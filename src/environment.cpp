@@ -3,20 +3,21 @@
 //
 
 #include <SDL_opengl.h>
+#include "src/constants.h"
 #include "src/environment.h"
 
 namespace pong{
     static int SCREEN_WIDTH = 720;
     static int SCREEN_HEIGHT = 720;
-    static double PI = 3.1415926535897932384626433832795;
+
     static float radius = 1;
 
 
     environment::environment() :
             tick {0},
-            unit {PI / 50},
+            unit {constants::PI / 50},
             p1 { 0, true, unit},
-            p2 { PI, false, unit}
+            p2 { constants::PI, false, unit}
     {
         // Intialize SDL.
         SDL_Init(SDL_INIT_EVERYTHING);
@@ -69,43 +70,45 @@ namespace pong{
         glLoadIdentity();
         // render scene
         glBegin( GL_LINE_LOOP );
-        for(double i = 0; i < 2 * PI * radius; i += unit)
+        for(double i = 0; i < 2 * constants::PI * radius; i += unit)
             glVertex2d(cos(i) * radius, sin(i) * radius);
         glEnd();
 
-        //glLoadIdentity();
-        render_player(p1.get_origin());
-
-        //glLoadIdentity();
-        render_player(p2.get_origin());
-
-        // render ball
-
-        double x, y;
-        double theta = PI + PI/6;
-        x = 0.01 * tick * cos(theta);
-        y = 0.01 * tick * sin(theta);
-
-        if (x*x + y*y < (radius-0.055)*(radius-0.055)) {
-            tick++;
-        }
+        glLoadIdentity();
+        render(p1);
+        render(p2);
 
         glLoadIdentity();
-        glTranslated(x, y, 0);
-        glBegin( GL_POLYGON );
-        for(double i = 0; i < 2 * PI * radius; i += PI / 6) {
-            glVertex2d(cos(i) * radius * 0.01, sin(i) * radius * 0.01);
-        }
-        glEnd();
-
+        render(b);
 
         /* Swap our back buffer to the front */
         SDL_GL_SwapWindow(window);
     }
 
-    void environment::render_player(double o) {
+    void environment::render(const ball &b) {
+        double dist;
+        double theta;
+        b.get_location(&dist, &theta);
+        auto x = dist * cos(theta);
+        auto y = dist * sin(theta);
+
+        if (x*x + y*y < (radius-0.055)*(radius-0.055)) {
+            tick++;
+        }
+
+        glTranslated(x, y, 0);
+        glBegin( GL_POLYGON );
+        for(double i = 0; i < 2 * constants::PI * radius; i += constants::PI / 6) {
+            glVertex2d(cos(i) * radius * 0.01, sin(i) * radius * 0.01);
+        }
+        glEnd();
+    }
+
+    void environment::render(const player& p) {
         //////
-        double arc_size = (2 * PI * radius) / 10;
+        double o = p.get_origin();
+
+        double arc_size = (2 * constants::PI * radius) / 10;
         auto edge_points = (unsigned int) floor(arc_size / unit);
 
         glBegin( GL_TRIANGLE_STRIP );
@@ -118,11 +121,14 @@ namespace pong{
                 glVertex2d(cos(theta) * (radius - 0.04), sin(theta) * (radius - 0.04));
         }
         glEnd();
-
     }
 
     void environment::frame_delay() {
         SDL_Delay(25);
+    }
+
+    void environment::update() {
+        b.move();
     }
 
     bool environment::get_event() {

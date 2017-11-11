@@ -10,7 +10,7 @@ namespace pong {
             unit_ {direction_up ? unit : -1 * unit}
     {}
 
-    double player::get_origin() {
+    double player::get_origin() const{
         return origin_;
     }
 

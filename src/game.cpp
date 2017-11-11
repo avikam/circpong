@@ -18,7 +18,10 @@ namespace pong {
 
     void game::play() {
         while (!env_.get_event()) {
+            env_.update();
             env_.render();
+            // is game over?
+
             env_.frame_delay();
         }
     }

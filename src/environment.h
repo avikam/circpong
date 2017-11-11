@@ -8,6 +8,8 @@
 #include <SDL2/SDL.h>                       // SDL library.
 #include <SDL2/SDL_ttf.h>                   // SDL font library.
 #include <SDL2/SDL_mixer.h>                 // SDL sound library.
+
+#include "src/ball.h"
 #include "src/player.h"
 
 namespace pong {
@@ -17,10 +19,12 @@ namespace pong {
         SDL_GLContext maincontext; /* Our opengl context handle */
         int tick;
         double unit;
-        void render_player(double o);
+        void render(const player& p);
+        void render(const ball& p);
 
         player p1;
         player p2;
+        ball b;
 
     public:
         environment();
@@ -28,6 +32,7 @@ namespace pong {
 
         void render();
         bool get_event();
+        void update();
         void frame_delay();
     };
 }

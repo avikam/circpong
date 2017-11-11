@@ -14,7 +14,7 @@ namespace pong {
         player(double origin, bool direction_up, double unit);
         void go_up();
         void go_down();
-        double get_origin();
+        double get_origin() const;
 
     };
 }
