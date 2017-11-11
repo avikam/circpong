@@ -12,7 +12,10 @@ namespace pong{
     static float radius = 1;
 
 
-    environment::environment() : tick {0} {
+    environment::environment() :
+            tick {0},
+            unit {PI / 50}
+    {
         // Intialize SDL.
         SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -55,12 +58,6 @@ namespace pong{
     }
 
     void environment::render() {
-        tick++;
-
-        // Clear screen (background color).
-//        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Dark grey.
-//        SDL_RenderClear(renderer);
-
         SDL_GL_SetSwapInterval(1);
 
         /* Clear our buffer with a red background */
@@ -68,35 +65,29 @@ namespace pong{
         glClear ( GL_COLOR_BUFFER_BIT );
 
         glBegin( GL_LINE_LOOP );
-        for(double i = 0; i < 2 * PI * radius; i += PI / 50) //<-- Change this Value
+        for(double i = 0; i < 2 * PI * radius; i += unit) //<-- Change this Value
             glVertex2d(cos(i) * radius, sin(i) * radius);
         glEnd();
 
-        //////
+        render_player(0);
+        render_player(PI);
 
-        double unit = PI / 50;
+
+        /* Swap our back buffer to the front */
+        SDL_GL_SwapWindow(window);
+    }
+
+    void environment::render_player(double o) {
+        //////
         double dx = tick * unit;
-        double dy = tick * unit;
 
         //////
         double arc_size = (2 * PI * radius) / 10;
-        unsigned int edge_points = (unsigned int) floor(arc_size / unit);
-
-//        glBegin( GL_POINTS );
-//        for(int i = 0; i <= edge_points; i++) {
-//            double theta = PI - (unit*i);
-//            glVertex2d(cos(theta) * (radius - 0.01), sin(theta) * (radius - 0.01));
-//        }
-//
-//        for(int i = edge_points; i >= 0; i--) {
-//            double theta = PI - (unit*i);
-//            glVertex2d(cos(theta) * (radius - 0.03), sin(theta) * (radius - 0.03));
-//        }
-//        glEnd();
+        auto edge_points = (unsigned int) floor(arc_size / unit);
 
         glBegin( GL_TRIANGLE_STRIP );
         for(int i = 0; i <= 2*edge_points + 1; i++) {
-            double theta = PI - (unit * (i >> 1)) + dx;
+            double theta = o + (unit * (i >> 1)) + dx;
 
             if (i % 2 == 0)
                 glVertex2d(cos(theta) * (radius - 0.01), sin(theta) * (radius - 0.01));
@@ -105,12 +96,6 @@ namespace pong{
         }
         glEnd();
 
-
-        /* Swap our back buffer to the front */
-        SDL_GL_SwapWindow(window);
-
-        // Swap buffers.
-        //SDL_RenderPresent(renderer);
     }
 
     void environment::frame_delay() {
@@ -122,9 +107,10 @@ namespace pong{
         SDL_Event event {};
         while (SDL_PollEvent(&event)) {
             // Track mouse movement.
-//            if (event.type == SDL_MOUSEMOTION) {
-//                SDL_GetMouseState(&mouse_x, &mouse_y);
-//            }
+            if (event.type == SDL_MOUSEMOTION) {
+                int mouse_x;
+                //SDL_GetMouseState(&mouse_x, &tick);
+            }
 
             // Clicking 'x' or pressing F4.
             if (event.type == SDL_QUIT) {
@@ -162,6 +148,12 @@ namespace pong{
 //                        }
                         break;
 
+                    case SDLK_UP:
+                        tick--;
+                        break;
+                    case SDLK_DOWN:
+                        tick++;
+                        break;
 
                         // Pressing F11 to toggle fullscreen.
 //                    case SDLK_F11:
@@ -177,7 +169,6 @@ namespace pong{
                 }
             }
         }
-
         return false;
     }
 }

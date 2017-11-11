@@ -14,7 +14,9 @@ namespace pong {
         SDL_Window * window;
         SDL_Renderer * renderer;
         SDL_GLContext maincontext; /* Our opengl context handle */
-        unsigned int tick;
+        int tick;
+        double unit;
+        void render_player(double o);
     public:
         environment();
         ~environment();
