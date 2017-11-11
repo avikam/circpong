@@ -10,20 +10,19 @@
 
 namespace pong {
     class ball {
-        // distance from origin
-        double distance;
-        // angle of linear movement
-        double theta_;
+        double x_;
+        double y_;
 
-        double speed_;
+        double speed_x;
+        double speed_y;
     public:
-        ball(double theta = constants::PI, double speed = 0.01);
+        explicit ball(double speed = 0.01);
 
-        //bool collide_with(const player& p);
+        bool outside_arean();
+        bool hit_if_collided(const player &p);
         void move();
 
-        void get_location(double* dist, double* theta) const;
-        //bool collide_with();
+        void get_location(double* x, double* y) const;
     };
 }
 

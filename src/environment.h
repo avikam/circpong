@@ -13,6 +13,13 @@
 #include "src/player.h"
 
 namespace pong {
+    enum class state_t {
+        active,
+        player1_win,
+        player2_win,
+        user_quit
+    };
+
     class environment {
         SDL_Window * window;
         SDL_Renderer * renderer;
@@ -22,6 +29,7 @@ namespace pong {
         void render(const player& p);
         void render(const ball& p);
 
+        state_t state ;
         player p1;
         player p2;
         ball b;
@@ -34,6 +42,7 @@ namespace pong {
         bool get_event();
         void update();
         void frame_delay();
+        bool is_active();
     };
 }
 

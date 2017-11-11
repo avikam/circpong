@@ -17,7 +17,8 @@ namespace pong{
             tick {0},
             unit {constants::PI / 50},
             p1 { 0, true, unit},
-            p2 { constants::PI, false, unit}
+            p2 { constants::PI, false, unit},
+            state { state_t::active }
     {
         // Intialize SDL.
         SDL_Init(SDL_INIT_EVERYTHING);
@@ -86,15 +87,9 @@ namespace pong{
     }
 
     void environment::render(const ball &b) {
-        double dist;
-        double theta;
-        b.get_location(&dist, &theta);
-        auto x = dist * cos(theta);
-        auto y = dist * sin(theta);
-
-        if (x*x + y*y < (radius-0.055)*(radius-0.055)) {
-            tick++;
-        }
+        double x;
+        double y;
+        b.get_location(&x, &y);
 
         glTranslated(x, y, 0);
         glBegin( GL_POLYGON );
@@ -108,8 +103,7 @@ namespace pong{
         //////
         double o = p.get_origin();
 
-        double arc_size = (2 * constants::PI * radius) / 10;
-        auto edge_points = (unsigned int) floor(arc_size / unit);
+        auto edge_points = (unsigned int) floor(constants::arc_size / unit);
 
         glBegin( GL_TRIANGLE_STRIP );
         for(int i = 0; i <= 2*edge_points + 1; i++) {
@@ -128,7 +122,24 @@ namespace pong{
     }
 
     void environment::update() {
+        if (state != state_t::active) {
+            return;
+        }
+        
         b.move();
+
+        if (b.outside_arean()) {
+            auto collided_with_p1 = b.hit_if_collided(p1);
+            if (!collided_with_p1) {
+                auto collided_with_p2 = b.hit_if_collided(p2);
+
+                if (!collided_with_p2) {
+                    // TODO: Check who won?
+                    state = state_t::player2_win;
+                }
+            }
+            // game is still on done
+        }
     }
 
     bool environment::get_event() {
@@ -167,6 +178,7 @@ namespace pong{
                 switch (event.key.keysym.sym) {
                     // Pressing ESC exits from the game.
                     case SDLK_ESCAPE:
+                        state = state_t::user_quit;
                         return true;
 
                         // Pressing space will launch the ball if it isn't
@@ -206,5 +218,9 @@ namespace pong{
             }
         }
         return false;
+    }
+
+    bool environment::is_active() {
+        return state != state_t::user_quit;
     }
 }

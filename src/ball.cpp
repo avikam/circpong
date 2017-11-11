@@ -3,16 +3,37 @@
 //
 
 #include "src/ball.h"
+#include <cmath>
+#include <iostream>
+
 namespace pong {
-    ball::ball(double theta, double speed) : theta_{theta}, distance {0}, speed_ {speed} {}
+    ball::ball(double speed) : speed_x {speed}, speed_y { speed }, x_ {0}, y_ {0} {}
 
     void ball::move() {
-        distance += speed_;
+        x_ += speed_x;
+        y_ += speed_y;
     }
 
-    void ball::get_location(double *dist, double* theta) const{
-        *dist = distance;
-        *theta = theta_;
+    void ball::get_location(double *x, double* y) const{
+        *x = x_;
+        *y = y_;
+    }
+
+    bool ball::hit_if_collided(const player &p) {
+        auto theta_factor = p.collision_from_center(x_, y_);
+
+        if (theta_factor >= 0) {
+            speed_x *= -1;
+            speed_y *= -1;
+            // theta_ += theta_factor * (constants::PI) / 4;
+            return true;
+        }
+
+        return false;
+    }
+
+    bool ball::outside_arean() {
+        return x_ * x_ + y_ * y_ >= (constants::radius - 0.055) * (constants::radius - 0.055);
     }
 
 
