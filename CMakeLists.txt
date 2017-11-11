@@ -19,6 +19,7 @@ ENDIF (APPLE)
 set(SOURCE_FILES
         main.cpp
         src/environment.cpp
+        src/player.cpp
         src/game.cpp
 )
 add_executable(cirpong ${SOURCE_FILES})

@@ -14,7 +14,9 @@ namespace pong{
 
     environment::environment() :
             tick {0},
-            unit {PI / 50}
+            unit {PI / 50},
+            p1 { 0, true, unit},
+            p2 { PI, false, unit}
     {
         // Intialize SDL.
         SDL_Init(SDL_INIT_EVERYTHING);
@@ -64,13 +66,37 @@ namespace pong{
         glClearColor ( 0.0, 0.0, 0.0, .3 );
         glClear ( GL_COLOR_BUFFER_BIT );
 
+        glLoadIdentity();
+        // render scene
         glBegin( GL_LINE_LOOP );
-        for(double i = 0; i < 2 * PI * radius; i += unit) //<-- Change this Value
+        for(double i = 0; i < 2 * PI * radius; i += unit)
             glVertex2d(cos(i) * radius, sin(i) * radius);
         glEnd();
 
-        render_player(0);
-        render_player(PI);
+        //glLoadIdentity();
+        render_player(p1.get_origin());
+
+        //glLoadIdentity();
+        render_player(p2.get_origin());
+
+        // render ball
+
+        double x, y;
+        double theta = PI + PI/6;
+        x = 0.01 * tick * cos(theta);
+        y = 0.01 * tick * sin(theta);
+
+        if (x*x + y*y < (radius-0.055)*(radius-0.055)) {
+            tick++;
+        }
+
+        glLoadIdentity();
+        glTranslated(x, y, 0);
+        glBegin( GL_POLYGON );
+        for(double i = 0; i < 2 * PI * radius; i += PI / 6) {
+            glVertex2d(cos(i) * radius * 0.01, sin(i) * radius * 0.01);
+        }
+        glEnd();
 
 
         /* Swap our back buffer to the front */
@@ -79,20 +105,17 @@ namespace pong{
 
     void environment::render_player(double o) {
         //////
-        double dx = tick * unit;
-
-        //////
         double arc_size = (2 * PI * radius) / 10;
         auto edge_points = (unsigned int) floor(arc_size / unit);
 
         glBegin( GL_TRIANGLE_STRIP );
         for(int i = 0; i <= 2*edge_points + 1; i++) {
-            double theta = o + (unit * (i >> 1)) + dx;
+            double theta = o + (unit * (i >> 1));
 
             if (i % 2 == 0)
                 glVertex2d(cos(theta) * (radius - 0.01), sin(theta) * (radius - 0.01));
             else
-                glVertex2d(cos(theta) * (radius - 0.03), sin(theta) * (radius - 0.03));
+                glVertex2d(cos(theta) * (radius - 0.04), sin(theta) * (radius - 0.04));
         }
         glEnd();
 
@@ -149,10 +172,17 @@ namespace pong{
                         break;
 
                     case SDLK_UP:
-                        tick--;
+                        p1.go_up();
                         break;
                     case SDLK_DOWN:
-                        tick++;
+                        p1.go_down();
+                        break;
+
+                    case SDLK_q:
+                        p2.go_up();
+                        break;
+                    case SDLK_a:
+                        p2.go_down();
                         break;
 
                         // Pressing F11 to toggle fullscreen.
