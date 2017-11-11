@@ -22,7 +22,12 @@ namespace pong {
     bool ball::hit_if_collided(const player &p) {
         auto theta_factor = p.collision_from_center(x_, y_);
 
-        if (theta_factor >= 0) {
+        if (theta_factor != -1) {
+            if (theta_factor >= 0)
+                speed_x += theta_factor/1000;
+            else
+                speed_y += theta_factor/1000;
+
             speed_x *= -1;
             speed_y *= -1;
             // theta_ += theta_factor * (constants::PI) / 4;

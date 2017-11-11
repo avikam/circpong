@@ -44,10 +44,10 @@ namespace pong {
 
         int mid = (edge_points >> 1);
         float d = (min_i - mid);
-        std::cout << "hit " << min_i << ", dist: " << min_dist << ", factor: " << fabsf(d) << std::endl;
 
-        if (min_dist <= 0.00275) {
-            return fabsf(d / mid);
+        std::cout << "hit " << min_i << ", dist: " << min_dist << ", factor: " << fabsf(d) << std::endl;
+        if (min_dist <= 0.005) {
+            return d / mid;
         }
 
         return -1;
