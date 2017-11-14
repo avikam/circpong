@@ -18,7 +18,7 @@ namespace pong {
     public:
         explicit ball(double speed = 0.01);
 
-        bool outside_arean();
+        bool outside_arena();
         bool hit_if_collided(const player &p);
         void move();
 

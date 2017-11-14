@@ -3,6 +3,7 @@
 //
 
 #include <SDL_opengl.h>
+#include <iostream>
 #include "src/constants.h"
 #include "src/environment.h"
 
@@ -18,6 +19,7 @@ namespace pong{
             unit {constants::PI / 50},
             p1 { 0, true, unit},
             p2 { constants::PI, false, unit},
+            b { 0.004 },
             state { state_t::active }
     {
         // Intialize SDL.
@@ -75,8 +77,17 @@ namespace pong{
             glVertex2d(cos(i) * radius, sin(i) * radius);
         glEnd();
 
+        glTranslated(0, radius/-12, 0);
+        glBegin( GL_LINES );
+        for (int i = 0; i < 12; i++) {
+            glVertex2d(0, radius - (i * 2*radius / 12));
+        }
+        glEnd();
+
         glLoadIdentity();
         render(p1);
+
+        glLoadIdentity();
         render(p2);
 
         glLoadIdentity();
@@ -93,28 +104,41 @@ namespace pong{
 
         glTranslated(x, y, 0);
         glBegin( GL_POLYGON );
-        for(double i = 0; i < 2 * constants::PI * radius; i += constants::PI / 6) {
-            glVertex2d(cos(i) * radius * 0.01, sin(i) * radius * 0.01);
-        }
+            glVertex2d(x + 0.02, y + 0.02);
+            glVertex2d(x + 0.02, y - 0.02);
+            glVertex2d(x - 0.02, y - 0.02);
+            glVertex2d(x - 0.02, y + 0.02);
         glEnd();
     }
 
     void environment::render(const player& p) {
         //////
         double o = p.get_origin();
+        int edge_points = 3;
 
-        auto edge_points = (unsigned int) floor(constants::arc_size / unit);
+       /*  _
+        * |0| _
+        *    |2| _
+        *     _ |4|
+        *  _ |3|
+        * |1|
+        */
 
-        glBegin( GL_TRIANGLE_STRIP );
-        for(int i = 0; i <= 2*edge_points + 1; i++) {
-            double theta = o + (unit * (i >> 1));
+        double height = 0.03;
+        double width = 0.03;
 
-            if (i % 2 == 0)
-                glVertex2d(cos(theta) * (radius - 0.01), sin(theta) * (radius - 0.01));
-            else
-                glVertex2d(cos(theta) * (radius - 0.04), sin(theta) * (radius - 0.04));
+        glRotatef(o * 180 / constants::PI, 0, 0, 1);
+        glTranslatef(radius - (edge_points + 1) * width, 0, 0);
+        for(int i = 0; i < 2*edge_points + 1; i++) {
+            auto center_x = (i >> 1) * height * 0.5;
+            auto center_y = width*((1 - 2*(i & 1)) * (edge_points - (i>>1)));
+            glBegin( GL_POLYGON );
+                glVertex2d(center_x + width/2, center_y + height/2);
+                glVertex2d(center_x - width/2, center_y + height/2);
+                glVertex2d(center_x - width/2, center_y - height/2);
+                glVertex2d(center_x + width/2, center_y - height/2);
+            glEnd();
         }
-        glEnd();
     }
 
     void environment::frame_delay() {
@@ -128,7 +152,8 @@ namespace pong{
         
         b.move();
 
-        if (b.outside_arean()) {
+        if (b.outside_arena()) {
+            std::cout << "ball out!" << std::endl;
             auto collided_with_p1 = b.hit_if_collided(p1);
             if (!collided_with_p1) {
                 auto collided_with_p2 = b.hit_if_collided(p2);

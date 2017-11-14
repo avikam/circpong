@@ -37,8 +37,9 @@ namespace pong {
         return false;
     }
 
-    bool ball::outside_arean() {
-        return x_ * x_ + y_ * y_ >= (constants::radius - 0.055) * (constants::radius - 0.055);
+    bool ball::outside_arena() {
+        std::cout << x_ << ", " << y_ << std::endl;
+        return x_ * x_ + y_ * y_ >= (constants::radius - 0.51) * (constants::radius - 0.51);
     }
 
 
