@@ -8,8 +8,8 @@
 #include "src/environment.h"
 
 namespace pong{
-    static int SCREEN_WIDTH = 720;
-    static int SCREEN_HEIGHT = 720;
+    static int SCREEN_WIDTH = 640;
+    static int SCREEN_HEIGHT = 640;
 
     static float radius = 1;
 
@@ -77,10 +77,11 @@ namespace pong{
             glVertex2d(cos(i) * radius, sin(i) * radius);
         glEnd();
 
-        glTranslated(0, radius/-12, 0);
+        auto num_lines = 40;
+        glTranslated(0, -1  * radius/num_lines, 0);
         glBegin( GL_LINES );
-        for (int i = 0; i < 12; i++) {
-            glVertex2d(0, radius - (i * 2*radius / 12));
+        for (int i = 0; i < num_lines; i++) {
+            glVertex2d(0, radius - (i * 2*radius / num_lines));
         }
         glEnd();
 
@@ -102,12 +103,15 @@ namespace pong{
         double y;
         b.get_location(&x, &y);
 
+        double height = 0.03;
+        double width = 0.03;
+
         glTranslated(x, y, 0);
         glBegin( GL_POLYGON );
-            glVertex2d(x + 0.02, y + 0.02);
-            glVertex2d(x + 0.02, y - 0.02);
-            glVertex2d(x - 0.02, y - 0.02);
-            glVertex2d(x - 0.02, y + 0.02);
+            glVertex2d(x + width/2, y + height/2);
+            glVertex2d(x + width/2, y - height/2);
+            glVertex2d(x - width/2, y - height/2);
+            glVertex2d(x - width/2, y + height/2);
         glEnd();
     }
 
@@ -128,7 +132,7 @@ namespace pong{
         double width = 0.03;
 
         glRotatef(o * 180 / constants::PI, 0, 0, 1);
-        glTranslatef(radius - (edge_points + 1) * width, 0, 0);
+        glTranslatef(radius - (edge_points) * width, 0, 0);
         for(int i = 0; i < 2*edge_points + 1; i++) {
             auto center_x = (i >> 1) * height * 0.5;
             auto center_y = width*((1 - 2*(i & 1)) * (edge_points - (i>>1)));

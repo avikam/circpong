@@ -16,7 +16,7 @@ namespace pong {
         void go_up();
         void go_down();
         double get_origin() const;
-        float collision_from_center(double distance, double theta) const;
+        float collision_with_ball(double distance, double theta) const;
     };
 }
 

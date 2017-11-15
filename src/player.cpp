@@ -11,7 +11,7 @@
 namespace pong {
     player::player(double origin, bool direction_up, double unit) :
             origin_ {origin},
-            edge_points {static_cast<unsigned int>(floor(constants::arc_size / std::abs(unit))) },
+            edge_points { 3 },
             unit_ {direction_up ? unit : -1 * unit}
     {}
 
@@ -26,29 +26,36 @@ namespace pong {
         origin_ -= unit_;
     }
 
-    float player::collision_from_center(double ball_x, double ball_y) const {
+    float player::collision_with_ball(double ball_x, double ball_y) const {
         int min_i = -1;
         double min_dist = 1000;
 
-        for(auto i = 1; i < edge_points; i++) {
-            double theta = origin_ + fabs(i* unit_);
-            double point_x = cos(theta) * (constants::radius - 0.01);
-            double point_y = sin(theta) * (constants::radius - 0.01);
 
-            auto dist = pow(point_x - ball_x, 2) + pow(point_y - ball_y, 2);
-            if (dist < min_dist) {
-                min_dist = dist;
-                min_i = i;
-            }
-        }
-
-        int mid = (edge_points >> 1);
-        float d = (min_i - mid);
-
-        std::cout << "hit " << min_i << ", dist: " << min_dist << ", factor: " << fabsf(d) << std::endl;
-        if (min_dist <= 0.005) {
-            return d / mid;
-        }
+//        double height = 0.03;
+//        double width = 0.03;
+//        double o = origin_;
+//
+//        rot = (o , 0, 0, 1);
+//        trans = (constants::radius - (edge_points + 1) * width, 0, 0);
+//
+//        for(int i = 0; i < 2*edge_points + 1; i++) {
+//            double point_x = (i >> 1) * height * 0.5;
+//            double point_y = width*((1 - 2*(i & 1)) * (edge_points - (i>>1)));
+//
+//            auto dist = pow(point_x - ball_x, 2) + pow(point_y - ball_y, 2);
+//            if (dist < min_dist) {
+//                min_dist = dist;
+//                min_i = i;
+//            }
+//        }
+//
+//        int mid = (edge_points >> 1);
+//        float d = (min_i - mid);
+//
+//        std::cout << "hit " << min_i << ", dist: " << min_dist << ", factor: " << fabsf(d) << std::endl;
+//        if (min_dist <= 0.005) {
+//            return d / mid;
+//        }
 
         return -1;
     }
