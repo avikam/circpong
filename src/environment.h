@@ -26,7 +26,7 @@ namespace pong {
         SDL_GLContext maincontext; /* Our opengl context handle */
         int tick;
         double unit;
-        void render(const player& p);
+        void renderAndSetCoordinate(player &p);
         void render(const ball& p);
 
         state_t state ;

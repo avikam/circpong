@@ -16,11 +16,17 @@ namespace pong {
         double speed_x;
         double speed_y;
     public:
-        explicit ball(double speed = 0.01);
+        explicit ball(double speed = 0.5);
 
         bool outside_arena();
         bool hit_if_collided(const player &p);
         void move();
+
+        void move_(double x, double y) {
+            x_ += x;
+            y_ += y;
+        }
+
 
         void get_location(double* x, double* y) const;
     };

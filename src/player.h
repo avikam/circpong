@@ -7,9 +7,15 @@
 
 namespace pong {
     class player {
-        double origin_;
+        double angle_;
+        double width;
+        double height;
         double unit_;
-        unsigned int edge_points;
+        int edge_points;
+
+        double coordinates[4 * 4];
+
+//        double* get_coordinates();
 
     public:
         player(double origin, bool direction_up, double unit);
@@ -17,6 +23,10 @@ namespace pong {
         void go_down();
         double get_origin() const;
         float collision_with_ball(double distance, double theta) const;
+
+        void set_coordinates(const double new_coordinates[]);
+
+        void get_point_x_y(int point_num, double* x, double* y) const;
     };
 }
 

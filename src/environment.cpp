@@ -4,10 +4,22 @@
 
 #include <SDL_opengl.h>
 #include <iostream>
+#include <iomanip>
 #include "src/constants.h"
 #include "src/environment.h"
 
 namespace pong{
+
+    template <int s>
+    float vect_mult(const float a[], const float b[]) {
+        return a[s-1] * b[s-1] + vect_mult<s-1>(a, b);
+    };
+
+    template <>
+    float vect_mult<0>(const float a[], const float b[]) {
+        return a[0] * b[0];
+    }
+
     static int SCREEN_WIDTH = 640;
     static int SCREEN_HEIGHT = 640;
 
@@ -19,7 +31,7 @@ namespace pong{
             unit {constants::PI / 50},
             p1 { 0, true, unit},
             p2 { constants::PI, false, unit},
-            b { 0.004 },
+            b { 0.005 },
             state { state_t::active }
     {
         // Intialize SDL.
@@ -71,7 +83,7 @@ namespace pong{
         glClear ( GL_COLOR_BUFFER_BIT );
 
         glLoadIdentity();
-        // render scene
+        // renderAndSetCoordinate scene
         glBegin( GL_LINE_LOOP );
         for(double i = 0; i < 2 * constants::PI * radius; i += unit)
             glVertex2d(cos(i) * radius, sin(i) * radius);
@@ -86,10 +98,10 @@ namespace pong{
         glEnd();
 
         glLoadIdentity();
-        render(p1);
+        renderAndSetCoordinate(p1);
 
-        glLoadIdentity();
-        render(p2);
+//        glLoadIdentity();
+//        renderAndSetCoordinate(p2);
 
         glLoadIdentity();
         render(b);
@@ -106,7 +118,7 @@ namespace pong{
         double height = 0.03;
         double width = 0.03;
 
-        glTranslated(x, y, 0);
+        //glTranslated(x, y, 0);
         glBegin( GL_POLYGON );
             glVertex2d(x + width/2, y + height/2);
             glVertex2d(x + width/2, y - height/2);
@@ -115,7 +127,7 @@ namespace pong{
         glEnd();
     }
 
-    void environment::render(const player& p) {
+    void environment::renderAndSetCoordinate(player &p) {
         //////
         double o = p.get_origin();
         int edge_points = 3;
@@ -131,11 +143,14 @@ namespace pong{
         double height = 0.03;
         double width = 0.03;
 
+        double center_x;
+        double center_y;
+
         glRotatef(o * 180 / constants::PI, 0, 0, 1);
         glTranslatef(radius - (edge_points) * width, 0, 0);
         for(int i = 0; i < 2*edge_points + 1; i++) {
-            auto center_x = (i >> 1) * height * 0.5;
-            auto center_y = width*((1 - 2*(i & 1)) * (edge_points - (i>>1)));
+            p.get_point_x_y(i, &center_x, &center_y);
+
             glBegin( GL_POLYGON );
                 glVertex2d(center_x + width/2, center_y + height/2);
                 glVertex2d(center_x - width/2, center_y + height/2);
@@ -143,6 +158,10 @@ namespace pong{
                 glVertex2d(center_x + width/2, center_y - height/2);
             glEnd();
         }
+
+        GLdouble modelMatrix[16];
+        glGetDoublev(GL_MODELVIEW_MATRIX, modelMatrix);
+        p.set_coordinates(modelMatrix);
     }
 
     void environment::frame_delay() {
@@ -156,19 +175,19 @@ namespace pong{
         
         b.move();
 
-        if (b.outside_arena()) {
-            std::cout << "ball out!" << std::endl;
+        //if (b.outside_arena()) {
+        //  std::cout << "ball out!" << std::endl;
             auto collided_with_p1 = b.hit_if_collided(p1);
             if (!collided_with_p1) {
-                auto collided_with_p2 = b.hit_if_collided(p2);
-
-                if (!collided_with_p2) {
-                    // TODO: Check who won?
-                    state = state_t::player2_win;
-                }
+//                auto collided_with_p2 = b.hit_if_collided(p2);
+//
+//                if (!collided_with_p2) {
+//                    // TODO: Check who won?
+//                    // state = state_t::player2_win;
+//                }
             }
             // game is still on done
-        }
+        //}
     }
 
     bool environment::get_event() {
@@ -232,6 +251,22 @@ namespace pong{
                         p2.go_down();
                         break;
 
+
+                    case SDLK_t:
+                        b.move_(0.01, 0);
+                        break;
+                    case SDLK_g:
+                        b.move_(-0.01, 0);
+                        break;
+                    case SDLK_h:
+                        b.move_(0, 0.01);
+                        break;
+                    case SDLK_f:
+                        b.move_(0, -0.01);
+                        break;
+
+                    case SDLK_z:
+                        break;
                         // Pressing F11 to toggle fullscreen.
 //                    case SDLK_F11:
 //                        int flags = SDL_GetWindowFlags(window);
