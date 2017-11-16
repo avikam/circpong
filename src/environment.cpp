@@ -100,8 +100,8 @@ namespace pong{
         glLoadIdentity();
         renderAndSetCoordinate(p1);
 
-//        glLoadIdentity();
-//        renderAndSetCoordinate(p2);
+        glLoadIdentity();
+        renderAndSetCoordinate(p2);
 
         glLoadIdentity();
         render(b);
@@ -179,8 +179,8 @@ namespace pong{
         //  std::cout << "ball out!" << std::endl;
             auto collided_with_p1 = b.hit_if_collided(p1);
             if (!collided_with_p1) {
-//                auto collided_with_p2 = b.hit_if_collided(p2);
-//
+                auto collided_with_p2 = b.hit_if_collided(p2);
+
 //                if (!collided_with_p2) {
 //                    // TODO: Check who won?
 //                    // state = state_t::player2_win;

@@ -44,7 +44,6 @@ namespace pong {
                 for (int j = 0; j < 4; j++) {
                     new_pos[i] += coordinates[j * 4 + i] * old_pos[j];
                 }
-                // std::cout << std::fixed << std::setw(11) << std::setprecision(6) << new_pos[i] << ", ";
             }
 
             auto dist_square = pow(new_pos[0] - ball_x, 2) + pow(new_pos[1] - ball_y, 2);
@@ -54,13 +53,12 @@ namespace pong {
             }
         }
 
-        int mid = (edge_points >> 1);
-        float d = (min_p - mid);
-
-        std::cout << std::fixed << std::setw(11) << std::setprecision(6) <<
-                        "hit " << min_p << ", dist: " << min_dist_sq << ", factor: " << fabsf(d) << std::endl;
         if (min_dist_sq <= 0.001) {
-            return d / mid;
+            float d = 1 - (min_p >> 1) / float(edge_points);
+            std::cout << std::fixed << std::setw(11) << std::setprecision(6) <<
+                      "hit " << min_p << ", dist: " << min_dist_sq << ", factor: " << fabsf(d) << std::endl;
+
+            return d;
         }
 
         return -1;
