@@ -29,6 +29,8 @@ namespace pong {
         void renderAndSetCoordinate(player &p);
         void render(const ball& p);
 
+        bool turn_p1;
+
         state_t state ;
         player p1;
         player p2;

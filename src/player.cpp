@@ -9,6 +9,8 @@
 #include "src/constants.h"
 #include "src/player.h"
 
+#define odd_sign(n) (1 - 2*( (n) & 1) )
+
 namespace pong {
     player::player(double origin, bool direction_up, double unit) :
             angle_ {origin},
@@ -54,14 +56,14 @@ namespace pong {
         }
 
         if (min_dist_sq <= 0.001) {
-            float d = 1 - (min_p >> 1) / float(edge_points);
+            float d = odd_sign(min_p) * (1 - (min_p >> 1) / float(edge_points));
             std::cout << std::fixed << std::setw(11) << std::setprecision(6) <<
                       "hit " << min_p << ", dist: " << min_dist_sq << ", factor: " << fabsf(d) << std::endl;
 
             return d;
         }
 
-        return -1;
+        return -2;
     }
 
     void player::set_coordinates(const double new_coordinates[]) {
@@ -70,6 +72,6 @@ namespace pong {
 
     void player::get_point_x_y(int point_num, double *x, double *y) const{
         *x = (point_num >> 1) * height * 0.5;
-        *y = width*((1 - 2*(point_num & 1)) * (edge_points - (point_num>>1)));
+        *y = width*(odd_sign(point_num) * (edge_points - (point_num>>1)));
     }
 }

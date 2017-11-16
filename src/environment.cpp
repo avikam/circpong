@@ -32,7 +32,8 @@ namespace pong{
             p1 { 0, true, unit},
             p2 { constants::PI, false, unit},
             b { 0.005 },
-            state { state_t::active }
+            state { state_t::active },
+            turn_p1 { true }
     {
         // Intialize SDL.
         SDL_Init(SDL_INIT_EVERYTHING);
@@ -175,19 +176,15 @@ namespace pong{
         
         b.move();
 
-        //if (b.outside_arena()) {
-        //  std::cout << "ball out!" << std::endl;
-            auto collided_with_p1 = b.hit_if_collided(p1);
-            if (!collided_with_p1) {
-                auto collided_with_p2 = b.hit_if_collided(p2);
-
-//                if (!collided_with_p2) {
-//                    // TODO: Check who won?
-//                    // state = state_t::player2_win;
-//                }
+        if (turn_p1) {
+            if (b.hit_if_collided(p1)) {
+                turn_p1 = !turn_p1;
             }
-            // game is still on done
-        //}
+        } else {
+            if (b.hit_if_collided(p2)) {
+                turn_p1 = !turn_p1;
+            }
+        }
     }
 
     bool environment::get_event() {
