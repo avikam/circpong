@@ -24,6 +24,6 @@ set(SOURCE_FILES
         src/player.cpp
         src/ball.cpp
         src/game.cpp
-)
+        src/control.cpp)
 add_executable(cirpong ${SOURCE_FILES})
 target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf SDL2_mixer)

@@ -188,6 +188,7 @@ namespace pong{
     }
 
     bool environment::get_event() {
+        pm_ct.poll_event();
         // Handle events.
         SDL_Event event {};
         while (SDL_PollEvent(&event)) {

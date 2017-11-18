@@ -11,6 +11,7 @@
 
 #include "src/ball.h"
 #include "src/player.h"
+#include "src/control.h"
 
 namespace pong {
     enum class state_t {
@@ -30,6 +31,8 @@ namespace pong {
         void render(const ball& p);
 
         bool turn_p1;
+
+        PowermateControl pm_ct;
 
         state_t state ;
         player p1;
