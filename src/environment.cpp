@@ -2,7 +2,7 @@
 // Created by Avikam Agur on 10/11/2017.
 //
 
-#include <SDL_opengl.h>
+#include <SDL2/SDL_opengl.h>
 #include <iostream>
 #include <iomanip>
 #include "src/constants.h"
