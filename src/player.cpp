@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <iomanip>
+#include <cstring>
 
 #include "src/constants.h"
 #include "src/player.h"

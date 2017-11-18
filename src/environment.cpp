@@ -2,11 +2,12 @@
 // Created by Avikam Agur on 10/11/2017.
 //
 
-#include <SDL_opengl.h>
+#include <SDL2/SDL_opengl.h>
 #include <iostream>
 #include <iomanip>
 #include "src/constants.h"
 #include "src/environment.h"
+#include <cmath>
 
 namespace pong{
 
@@ -31,7 +32,7 @@ namespace pong{
             unit {constants::PI / 50},
             p1 { 0, true, unit},
             p2 { constants::PI, false, unit},
-            b { 0.005 },
+            b { 0.0125 },
             state { state_t::active },
             turn_p1 { true }
     {
@@ -41,8 +42,8 @@ namespace pong{
         // Don't show cursor.
         SDL_ShowCursor(0);
 
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
         /* Turn on double buffering with a 24bit Z buffer.
          * You may need to change this to 16 or 32 for your system */
