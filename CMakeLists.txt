@@ -8,6 +8,10 @@ include_directories(
         /usr/local/include/SDL2
 )
 
+link_directories(
+        /usr/x86_64-w64-mingw32/sys-root/mingw/lib
+)
+
 IF(APPLE)
     #SET(GUI_TYPE MACOSX_BUNDLE)
     FIND_LIBRARY(OPENGL OpenGL)
@@ -26,4 +30,4 @@ set(SOURCE_FILES
         src/game.cpp
 )
 add_executable(cirpong ${SOURCE_FILES})
-target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf SDL2_mixer)
+target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 OpenGL32)
