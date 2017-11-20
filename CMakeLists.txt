@@ -17,6 +17,12 @@ ELSE()
     SET(EXTRA_LIBS GL)
 ENDIF ()
 
+if(UNIX AND NOT APPLE)
+    SET(SRC_CONTROL src/control.cpp)
+else()
+    SET(SRC_CONTROL src/control_non.cpp)
+endif()
+
 
 set(SOURCE_FILES
         main.cpp
@@ -24,6 +30,7 @@ set(SOURCE_FILES
         src/player.cpp
         src/ball.cpp
         src/game.cpp
-        src/control.cpp)
+        ${SRC_CONTROL}
+)
 add_executable(cirpong ${SOURCE_FILES})
 target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf SDL2_mixer)

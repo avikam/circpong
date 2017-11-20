@@ -24,14 +24,14 @@ namespace pong {
 
         if (theta_factor != -2) {
             if (theta_factor >= 0) {
-                speed_x += theta_factor / 1000;
+                speed_x += theta_factor / 100;
             }
             else
-                speed_y += theta_factor/1000;
+                speed_y += theta_factor/100;
 
             speed_x *= -1;
             speed_y *= -1;
-            // theta_ += theta_factor * (constants::PI) / 4;
+            std::cout << speed_x << ", " << speed_y << std::endl;
             return true;
         }
 

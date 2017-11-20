@@ -23,7 +23,6 @@ namespace pong {
 
     class environment {
         SDL_Window * window;
-        SDL_Renderer * renderer;
         SDL_GLContext maincontext; /* Our opengl context handle */
         int tick;
         double unit;

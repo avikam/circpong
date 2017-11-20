@@ -12,6 +12,12 @@ namespace pong {
     private:
         environment env_;
         bool exit_;
+
+        SDL_Window * window;
+        SDL_GLContext maincontext; /* Our opengl context handle */
+
+        void render();
+
     public:
         game();
         ~game();

@@ -4,8 +4,8 @@
 
 #include <SDL2/SDL_events.h>
 #include <poll.h>
-#include <unistd.h>
-#include <linux/input.h>
+// #include <unistd.h>
+// #include <linux/input.h>
 #include <iostream>
 
 namespace pong {
