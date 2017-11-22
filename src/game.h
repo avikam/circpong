@@ -6,11 +6,14 @@
 #define CIRPONG_GAME_H
 
 #include "src/environment.h"
+#include "src/start_game.h"
 
 namespace pong {
     class game {
     private:
         environment env_;
+        start_game start_game_;
+
         bool exit_;
 
         SDL_Window * window;

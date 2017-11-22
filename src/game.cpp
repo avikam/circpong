@@ -7,7 +7,6 @@
 namespace pong {
 
     game::game() :
-            env_ {},
             exit_ {false}
     {
         // Intialize SDL.
@@ -45,10 +44,10 @@ namespace pong {
 
     void game::render() {
         SDL_GL_SetSwapInterval(1);
-        env_.render();
+        //env_.render();
+        start_game_.render();
         /* Swap our back buffer to the front */
         SDL_GL_SwapWindow(window);
-
     }
 
     void game::play() {
