@@ -9,53 +9,53 @@
 #include <vector>
 #include "src/scene.h"
 
-//
-//// Shader sources
-//const GLchar* vertexSource = R"glsl(
-//    #version 150 core
-//    in vec2 position;
-//    in vec3 color;
-//    in vec2 texcoord;
-//    out vec3 Color;
-//    out vec2 Texcoord;
-//    uniform mat4 trans;
-//    void main()
-//    {
-//        Color = color;
-//        Texcoord = texcoord;
-//        gl_Position = trans * vec4(position, 0.0, 1.0);
-//    }
-//)glsl";
-//const GLchar* fragmentSource = R"glsl(
-//    #version 150 core
-//    in vec3 Color;
-//    in vec2 Texcoord;
-//    out vec4 outColor;
-//    uniform sampler2D tex;
-//    void main()
-//    {
-//        outColor = texture(tex, Texcoord);
-//    }
-//)glsl";
-
 
 // Shader sources
 const GLchar* vertexSource = R"glsl(
     #version 150 core
     in vec2 position;
+    in vec3 color;
+    in vec2 texcoord;
+    out vec3 Color;
+    out vec2 Texcoord;
+    uniform mat4 trans;
     void main()
     {
-        gl_Position = vec4(position, 0.0, 1.0);
+        Color = color;
+        Texcoord = texcoord;
+        gl_Position = trans * vec4(position, 0.0, 1.0);
     }
 )glsl";
 const GLchar* fragmentSource = R"glsl(
     #version 150 core
+    in vec3 Color;
+    in vec2 Texcoord;
     out vec4 outColor;
+    uniform sampler2D tex;
     void main()
     {
-        outColor = vec4(1.0, 1.0, 1.0, 1.0);
+        outColor = vec4(Color, 1.0);
     }
 )glsl";
+
+
+// Shader sources
+//const GLchar* vertexSource = R"glsl(
+//    #version 150 core
+//    in vec2 position;
+//    void main()
+//    {
+//        gl_Position = vec4(position, 0.0, 1.0);
+//    }
+//)glsl";
+//const GLchar* fragmentSource = R"glsl(
+//    #version 150 core
+//    out vec4 outColor;
+//    void main()
+//    {
+//        outColor = vec4(1.0, 1.0, 1.0, 1.0);
+//    }
+//)glsl";
 
 namespace pong {
     static void compile_shader(GLuint shader) {
@@ -108,35 +108,53 @@ namespace pong {
         glGenBuffers(1, &vbo);
 
         GLfloat vertices[] = {
-                0.0f,  0.5f,
-                0.5f, -0.5f,
-                -0.5f, -0.5f
+                //  Position      Color             Texcoords
+                -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
+                0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
+                0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+                -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
         };
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+        // Create an element array
+        GLuint ebo;
+        glGenBuffers(1, &ebo);
 
+        GLuint elements[] = {
+                0, 3, 1,
+                1, 2, 3
+        };
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+
+
+        // Specify the layout of the vertex data
         // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of
         // invalid op
         GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
         glEnableVertexAttribArray(posAttrib);
-        glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+        glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), nullptr);
 
-//            // Specify the layout of the vertex data
-//            GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-//            glEnableVertexAttribArray(posAttrib);
-//            glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), nullptr);
-//
-//            GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
-//            glEnableVertexAttribArray(colAttrib);
-//            glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-//
-//            GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
-//            glEnableVertexAttribArray(texAttrib);
-//            glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
-            // Specify the layout of the vertex data
+        GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
+        glEnableVertexAttribArray(colAttrib);
+        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
 
+        GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
+        glEnableVertexAttribArray(texAttrib);
+        glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+
+        GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
+        glm::mat4 identity{1};
+        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(identity));
+        {
+            auto er = glGetError();
+            if (er == GL_INVALID_OPERATION) {
+                std::cout << "glDrawArrays Error: invalid op " << std::endl;
+            }
+        }
 
     };
 
@@ -210,14 +228,13 @@ namespace pong {
         // Draw a rectangle from the 2 triangles using 6 indices
 
         // Create a Vertex Buffer Object and copy the vertex data to i
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         {
             auto er = glGetError();
             if (er == GL_INVALID_OPERATION) {
                 std::cout << "glDrawArrays Error: invalid op " << std::endl;
             }
         }
-
     }
 
 }
