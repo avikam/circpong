@@ -5,9 +5,10 @@
 #include "src/game.h"
 
 namespace pong {
-
     game::game() :
-            exit_ {false}
+            exit_ {false},
+            scene_ {nullptr},
+            start_game_ {&scene_}
     {
         // Intialize SDL.
         SDL_Init(SDL_INIT_EVERYTHING);
@@ -15,8 +16,9 @@ namespace pong {
         // Don't show cursor.
         SDL_ShowCursor(0);
 
-        // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-        // SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
         /* Turn on double buffering with a 24bit Z buffer.
          * You may need to change this to 16 or 32 for your system */
@@ -32,9 +34,17 @@ namespace pong {
                                   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
         maincontext = SDL_GL_CreateContext(window);
+        if (maincontext == nullptr) {
+            std::cout << "Error initing opengl context " << SDL_GetError() << std::endl;
+            throw std::runtime_error("maincontext init error");
+        }
+        printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
+        scene_ = new scene{};
     }
 
     game::~game() {
+        SDL_GL_DeleteContext(maincontext);
+        delete scene_;
         // Destroy  window.
         SDL_DestroyWindow(window);
 
@@ -45,12 +55,16 @@ namespace pong {
     void game::render() {
         SDL_GL_SetSwapInterval(1);
         //env_.render();
-        start_game_.render();
+        // start_game_.render();
+        scene_->render();
+        // Clear the screen to black
         /* Swap our back buffer to the front */
         SDL_GL_SwapWindow(window);
     }
 
     void game::play() {
+
+
         while (env_.is_active()) {
             render();
             env_.update();

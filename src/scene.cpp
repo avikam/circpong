@@ -1,0 +1,223 @@
+//
+// Created by Avikam Agur on 24/11/2017.
+//
+
+#include <OpenGl/gl3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+#include <vector>
+#include "src/scene.h"
+
+//
+//// Shader sources
+//const GLchar* vertexSource = R"glsl(
+//    #version 150 core
+//    in vec2 position;
+//    in vec3 color;
+//    in vec2 texcoord;
+//    out vec3 Color;
+//    out vec2 Texcoord;
+//    uniform mat4 trans;
+//    void main()
+//    {
+//        Color = color;
+//        Texcoord = texcoord;
+//        gl_Position = trans * vec4(position, 0.0, 1.0);
+//    }
+//)glsl";
+//const GLchar* fragmentSource = R"glsl(
+//    #version 150 core
+//    in vec3 Color;
+//    in vec2 Texcoord;
+//    out vec4 outColor;
+//    uniform sampler2D tex;
+//    void main()
+//    {
+//        outColor = texture(tex, Texcoord);
+//    }
+//)glsl";
+
+
+// Shader sources
+const GLchar* vertexSource = R"glsl(
+    #version 150 core
+    in vec2 position;
+    void main()
+    {
+        gl_Position = vec4(position, 0.0, 1.0);
+    }
+)glsl";
+const GLchar* fragmentSource = R"glsl(
+    #version 150 core
+    out vec4 outColor;
+    void main()
+    {
+        outColor = vec4(1.0, 1.0, 1.0, 1.0);
+    }
+)glsl";
+
+namespace pong {
+    static void compile_shader(GLuint shader) {
+        glCompileShader(shader);
+
+        GLint status;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
+        if (status != GL_TRUE) {
+            GLint maxLength = 0;
+            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+            // The maxLength includes the NULL character
+            std::vector<GLchar> errorLog(maxLength);
+            glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
+            std::cout << &errorLog[0];
+
+            glDeleteShader(shader);
+            throw std::runtime_error("Cant compile vertext shader");
+        } else {
+            std::cout << "Compiled successfully" << std::endl;
+        }
+    }
+
+    scene::scene() {
+            // Create Vertex Array Object
+            GLuint vao;
+            glGenVertexArrays(1, &vao);
+            glBindVertexArray(vao);
+
+
+        // Create and compile the vertex shader
+            vertexShader = glCreateShader(GL_VERTEX_SHADER);
+            glShaderSource(vertexShader, 1, &vertexSource, NULL);
+            compile_shader(vertexShader);
+
+            // Create and compile the fragment shader
+            fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+            glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
+            compile_shader(fragmentShader);
+
+            // Link the vertex and fragment shader into a shader program
+            shaderProgram = glCreateProgram();
+            glAttachShader(shaderProgram, vertexShader);
+            glAttachShader(shaderProgram, fragmentShader);
+            glBindFragDataLocation(shaderProgram, 0, "outColor");
+            glLinkProgram(shaderProgram);
+            glUseProgram(shaderProgram);
+
+        GLuint vbo;
+        glGenBuffers(1, &vbo);
+
+        GLfloat vertices[] = {
+                0.0f,  0.5f,
+                0.5f, -0.5f,
+                -0.5f, -0.5f
+        };
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+
+        // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of
+        // invalid op
+        GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
+        glEnableVertexAttribArray(posAttrib);
+        glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+
+//            // Specify the layout of the vertex data
+//            GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
+//            glEnableVertexAttribArray(posAttrib);
+//            glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), nullptr);
+//
+//            GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
+//            glEnableVertexAttribArray(colAttrib);
+//            glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+//
+//            GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
+//            glEnableVertexAttribArray(texAttrib);
+//            glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+            // Specify the layout of the vertex data
+
+
+    };
+
+    scene::~scene() {
+        glDeleteProgram(shaderProgram);
+        glDeleteShader(fragmentShader);
+        glDeleteShader(vertexShader);
+//
+//        glDeleteBuffers(1, &vbo);
+//
+//        glDeleteVertexArrays(1, &vao);
+    }
+
+    void scene::draw_texture(const GLvoid *pixels, int width, int height) {
+//        // Load textures
+//        GLuint textures;
+//        glGenTextures(1, &textures);
+//
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D, textures);
+//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+//
+//        glUniform1i(glGetUniformLocation(shaderProgram, "tex"), 0);
+//
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//
+//        GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
+//        //glm::mat4 identity{};
+//        //glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(identity));
+//
+//        // Create a Vertex Buffer Object and copy the vertex data to it
+//        GLuint vbo;
+//        glGenBuffers(1, &vbo);
+//
+//        GLfloat vertices[] = {
+//                //  Position      Color             Texcoords
+//                -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
+//                0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
+//                0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+//                -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
+//        };
+//
+//        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+//        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+//
+//        // Create an element array
+//        GLuint ebo;
+//        glGenBuffers(1, &ebo);
+//
+//        GLuint elements[] = {
+//                0, 1, 2,
+//                2, 3, 0
+//        };
+//
+//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+//        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+
+    }
+
+    void scene::render() {
+        //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        //glClear(GL_COLOR_BUFFER_BIT);
+
+//        GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
+//        glm::mat4 trans {};
+//        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+
+        // Draw a rectangle from the 2 triangles using 6 indices
+
+        // Create a Vertex Buffer Object and copy the vertex data to i
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        {
+            auto er = glGetError();
+            if (er == GL_INVALID_OPERATION) {
+                std::cout << "glDrawArrays Error: invalid op " << std::endl;
+            }
+        }
+
+    }
+
+}

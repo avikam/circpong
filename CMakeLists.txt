@@ -26,6 +26,7 @@ endif()
 
 set(SOURCE_FILES
         main.cpp
+        src/scene.cpp
         src/environment.cpp
         src/start_game.cpp
         src/player.cpp

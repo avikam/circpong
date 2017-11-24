@@ -5,22 +5,23 @@
 #ifndef CIRPONG_GAME_H
 #define CIRPONG_GAME_H
 
+#include <OpenGl/gl.h>
 #include "src/environment.h"
 #include "src/start_game.h"
+#include "src/scene.h"
 
 namespace pong {
     class game {
     private:
         environment env_;
         start_game start_game_;
+        scene* scene_;
 
         bool exit_;
-
         SDL_Window * window;
         SDL_GLContext maincontext; /* Our opengl context handle */
 
         void render();
-
     public:
         game();
         ~game();
