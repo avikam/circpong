@@ -2,14 +2,14 @@
 // Created by Avikam Agur on 24/11/2017.
 //
 
-#include <OpenGl/gl3.h>
+#include <OpenGL/gl3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <vector>
 
-#include "src/scene.h"
+#include "src/scenes/scene.h"
 #include "src/scenes/utils.h"
 
 // Shader sources
@@ -144,7 +144,7 @@ namespace pong {
         glBindTexture(GL_TEXTURE_2D, textures[tex_num]);
     }
 
-    void scene::render() {
+    void scene::render(pong::state s) {
         glBindVertexArray(vao);
         glUseProgram(shaderProgram);
 

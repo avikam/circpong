@@ -6,7 +6,7 @@
 #define CIRPONG_START_GAME_H
 
 #include <SDL2/SDL_ttf.h>                   // SDL font library.
-#include "src/scene.h"
+#include "src/scenes/scene.h"
 
 namespace pong {
     class start_game {

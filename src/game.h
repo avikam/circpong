@@ -10,7 +10,7 @@
 
 #include "src/environment.h"
 #include "src/start_game.h"
-#include "src/scene.h"
+#include "src/scenes/scene.h"
 #include "src/scenes/arena.h"
 
 namespace pong {

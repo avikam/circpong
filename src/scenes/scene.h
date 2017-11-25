@@ -5,7 +5,8 @@
 #ifndef CIRPONG_SCENE_H
 #define CIRPONG_SCENE_H
 
-#include <OpenGl/gl3.h>
+#include <OpenGL/gl3.h>
+#include "src/state.h"
 
 namespace pong{
     class scene {
@@ -21,7 +22,7 @@ namespace pong{
         scene();
         ~scene();
         void draw_texture(const GLvoid *pixels, int width, int height, int tex_num);
-        void render();
+        void render(pong::state s);
     };
 }
 

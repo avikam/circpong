@@ -57,10 +57,10 @@ namespace pong {
 
     void game::render() {
         SDL_GL_SetSwapInterval(1);
-        //env_.render();
-        scene_->render();
+
+        scene_->render(s);
         arena_->render(s);
-        // Clear the screen to black
+
         /* Swap our back buffer to the front */
         SDL_GL_SwapWindow(window);
     }
