@@ -10,9 +10,10 @@
 
 namespace pong {
     class arena {
-        GLint shaderProgram;
+        GLint arenaShaderProgram;
+        GLint playerShaderProgram;
         GLuint vao;
-        GLuint vbo;
+        GLuint vbo[2];
     public:
         void render(state s);
 

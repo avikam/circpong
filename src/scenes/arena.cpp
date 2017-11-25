@@ -4,6 +4,7 @@
 
 #include "src/scenes/arena.h"
 #include "src/scenes/utils.h"
+#include "src/constants.h"
 
 namespace pong {
 
@@ -38,6 +39,7 @@ namespace pong {
                 // Offset from center of point
                 vec4 offset = vec4(0.95 * cos(ang), 0.95 * sin(ang), 0.0, 0.0);
 
+                // gl_Position = gl_in[0].gl_Position + offset;
                 gl_Position = gl_in[0].gl_Position + offset;
                 EmitVertex();
             }
@@ -86,31 +88,43 @@ namespace pong {
         compile_shader(fragmentShader);
 
         // Link the vertex and fragment shader into a shader program
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, geometricShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glBindFragDataLocation(shaderProgram, 0, "outColor");
-        glLinkProgram(shaderProgram);
-        glUseProgram(shaderProgram);
+        arenaShaderProgram = glCreateProgram();
+        glAttachShader(arenaShaderProgram, vertexShader);
+        glAttachShader(arenaShaderProgram, geometricShader);
+        glAttachShader(arenaShaderProgram, fragmentShader);
+        glBindFragDataLocation(arenaShaderProgram, 0, "outColor");
+        glLinkProgram(arenaShaderProgram);
 
-        glGenBuffers(1, &vbo);
-        GLfloat vertices[] = {
-            //  Position
-            0.0f, 0.0f
-        };
-
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        playerShaderProgram = glCreateProgram();
+        glAttachShader(playerShaderProgram, vertexShader);
+        glAttachShader(playerShaderProgram, fragmentShader);
+        glBindFragDataLocation(playerShaderProgram, 0, "outColor");
+        glLinkProgram(playerShaderProgram);
 
 
-        // Specify the layout of the vertex data
-        // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of
-        // invalid op
-        GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-        // uses currently bound vertex array object for the operation
-        glEnableVertexAttribArray(posAttrib);
-        glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+        glGenBuffers(2, vbo);
+
+        {
+            glUseProgram(arenaShaderProgram);
+            GLfloat arena_center[] = {0.0f, 0.0f};
+
+            glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(arena_center), arena_center, GL_STATIC_DRAW);
+        }
+
+        {
+            glUseProgram(playerShaderProgram);
+            GLfloat player[] = {
+                -constants::player_size / 2, constants::player_size / 2,
+                constants::player_size / 2, constants::player_size / 2,
+                constants::player_size / 2, -constants::player_size / 2,
+                -constants::player_size / 2, -constants::player_size / 2
+            };
+
+            glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(player), player, GL_STATIC_DRAW);
+        }
+
 
         glDeleteShader(fragmentShader);
         glDeleteShader(geometricShader);
@@ -118,28 +132,46 @@ namespace pong {
     }
 
     void arena::render(pong::state s) {
-        glUseProgram(shaderProgram);
+        /* Clear our buffer with a red background */
+
         glBindVertexArray(vao);
 
-        /* Clear our buffer with a red background */
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+        glUseProgram(arenaShaderProgram);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+        {
+            // Specify the layout of the vertex data
+            // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of invalid op
+            GLint posAttrib = glGetAttribLocation(arenaShaderProgram, "position");
+            // uses currently bound vertex array object for the operation
+            glEnableVertexAttribArray(posAttrib);
+            glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+        }
         glDrawArrays(GL_POINTS, 0, 1);
 
-//        glLoadIdentity();
+        glUseProgram(playerShaderProgram);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+        {
+            // Specify the layout of the vertex data
+            // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of invalid op
+            GLint posAttrib = glGetAttribLocation(playerShaderProgram, "position");
+            // uses currently bound vertex array object for the operation
+            glEnableVertexAttribArray(posAttrib);
+            glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+        }
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
 //        renderAndSetCoordinate(p1);
 //
 //        glLoadIdentity();
 //        renderAndSetCoordinate(p2);
-//
-//        glLoadIdentity();
-//        render(b);
-
     }
 
     arena::~arena() {
-        glDeleteProgram(shaderProgram);
+        glDeleteProgram(playerShaderProgram);
+        glDeleteProgram(arenaShaderProgram);
         // delete vertex buffer
-        glDeleteBuffers(1, &vbo);
+        glDeleteBuffers(2, vbo);
         // delete vertex array data
         glDeleteVertexArrays(1, &vao);
     }
