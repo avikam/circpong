@@ -15,7 +15,7 @@ namespace pong{
     public:
         scene();
         ~scene();
-        void draw_texture(const GLvoid *pixels, int width, int height);
+        void draw_texture(const GLvoid *pixels, int width, int height, int tex_num);
         void render();
     };
 }

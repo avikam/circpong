@@ -12,7 +12,8 @@ namespace pong {
     class start_game {
         SDL_Color textColor;
         SDL_Color backgroundColor;
-        SDL_Surface* text_surface;
+        SDL_Surface* score_1;
+        SDL_Surface* score_2;
         scene** scene_;
     public:
         explicit start_game(scene**);

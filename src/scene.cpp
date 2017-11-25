@@ -5,6 +5,7 @@
 #include <OpenGl/gl3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <vector>
 #include "src/scene.h"
@@ -61,6 +62,14 @@ namespace pong {
         }
     }
 
+    static void debug_err() {
+        auto er = glGetError();
+        if (er == GL_INVALID_OPERATION) {
+            std::cout << "glDrawArrays Error: invalid op" << std::endl;
+        }
+
+    }
+
     scene::scene() {
         //Set Blending
         //Required so that the alpha channels show up from the surface
@@ -96,10 +105,10 @@ namespace pong {
 
         GLfloat vertices[] = {
                 //  Position      Color             Texcoords
-                -0.9f,  0.9f,    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
-                -0.4f,  0.9f,    1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // Top-right
-                -0.4f,  0.8f,    1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
-                -0.9f,  0.8f,    1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
+                -0.5f, 0.5f,    1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Top-left
+                0.5f, 0.5f,     1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // Top-right
+                0.5f, -0.5f,    1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+                -0.5f, -0.5f,   1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
         };
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -122,27 +131,17 @@ namespace pong {
         // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of
         // invalid op
         GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
+        // uses currently bound vertex array object for the operation
         glEnableVertexAttribArray(posAttrib);
         glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), nullptr);
 
         GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
         glEnableVertexAttribArray(colAttrib);
-        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void *) (2 * sizeof(GLfloat)));
 
         GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
         glEnableVertexAttribArray(texAttrib);
-        glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
-
-        GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
-        glm::mat4 identity{1};
-        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(identity));
-        {
-            auto er = glGetError();
-            if (er == GL_INVALID_OPERATION) {
-                std::cout << "glDrawArrays Error: invalid op " << std::endl;
-            }
-        }
-
+        glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void *) (5 * sizeof(GLfloat)));
     };
 
     scene::~scene() {
@@ -151,13 +150,13 @@ namespace pong {
         glDeleteShader(vertexShader);
     }
 
-    void scene::draw_texture(const GLvoid *pixels, int width, int height) {
+    void scene::draw_texture(const GLvoid *pixels, int width, int height, int tex_num) {
         // Load textures
-        GLuint textures;
-        glGenTextures(1, &textures);
+        GLuint textures[2];
+        glGenTextures(1, textures);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures);
+        glActiveTexture(GL_TEXTURE0 + tex_num);
+        glBindTexture(GL_TEXTURE_2D, textures[tex_num]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
 
@@ -167,19 +166,40 @@ namespace pong {
 
         //Set up Sampler
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures);
-
-        glUniform1i(glGetUniformLocation(shaderProgram, "tex"), 0);
+        glBindTexture(GL_TEXTURE_2D, textures[tex_num]);
     }
 
     void scene::render() {
-        // Create a Vertex Buffer Object and copy the vertex data to i
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        GLint uniTex = glGetUniformLocation(shaderProgram, "tex");
+        GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
+
         {
-            auto er = glGetError();
-            if (er == GL_INVALID_OPERATION) {
-                std::cout << "glDrawArrays Error: invalid op " << std::endl;
-            }
+            glm::mat4 identity{1};
+
+            auto t = glm::scale(
+                    glm::translate(identity, glm::vec3(-0.7f, 0.85f, 0)),
+                    glm::vec3(0.5, 0.125, 0));
+
+            glUniform1i(uniTex, 0);
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+
+            // Create a Vertex Buffer Object and copy the vertex data to i
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            debug_err();
+        }
+        {
+            glm::mat4 identity{1};
+
+            auto t = glm::scale(
+                    glm::translate(identity, glm::vec3(0.7f, 0.85f, 0)),
+                    glm::vec3(0.5, 0.125, 0));
+
+            glUniform1i(uniTex, 1);
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+
+            // Create a Vertex Buffer Object and copy the vertex data to i
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            debug_err();
         }
     }
 
