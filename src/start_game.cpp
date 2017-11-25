@@ -89,7 +89,7 @@ namespace pong {
     }
 
     void start_game::render() {
-        // (*scene_)->draw_texture(text_surface->pixels, text_surface->w, text_surface->h);
+        (*scene_)->draw_texture(text_surface->pixels, text_surface->w, text_surface->h);
         //render_surface(text_surface);
     }
 }

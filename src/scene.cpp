@@ -34,7 +34,7 @@ const GLchar* fragmentSource = R"glsl(
     uniform sampler2D tex;
     void main()
     {
-        outColor = vec4(Color, 1.0);
+        outColor = texture(tex, Texcoord);
     }
 )glsl";
 
@@ -80,7 +80,12 @@ namespace pong {
     }
 
     scene::scene() {
-            // Create Vertex Array Object
+        //Set Blending
+        //Required so that the alpha channels show up from the surface
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        // Create Vertex Array Object
             GLuint vao;
             glGenVertexArrays(1, &vao);
             glBindVertexArray(vao);
@@ -109,9 +114,9 @@ namespace pong {
 
         GLfloat vertices[] = {
                 //  Position      Color             Texcoords
-                -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
-                0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
-                0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+                -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Top-left
+                0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // Top-right
+                0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
                 -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
         };
 
@@ -169,16 +174,26 @@ namespace pong {
     }
 
     void scene::draw_texture(const GLvoid *pixels, int width, int height) {
-//        // Load textures
-//        GLuint textures;
-//        glGenTextures(1, &textures);
-//
-//        glActiveTexture(GL_TEXTURE0);
-//        glBindTexture(GL_TEXTURE_2D, textures);
-//        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-//
+        // Load textures
+        GLuint textures;
+        glGenTextures(1, &textures);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textures);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
 //        glUniform1i(glGetUniformLocation(shaderProgram, "tex"), 0);
-//
+
+        //Set Some basic parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        //Set up Sampler
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textures);
+
+        glUniform1i(glGetUniformLocation(shaderProgram, "tex"), 0);
+
 //        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 //        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 //        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
