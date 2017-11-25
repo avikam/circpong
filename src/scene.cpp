@@ -34,28 +34,10 @@ const GLchar* fragmentSource = R"glsl(
     uniform sampler2D tex;
     void main()
     {
-        outColor = texture(tex, Texcoord);
+        outColor = texture(tex, Texcoord) * vec4(Color, 1);
     }
 )glsl";
 
-
-// Shader sources
-//const GLchar* vertexSource = R"glsl(
-//    #version 150 core
-//    in vec2 position;
-//    void main()
-//    {
-//        gl_Position = vec4(position, 0.0, 1.0);
-//    }
-//)glsl";
-//const GLchar* fragmentSource = R"glsl(
-//    #version 150 core
-//    out vec4 outColor;
-//    void main()
-//    {
-//        outColor = vec4(1.0, 1.0, 1.0, 1.0);
-//    }
-//)glsl";
 
 namespace pong {
     static void compile_shader(GLuint shader) {
@@ -86,38 +68,38 @@ namespace pong {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         // Create Vertex Array Object
-            GLuint vao;
-            glGenVertexArrays(1, &vao);
-            glBindVertexArray(vao);
+        GLuint vao;
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
 
 
         // Create and compile the vertex shader
-            vertexShader = glCreateShader(GL_VERTEX_SHADER);
-            glShaderSource(vertexShader, 1, &vertexSource, NULL);
-            compile_shader(vertexShader);
+        vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertexShader, 1, &vertexSource, NULL);
+        compile_shader(vertexShader);
 
-            // Create and compile the fragment shader
-            fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-            glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
-            compile_shader(fragmentShader);
+        // Create and compile the fragment shader
+        fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
+        compile_shader(fragmentShader);
 
-            // Link the vertex and fragment shader into a shader program
-            shaderProgram = glCreateProgram();
-            glAttachShader(shaderProgram, vertexShader);
-            glAttachShader(shaderProgram, fragmentShader);
-            glBindFragDataLocation(shaderProgram, 0, "outColor");
-            glLinkProgram(shaderProgram);
-            glUseProgram(shaderProgram);
+        // Link the vertex and fragment shader into a shader program
+        shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram, vertexShader);
+        glAttachShader(shaderProgram, fragmentShader);
+        glBindFragDataLocation(shaderProgram, 0, "outColor");
+        glLinkProgram(shaderProgram);
+        glUseProgram(shaderProgram);
 
         GLuint vbo;
         glGenBuffers(1, &vbo);
 
         GLfloat vertices[] = {
                 //  Position      Color             Texcoords
-                -0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Top-left
-                0.5f,  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // Top-right
-                0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
-                -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
+                -0.9f,  0.9f,    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
+                -0.4f,  0.9f,    1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // Top-right
+                -0.4f,  0.8f,    1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+                -0.9f,  0.8f,    1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
         };
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -167,10 +149,6 @@ namespace pong {
         glDeleteProgram(shaderProgram);
         glDeleteShader(fragmentShader);
         glDeleteShader(vertexShader);
-//
-//        glDeleteBuffers(1, &vbo);
-//
-//        glDeleteVertexArrays(1, &vao);
     }
 
     void scene::draw_texture(const GLvoid *pixels, int width, int height) {
@@ -182,7 +160,6 @@ namespace pong {
         glBindTexture(GL_TEXTURE_2D, textures);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
-//        glUniform1i(glGetUniformLocation(shaderProgram, "tex"), 0);
 
         //Set Some basic parameters
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -193,55 +170,9 @@ namespace pong {
         glBindTexture(GL_TEXTURE_2D, textures);
 
         glUniform1i(glGetUniformLocation(shaderProgram, "tex"), 0);
-
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//
-//        GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
-//        //glm::mat4 identity{};
-//        //glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(identity));
-//
-//        // Create a Vertex Buffer Object and copy the vertex data to it
-//        GLuint vbo;
-//        glGenBuffers(1, &vbo);
-//
-//        GLfloat vertices[] = {
-//                //  Position      Color             Texcoords
-//                -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Top-left
-//                0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Top-right
-//                0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
-//                -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
-//        };
-//
-//        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-//        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-//
-//        // Create an element array
-//        GLuint ebo;
-//        glGenBuffers(1, &ebo);
-//
-//        GLuint elements[] = {
-//                0, 1, 2,
-//                2, 3, 0
-//        };
-//
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-//        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-
     }
 
     void scene::render() {
-        //glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        //glClear(GL_COLOR_BUFFER_BIT);
-
-//        GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
-//        glm::mat4 trans {};
-//        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
-
-        // Draw a rectangle from the 2 triangles using 6 indices
-
         // Create a Vertex Buffer Object and copy the vertex data to i
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         {
