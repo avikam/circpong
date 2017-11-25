@@ -12,6 +12,11 @@ namespace pong{
         GLuint shaderProgram;
         GLuint fragmentShader;
         GLuint vertexShader;
+
+        GLuint vao;
+        GLuint vbo;
+        GLuint ebo;
+
     public:
         scene();
         ~scene();

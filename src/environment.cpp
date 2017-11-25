@@ -4,23 +4,10 @@
 
 #include <SDL2/SDL_opengl.h>
 #include <iostream>
-#include <iomanip>
 #include "src/constants.h"
 #include "src/environment.h"
 
 namespace pong{
-
-    template <int s>
-    float vect_mult(const float a[], const float b[]) {
-        return a[s-1] * b[s-1] + vect_mult<s-1>(a, b);
-    };
-
-    template <>
-    float vect_mult<0>(const float a[], const float b[]) {
-        return a[0] * b[0];
-    }
-
-
     static float radius = 1;
 
 
@@ -38,35 +25,6 @@ namespace pong{
     environment::~environment() {
     }
 
-    void environment::render() {
-        /* Clear our buffer with a red background */
-        glClearColor ( 0.0, 0.0, 0.0, .3 );
-        glClear ( GL_COLOR_BUFFER_BIT );
-
-        glLoadIdentity();
-        // renderAndSetCoordinate scene
-        glBegin( GL_LINE_LOOP );
-        for(double i = 0; i < 2 * constants::PI * radius; i += unit)
-            glVertex2d(cos(i) * radius, sin(i) * radius);
-        glEnd();
-
-        auto num_lines = 40;
-        glTranslated(0, -1  * radius/num_lines, 0);
-        glBegin( GL_LINES );
-        for (int i = 0; i < num_lines; i++) {
-            glVertex2d(0, radius - (i * 2*radius / num_lines));
-        }
-        glEnd();
-
-        glLoadIdentity();
-        renderAndSetCoordinate(p1);
-
-        glLoadIdentity();
-        renderAndSetCoordinate(p2);
-
-        glLoadIdentity();
-        render(b);
-    }
 
     void environment::render(const ball &b) {
         double x;
@@ -120,10 +78,6 @@ namespace pong{
         GLdouble modelMatrix[16];
         glGetDoublev(GL_MODELVIEW_MATRIX, modelMatrix);
         p.set_coordinates(modelMatrix);
-    }
-
-    void environment::frame_delay() {
-        SDL_Delay(25);
     }
 
     void environment::update() {

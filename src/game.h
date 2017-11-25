@@ -6,9 +6,12 @@
 #define CIRPONG_GAME_H
 
 #include <OpenGl/gl.h>
+#include "src/state.h"
+
 #include "src/environment.h"
 #include "src/start_game.h"
 #include "src/scene.h"
+#include "src/scenes/arena.h"
 
 namespace pong {
     class game {
@@ -16,12 +19,15 @@ namespace pong {
         environment env_;
         start_game start_game_;
         scene* scene_;
+        arena* arena_;
 
         bool exit_;
         SDL_Window * window;
         SDL_GLContext maincontext; /* Our opengl context handle */
 
         void render();
+
+        state s;
     public:
         game();
         ~game();

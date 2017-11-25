@@ -39,12 +39,15 @@ namespace pong {
             throw std::runtime_error("maincontext init error");
         }
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
-        scene_ = new scene{};
+
+        //scene_ = new scene{};
+        arena_ = new arena{};
     }
 
     game::~game() {
         SDL_GL_DeleteContext(maincontext);
-        delete scene_;
+        //delete scene_;
+        delete arena_;
         // Destroy  window.
         SDL_DestroyWindow(window);
 
@@ -55,7 +58,8 @@ namespace pong {
     void game::render() {
         SDL_GL_SetSwapInterval(1);
         //env_.render();
-        scene_->render();
+        //scene_->render();
+        arena_->render(s);
         // Clear the screen to black
         /* Swap our back buffer to the front */
         SDL_GL_SwapWindow(window);
@@ -67,7 +71,9 @@ namespace pong {
         while (env_.is_active()) {
             render();
             env_.update();
-            env_.frame_delay();
+
+            SDL_Delay(25);
+
             env_.get_event();
         }
     }

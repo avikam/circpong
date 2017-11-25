@@ -8,8 +8,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <vector>
-#include "src/scene.h"
 
+#include "src/scene.h"
+#include "src/scenes/utils.h"
 
 // Shader sources
 const GLchar* vertexSource = R"glsl(
@@ -41,46 +42,18 @@ const GLchar* fragmentSource = R"glsl(
 
 
 namespace pong {
-    static void compile_shader(GLuint shader) {
-        glCompileShader(shader);
-
-        GLint status;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
-        if (status != GL_TRUE) {
-            GLint maxLength = 0;
-            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
-
-            // The maxLength includes the NULL character
-            std::vector<GLchar> errorLog(maxLength);
-            glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
-            std::cout << &errorLog[0];
-
-            glDeleteShader(shader);
-            throw std::runtime_error("Cant compile vertext shader");
-        } else {
-            std::cout << "Compiled successfully" << std::endl;
-        }
-    }
-
     static void debug_err() {
         auto er = glGetError();
         if (er == GL_INVALID_OPERATION) {
-            std::cout << "glDrawArrays Error: invalid op" << std::endl;
+            std::cout << "gl Draw Error: invalid op" << std::endl;
         }
 
     }
 
     scene::scene() {
-        //Set Blending
-        //Required so that the alpha channels show up from the surface
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
         // Create Vertex Array Object
-        GLuint vao;
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
-
 
         // Create and compile the vertex shader
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -100,7 +73,6 @@ namespace pong {
         glLinkProgram(shaderProgram);
         glUseProgram(shaderProgram);
 
-        GLuint vbo;
         glGenBuffers(1, &vbo);
 
         GLfloat vertices[] = {
@@ -115,7 +87,6 @@ namespace pong {
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         // Create an element array
-        GLuint ebo;
         glGenBuffers(1, &ebo);
 
         GLuint elements[] = {
@@ -142,12 +113,16 @@ namespace pong {
         GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
         glEnableVertexAttribArray(texAttrib);
         glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void *) (5 * sizeof(GLfloat)));
+
+        glDeleteShader(fragmentShader);
+        glDeleteShader(vertexShader);
+
     };
 
     scene::~scene() {
         glDeleteProgram(shaderProgram);
-        glDeleteShader(fragmentShader);
-        glDeleteShader(vertexShader);
+        //glDeleteShader(fragmentShader);
+        //glDeleteShader(vertexShader);
     }
 
     void scene::draw_texture(const GLvoid *pixels, int width, int height, int tex_num) {
@@ -170,8 +145,15 @@ namespace pong {
     }
 
     void scene::render() {
+        glBindVertexArray(vao);
+
         GLint uniTex = glGetUniformLocation(shaderProgram, "tex");
         GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
+
+        //Set Blending
+        //Required so that the alpha channels show up from the surface
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         {
             glm::mat4 identity{1};
