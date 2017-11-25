@@ -8,12 +8,14 @@
 #include "src/state.h"
 #include <OpenGl/gl3.h>
 
+
 namespace pong {
     class arena {
         GLint arenaShaderProgram;
+        GLint ballShaderProgram;
         GLint playerShaderProgram;
         GLuint vao;
-        GLuint vbo[2];
+        GLuint vbo[3];
     public:
         void render(state s);
 

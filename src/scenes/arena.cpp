@@ -2,12 +2,14 @@
 // Created by Avikam Agur on 25/11/2017.
 //
 
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "src/scenes/arena.h"
 #include "src/scenes/utils.h"
 #include "src/constants.h"
 
 namespace pong {
-
     // Vertex shader
     static const char* vertexSource = R"glsl(
         #version 150 core
@@ -16,6 +18,18 @@ namespace pong {
         void main()
         {
             gl_Position = vec4(position, 0.0, 1.0);
+        }
+    )glsl";
+
+    // Vertex shader
+    static const char* vertexPlayerSource = R"glsl(
+        #version 150 core
+        in vec2 position;
+        uniform mat4 trans;
+
+        void main()
+        {
+            gl_Position = trans * vec4(position, 0.0, 1.0);
         }
     )glsl";
 
@@ -79,6 +93,10 @@ namespace pong {
         glShaderSource(vertexShader, 1, &vertexSource, nullptr);
         compile_shader(vertexShader);
 
+        GLint playerVertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(playerVertexShader, 1, &vertexPlayerSource, nullptr);
+        compile_shader(playerVertexShader);
+
         GLint geometricShader = glCreateShader(GL_GEOMETRY_SHADER);
         glShaderSource(geometricShader, 1, &geometricSource, nullptr);
         compile_shader(geometricShader);
@@ -95,40 +113,51 @@ namespace pong {
         glBindFragDataLocation(arenaShaderProgram, 0, "outColor");
         glLinkProgram(arenaShaderProgram);
 
+        ballShaderProgram = glCreateProgram();
+        glAttachShader(ballShaderProgram, vertexShader);
+        glAttachShader(ballShaderProgram, fragmentShader);
+        glBindFragDataLocation(ballShaderProgram, 0, "outColor");
+        glLinkProgram(ballShaderProgram);
+
         playerShaderProgram = glCreateProgram();
-        glAttachShader(playerShaderProgram, vertexShader);
+        glAttachShader(playerShaderProgram, playerVertexShader);
         glAttachShader(playerShaderProgram, fragmentShader);
         glBindFragDataLocation(playerShaderProgram, 0, "outColor");
         glLinkProgram(playerShaderProgram);
 
 
-        glGenBuffers(2, vbo);
+        glGenBuffers(3, vbo);
 
-        {
-            glUseProgram(arenaShaderProgram);
-            GLfloat arena_center[] = {0.0f, 0.0f};
+        glUseProgram(arenaShaderProgram);
+        GLfloat arena_center[] = {0.0f, 0.0f};
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(arena_center), arena_center, GL_STATIC_DRAW);
 
-            glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(arena_center), arena_center, GL_STATIC_DRAW);
-        }
+        glUseProgram(ballShaderProgram);
+        GLfloat ball[] = {
+            -constants::player_size / 2, constants::player_size / 2,
+            constants::player_size / 2, constants::player_size / 2,
+            constants::player_size / 2, -constants::player_size / 2,
+            -constants::player_size / 2, -constants::player_size / 2
+        };
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(ball), ball, GL_STATIC_DRAW);
 
-        {
-            glUseProgram(playerShaderProgram);
-            GLfloat player[] = {
+        glUseProgram(playerShaderProgram);
+        GLfloat player[] = {
                 -constants::player_size / 2, constants::player_size / 2,
                 constants::player_size / 2, constants::player_size / 2,
                 constants::player_size / 2, -constants::player_size / 2,
                 -constants::player_size / 2, -constants::player_size / 2
-            };
-
-            glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(player), player, GL_STATIC_DRAW);
-        }
+        };
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(player), player, GL_STATIC_DRAW);
 
 
         glDeleteShader(fragmentShader);
         glDeleteShader(geometricShader);
         glDeleteShader(vertexShader);
+        glDeleteShader(playerVertexShader);
     }
 
     void arena::render(pong::state s) {
@@ -149,8 +178,20 @@ namespace pong {
         }
         glDrawArrays(GL_POINTS, 0, 1);
 
+//        glUseProgram(ballShaderProgram);
+//        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+//        {
+//            // Specify the layout of the vertex data
+//            // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of invalid op
+//            GLint posAttrib = glGetAttribLocation(ballShaderProgram, "position");
+//            // uses currently bound vertex array object for the operation
+//            glEnableVertexAttribArray(posAttrib);
+//            glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+//        }
+//        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
         glUseProgram(playerShaderProgram);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
         {
             // Specify the layout of the vertex data
             // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of invalid op
@@ -159,19 +200,46 @@ namespace pong {
             glEnableVertexAttribArray(posAttrib);
             glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
         }
+        GLint uniTrans = glGetUniformLocation(playerShaderProgram, "trans");
+        glm::mat4 trans { 1 };
+
+        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
+        {
+            auto t = glm::translate(glm::mat4 {1},
+                                        glm::vec3{-0.75 * constants::player_size, constants::player_size, 0});
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        }
+        {
+            auto t = glm::translate(glm::mat4 {1},
+                                    glm::vec3{-constants::player_size * (0.75), -constants::player_size, 0});
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        }
+
+        {
+            auto t = glm::translate(glm::mat4 {1},
+                                    glm::vec3{-2*constants::player_size * (0.75), 2*constants::player_size, 0});
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        }
+        {
+            auto t = glm::translate(glm::mat4 {1},
+                                    glm::vec3{-2*constants::player_size * (0.75), -2*constants::player_size, 0});
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        }
 //        renderAndSetCoordinate(p1);
-//
-//        glLoadIdentity();
 //        renderAndSetCoordinate(p2);
     }
 
     arena::~arena() {
-        glDeleteProgram(playerShaderProgram);
+        glDeleteProgram(ballShaderProgram);
         glDeleteProgram(arenaShaderProgram);
         // delete vertex buffer
-        glDeleteBuffers(2, vbo);
+        glDeleteBuffers(3, vbo);
         // delete vertex array data
         glDeleteVertexArrays(1, &vao);
     }
