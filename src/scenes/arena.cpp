@@ -22,13 +22,14 @@ namespace pong {
         #version 150 core
 
         layout(points) in;
-        layout(line_strip, max_vertices = 100) out;
+        layout(line_strip, max_vertices = 300) out;
 
         const float PI = 3.1415926;
         const int SIZE = 50;
 
         void main()
         {
+            // Draw main circle
             for (int i = 0; i <= SIZE; i++) {
                 // Angle between each side in radians
                 // 2 * PI * r *  (i/SIZE); r = 1
@@ -36,12 +37,22 @@ namespace pong {
 
                 // Offset from center of point
                 vec4 offset = vec4(0.95 * cos(ang), 0.95 * sin(ang), 0.0, 0.0);
-                gl_Position = gl_in[0].gl_Position + offset;
 
+                gl_Position = gl_in[0].gl_Position + offset;
                 EmitVertex();
             }
-
             EndPrimitive();
+
+            // Draw field separation
+            for (int i = -47; i <= 47; i++) {
+                gl_Position = gl_in[0].gl_Position + vec4(0, 0.01 * 2 * i, 0, 0);
+                EmitVertex();
+
+                gl_Position = gl_in[0].gl_Position + vec4(0, 0.01 * (2 * i+1), 0, 0);
+                EmitVertex();
+
+                EndPrimitive();
+            }
         }
     )glsl";
 
@@ -113,14 +124,7 @@ namespace pong {
         /* Clear our buffer with a red background */
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glDrawArrays(GL_POINTS, 0, 1);
-//        auto num_lines = 40;
-//        glTranslated(0, -1  * radius/num_lines, 0);
-//        glBegin( GL_LINES );
-//        for (int i = 0; i < num_lines; i++) {
-//            glVertex2d(0, radius - (i * 2*radius / num_lines));
-//        }
-//        glEnd();
-//
+
 //        glLoadIdentity();
 //        renderAndSetCoordinate(p1);
 //
@@ -134,5 +138,9 @@ namespace pong {
 
     arena::~arena() {
         glDeleteProgram(shaderProgram);
+        // delete vertex buffer
+        glDeleteBuffers(1, &vbo);
+        // delete vertex array data
+        glDeleteVertexArrays(1, &vao);
     }
 }

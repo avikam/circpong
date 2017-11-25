@@ -40,6 +40,7 @@ namespace pong {
         }
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
+        // Needs to be initialized after we have an OpenGl context
         scene_ = new scene{};
         arena_ = new arena{};
     }

@@ -121,8 +121,12 @@ namespace pong {
 
     scene::~scene() {
         glDeleteProgram(shaderProgram);
-        //glDeleteShader(fragmentShader);
-        //glDeleteShader(vertexShader);
+        // delete elements buffer
+        glDeleteBuffers(1, &ebo);
+        // delete vertex buffer
+        glDeleteBuffers(1, &vbo);
+        // delete vertex array data
+        glDeleteVertexArrays(1, &vao);
     }
 
     void scene::draw_texture(const GLvoid *pixels, int width, int height, int tex_num) {
