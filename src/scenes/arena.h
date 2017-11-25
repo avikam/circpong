@@ -11,6 +11,7 @@
 namespace pong {
     class arena {
         GLint shaderProgram;
+        GLuint vao;
         GLuint vbo;
     public:
         void render(state s);

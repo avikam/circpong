@@ -40,13 +40,13 @@ namespace pong {
         }
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
-        //scene_ = new scene{};
+        scene_ = new scene{};
         arena_ = new arena{};
     }
 
     game::~game() {
         SDL_GL_DeleteContext(maincontext);
-        //delete scene_;
+        delete scene_;
         delete arena_;
         // Destroy  window.
         SDL_DestroyWindow(window);
@@ -58,7 +58,7 @@ namespace pong {
     void game::render() {
         SDL_GL_SetSwapInterval(1);
         //env_.render();
-        //scene_->render();
+        scene_->render();
         arena_->render(s);
         // Clear the screen to black
         /* Swap our back buffer to the front */

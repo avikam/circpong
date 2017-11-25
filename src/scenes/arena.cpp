@@ -58,7 +58,6 @@ namespace pong {
 
     arena::arena() {
         // Create Vertex Array Object
-        GLuint vao;
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
 
@@ -108,6 +107,9 @@ namespace pong {
     }
 
     void arena::render(pong::state s) {
+        glUseProgram(shaderProgram);
+        glBindVertexArray(vao);
+
         /* Clear our buffer with a red background */
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glDrawArrays(GL_POINTS, 0, 1);

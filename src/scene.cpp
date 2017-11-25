@@ -146,6 +146,7 @@ namespace pong {
 
     void scene::render() {
         glBindVertexArray(vao);
+        glUseProgram(shaderProgram);
 
         GLint uniTex = glGetUniformLocation(shaderProgram, "tex");
         GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
