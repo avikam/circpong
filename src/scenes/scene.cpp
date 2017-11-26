@@ -148,7 +148,7 @@ namespace pong {
         glBindTexture(GL_TEXTURE_2D, textures[tex_num]);
     }
 
-    void scene::render(pong::state s) {
+    void scene::render(pong::state& s) {
         glBindVertexArray(vao);
         glUseProgram(shaderProgram);
 

@@ -17,6 +17,7 @@ namespace pong {
         static int screen_height = 640;
 
         static float player_size = 0.03;
+        constexpr unsigned player_pixel_levels = 2;
     }
 }
 

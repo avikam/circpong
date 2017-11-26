@@ -17,8 +17,7 @@ namespace pong{
             p1 { 0, true, unit},
             p2 { constants::PI, false, unit},
             b { 0.005 },
-            state { state_t::active },
-            turn_p1 { true }
+            state { state_t::active }
     {
     }
 
@@ -27,57 +26,10 @@ namespace pong{
 
 
     void environment::render(const ball &b) {
-        double x;
-        double y;
-        b.get_location(&x, &y);
 
-        double height = 0.03;
-        double width = 0.03;
-
-        //glTranslated(x, y, 0);
-        glBegin( GL_POLYGON );
-            glVertex2d(x + width/2, y + height/2);
-            glVertex2d(x + width/2, y - height/2);
-            glVertex2d(x - width/2, y - height/2);
-            glVertex2d(x - width/2, y + height/2);
-        glEnd();
     }
 
     void environment::renderAndSetCoordinate(player &p) {
-        //////
-        double o = p.get_origin();
-        int edge_points = 3;
-
-       /*  _
-        * |0| _
-        *    |2| _
-        *     _ |4|
-        *  _ |3|
-        * |1|
-        */
-
-        double height = 0.03;
-        double width = 0.03;
-
-        double center_x;
-        double center_y;
-
-        glRotatef(o * 180 / constants::PI, 0, 0, 1);
-        glTranslatef(radius - (edge_points) * width, 0, 0);
-        for(int i = 0; i < 2*edge_points + 1; i++) {
-            p.get_point_x_y(i, &center_x, &center_y);
-
-            glBegin( GL_POLYGON );
-                glVertex2d(center_x + width/2, center_y + height/2);
-                glVertex2d(center_x - width/2, center_y + height/2);
-                glVertex2d(center_x - width/2, center_y - height/2);
-                glVertex2d(center_x + width/2, center_y - height/2);
-            glEnd();
-        }
-
-        GLdouble modelMatrix[16];
-        glGetDoublev(GL_MODELVIEW_MATRIX, modelMatrix);
-        p.set_coordinates(modelMatrix);
     }
 
     void environment::update() {

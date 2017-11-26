@@ -59,8 +59,14 @@ namespace pong {
     void game::render() {
         SDL_GL_SetSwapInterval(1);
 
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         scene_->render(s);
         arena_->render(s);
+
+        std::cout << s.player_1_pos_xy[0].first << ", " << s.player_1_pos_xy[0].second << std::endl;
+        s.player_1_ang++;
 
         /* Swap our back buffer to the front */
         SDL_GL_SwapWindow(window);

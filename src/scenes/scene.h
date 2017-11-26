@@ -22,7 +22,7 @@ namespace pong{
         scene();
         ~scene();
         void draw_texture(const GLvoid *pixels, int width, int height, int tex_num);
-        void render(pong::state s);
+        void render(pong::state& s);
     };
 }
 

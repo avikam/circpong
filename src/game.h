@@ -5,7 +5,6 @@
 #ifndef CIRPONG_GAME_H
 #define CIRPONG_GAME_H
 
-#include <OpenGl/gl.h>
 #include "src/state.h"
 
 #include "src/environment.h"

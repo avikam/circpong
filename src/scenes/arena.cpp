@@ -161,7 +161,7 @@ namespace pong {
         glDeleteShader(playerVertexShader);
     }
 
-    void arena::render(pong::state s) {
+    void arena::render(pong::state& s) {
         /* Clear our buffer with a red background */
 
         glBindVertexArray(vao);
@@ -191,11 +191,11 @@ namespace pong {
         }
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-        render_player_set_pos(40.0f);
-        render_player_set_pos(170.0f);
+        render_player_set_pos(s.player_1_ang, s.player_1_pos_xy);
+        render_player_set_pos(s.player_2_ang, s.player_2_pos_xy);
     }
 
-    void arena::render_player_set_pos(float angle) {
+    void arena::render_player_set_pos(float angle, state::player_pos_t& player_pos_out) {
         glUseProgram(playerShaderProgram);
         glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
         {
@@ -206,6 +206,14 @@ namespace pong {
             glEnableVertexAttribArray(posAttrib);
             glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
         }
+
+        /*  _
+         * |0| _
+         *    |2| _
+         *     _ |4|
+         *  _ |3|
+         * |1|
+         */
 
         GLint uniTrans = glGetUniformLocation(playerShaderProgram, "trans");
         glm::mat4 trans { 1 };
@@ -219,24 +227,36 @@ namespace pong {
 
 
         // Base pixel
-        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos*trans));
+        auto out_iter = player_pos_out.begin();
+
+        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos));
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
+        auto new_pos = pos * glm::vec4{ 0, 0, 0, 1};
+        *out_iter++ = {new_pos.x, new_pos.y};
+
+
         // Level n
-        for (int i=1; i <= 2; i++) {
-        {
-            // 0.75 is the factor of congruence
-            auto t = glm::translate(glm::mat4 {1},
-                                    glm::vec3{i * -0.75 * constants::player_size, i*constants::player_size, 0});
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos*t));
-            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-        }
-        {
-            auto t = glm::translate(glm::mat4 {1},
-                                    glm::vec3{i * -constants::player_size * (0.75), i * -constants::player_size, 0});
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos*t));
-            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-        }
+        for (int i=1; i <=constants::player_pixel_levels; i++) {
+            {
+                // 0.75 is the factor of congruence
+                auto t = pos * glm::translate(glm::mat4 {1},
+                                              glm::vec3{-i * constants::player_size * .75f, i * constants::player_size, 0});
+                glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+                glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+                auto new_pos = pos * glm::vec4{ 0, 0, 0, 1};
+                *out_iter++ = {new_pos.x, new_pos.y};
+            }
+            {
+                auto t = pos * glm::translate(glm::mat4 {1},
+                                        glm::vec3{-i * constants::player_size * .75f, -i * constants::player_size, 0});
+                glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+                glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+                auto new_pos = pos * glm::vec4{ 0, 0, 0, 1};
+                *out_iter++ = {new_pos.x, new_pos.y};
+            }
         }
     }
 

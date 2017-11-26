@@ -17,9 +17,9 @@ namespace pong {
         GLuint vao;
         GLuint vbo[3];
 
-        void render_player_set_pos(float angle);
+        void render_player_set_pos(float angle, state::player_pos_t& player_pos_out);
     public:
-        void render(state s);
+        void render(state& s);
 
         arena();
         ~arena();
