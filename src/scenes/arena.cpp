@@ -4,6 +4,7 @@
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/trigonometric.hpp>
 
 #include "src/scenes/arena.h"
 #include "src/scenes/utils.h"
@@ -178,18 +179,23 @@ namespace pong {
         }
         glDrawArrays(GL_POINTS, 0, 1);
 
-//        glUseProgram(ballShaderProgram);
-//        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-//        {
-//            // Specify the layout of the vertex data
-//            // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of invalid op
-//            GLint posAttrib = glGetAttribLocation(ballShaderProgram, "position");
-//            // uses currently bound vertex array object for the operation
-//            glEnableVertexAttribArray(posAttrib);
-//            glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
-//        }
-//        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        glUseProgram(ballShaderProgram);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+        {
+            // Specify the layout of the vertex data
+            // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of invalid op
+            GLint posAttrib = glGetAttribLocation(ballShaderProgram, "position");
+            // uses currently bound vertex array object for the operation
+            glEnableVertexAttribArray(posAttrib);
+            glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+        }
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
+        render_player_set_pos(40.0f);
+        render_player_set_pos(170.0f);
+    }
+
+    void arena::render_player_set_pos(float angle) {
         glUseProgram(playerShaderProgram);
         glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
         {
@@ -200,39 +206,38 @@ namespace pong {
             glEnableVertexAttribArray(posAttrib);
             glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
         }
+
         GLint uniTrans = glGetUniformLocation(playerShaderProgram, "trans");
         glm::mat4 trans { 1 };
 
-        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+        // 0.90 is little far of the edge of the arena.
+        // TODO: this number should be integrated with the shader's factor (0.95)
+        glm::mat4 pos = glm::translate(
+                glm::rotate(glm::mat4 {1.0f}, glm::radians(angle), glm::vec3(0,0,1)),
+                glm::vec3(0.90, 0, 0)
+        );
+
+
+        // Base pixel
+        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos*trans));
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
+        // Level n
+        for (int i=1; i <= 2; i++) {
         {
+            // 0.75 is the factor of congruence
             auto t = glm::translate(glm::mat4 {1},
-                                        glm::vec3{-0.75 * constants::player_size, constants::player_size, 0});
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+                                    glm::vec3{i * -0.75 * constants::player_size, i*constants::player_size, 0});
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos*t));
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
         }
         {
             auto t = glm::translate(glm::mat4 {1},
-                                    glm::vec3{-constants::player_size * (0.75), -constants::player_size, 0});
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+                                    glm::vec3{i * -constants::player_size * (0.75), i * -constants::player_size, 0});
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos*t));
             glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
         }
-
-        {
-            auto t = glm::translate(glm::mat4 {1},
-                                    glm::vec3{-2*constants::player_size * (0.75), 2*constants::player_size, 0});
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
-            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
         }
-        {
-            auto t = glm::translate(glm::mat4 {1},
-                                    glm::vec3{-2*constants::player_size * (0.75), -2*constants::player_size, 0});
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
-            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-        }
-//        renderAndSetCoordinate(p1);
-//        renderAndSetCoordinate(p2);
     }
 
     arena::~arena() {

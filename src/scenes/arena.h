@@ -16,6 +16,8 @@ namespace pong {
         GLint playerShaderProgram;
         GLuint vao;
         GLuint vbo[3];
+
+        void render_player_set_pos(float angle);
     public:
         void render(state s);
 
