@@ -30,6 +30,10 @@ namespace pong {
         float ball_speed_y;
         pos_t ball_pos;
 
+        // After detecting a collision we start this timer that is reduced every frame
+        // in which collision detection is disabled so we won't have "collision loop"
+        int collision_cooldown;
+
         state() :
             is_paused { true  },
             score_1 { 0 },
@@ -41,10 +45,14 @@ namespace pong {
 
             ball_speed_x {0.01},
             ball_speed_y {0.01},
-            ball_pos {0, 0}
+            ball_pos {0, 0},
+
+            collision_cooldown { constants::collision_cooldown_max_val }
             {};
 
         void update(input_t);
+
+        bool ball_player_collision(const player_pos_t& p);
     };
 }
 
