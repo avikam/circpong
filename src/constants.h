@@ -21,7 +21,7 @@ namespace pong {
         static float player_size = 0.03;
         constexpr unsigned player_pixel_levels = 2;
 
-        static float hit_threshold = 0.005;
+        static float hit_threshold = 0.009;
     }
 }
 

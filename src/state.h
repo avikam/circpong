@@ -52,7 +52,12 @@ namespace pong {
 
         void update(input_t);
 
-        bool ball_player_collision(const player_pos_t& p);
+        bool is_ball_player_collision(const player_pos_t &p);
+
+        /*
+         * return nullptr if no goal occurred or player scored the goal.
+         */
+        int test_goal();
     };
 }
 

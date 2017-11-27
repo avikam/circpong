@@ -37,7 +37,7 @@ namespace pong {
         if (collision_cooldown > 0) {
             collision_cooldown -= 1;
         } else {
-            if (ball_player_collision(player_1_pos_xy)) {
+            if (is_ball_player_collision(player_1_pos_xy)) {
                 std::cout << "player 1 collision";
 
                 collision_cooldown = constants::collision_cooldown_max_val;
@@ -45,7 +45,7 @@ namespace pong {
                 ball_speed_y *= -1;
             }
 
-            if (ball_player_collision(player_2_pos_xy)) {
+            if (is_ball_player_collision(player_2_pos_xy)) {
                 std::cout << "player 2 collision";
 
                 collision_cooldown = constants::collision_cooldown_max_val;
@@ -53,9 +53,18 @@ namespace pong {
                 ball_speed_y *= -1;
             }
         }
+
+        auto goal = test_goal();
+        if (goal != 0) {
+            is_paused = true;
+            ball_speed_x = 0.01;
+            ball_speed_y = 0.01;
+            ball_pos = {0, 0};
+        }
+
     }
 
-    bool state::ball_player_collision(const player_pos_t& p) {
+    bool state::is_ball_player_collision(const player_pos_t &p) {
         double min_dist_sq = 1000;
 
         for (const auto& pixel : p) {
@@ -65,10 +74,19 @@ namespace pong {
             }
         }
 
+        std::cout << min_dist_sq << std::endl;
         if (min_dist_sq < constants::hit_threshold) {
             return true;
         }
 
         return false;
+    }
+
+    int state::test_goal() {
+        if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) <= (0.95*0.95) ) {
+            return 0;
+        }
+
+        return 1;
     }
 }
