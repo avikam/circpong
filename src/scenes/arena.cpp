@@ -115,7 +115,7 @@ namespace pong {
         glLinkProgram(arenaShaderProgram);
 
         ballShaderProgram = glCreateProgram();
-        glAttachShader(ballShaderProgram, vertexShader);
+        glAttachShader(ballShaderProgram, playerVertexShader);
         glAttachShader(ballShaderProgram, fragmentShader);
         glBindFragDataLocation(ballShaderProgram, 0, "outColor");
         glLinkProgram(ballShaderProgram);
@@ -163,9 +163,7 @@ namespace pong {
 
     void arena::render(pong::state& s) {
         /* Clear our buffer with a red background */
-
         glBindVertexArray(vao);
-
 
         glUseProgram(arenaShaderProgram);
         glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
@@ -179,20 +177,30 @@ namespace pong {
         }
         glDrawArrays(GL_POINTS, 0, 1);
 
-        glUseProgram(ballShaderProgram);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-        {
-            // Specify the layout of the vertex data
-            // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of invalid op
-            GLint posAttrib = glGetAttribLocation(ballShaderProgram, "position");
-            // uses currently bound vertex array object for the operation
-            glEnableVertexAttribArray(posAttrib);
-            glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
-        }
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        render_ball(s.ball_pos);
 
         render_player_set_pos(s.player_1_ang, s.player_1_pos_xy);
         render_player_set_pos(s.player_2_ang, s.player_2_pos_xy);
+    }
+
+    void arena::render_ball(state::pos_t ball_pos) {
+        glUseProgram(ballShaderProgram);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+
+        // Specify the layout of the vertex data
+        // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of invalid op
+        GLint posAttrib = glGetAttribLocation(ballShaderProgram, "position");
+        // uses currently bound vertex array object for the operation
+        glEnableVertexAttribArray(posAttrib);
+        glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
+
+        GLint uniTrans = glGetUniformLocation(playerShaderProgram, "trans");
+        glm::mat4 pos = glm::translate(glm::mat4 {1.0f},
+                glm::vec3(ball_pos.first, ball_pos.second, 0)
+        );
+
+        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos));
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
 
     void arena::render_player_set_pos(float angle, state::player_pos_t& player_pos_out) {
@@ -224,7 +232,6 @@ namespace pong {
                 glm::rotate(glm::mat4 {1.0f}, glm::radians(angle), glm::vec3(0,0,1)),
                 glm::vec3(0.90, 0, 0)
         );
-
 
         // Base pixel
         auto out_iter = player_pos_out.begin();

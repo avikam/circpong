@@ -6,11 +6,14 @@
 #define CIRPONG_STATE_H
 
 #include "src/constants.h"
+#include "src/environment.h"
 #include <vector>
 #include <tuple>
+
 namespace pong {
     struct state {
-        using player_pos_t = std::vector<std::pair<float, float>>;
+        using pos_t = std::pair<float, float>;
+        using player_pos_t = std::vector<pos_t>;
 
         bool is_paused;
         int score_1;
@@ -23,6 +26,10 @@ namespace pong {
         player_pos_t player_1_pos_xy;
         player_pos_t player_2_pos_xy;
 
+        float ball_speed_x;
+        float ball_speed_y;
+        pos_t ball_pos;
+
         state() :
             is_paused { true  },
             score_1 { 0 },
@@ -30,8 +37,14 @@ namespace pong {
             player_1_pos_xy (2 * constants::player_pixel_levels + 1),
             player_2_pos_xy (2 * constants::player_pixel_levels + 1),
             player_1_ang(0),
-            player_2_ang(180)
+            player_2_ang(180),
+
+            ball_speed_x {0.01},
+            ball_speed_y {0.01},
+            ball_pos {0, 0}
             {};
+
+        void update(input_t);
     };
 }
 

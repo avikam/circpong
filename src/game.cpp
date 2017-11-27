@@ -62,7 +62,7 @@ namespace pong {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        if (!s.is_paused) {
+        if (s.is_paused) {
             scene_->render(s);
         }
         arena_->render(s);
@@ -79,21 +79,7 @@ namespace pong {
                 return;
             }
 
-            if (event == input_t::player_1_up) {
-                s.player_1_ang+=1;
-                std::cout << s.player_1_pos_xy[0].first << ", " << s.player_1_pos_xy[0].second << std::endl;
-
-            }
-            if (event == input_t::player_1_down) {
-                s.player_1_ang-=1;
-                std::cout << s.player_1_pos_xy[0].first << ", " << s.player_1_pos_xy[0].second << std::endl;
-
-            }
-
-            if (event == input_t::pause) {
-                s.is_paused = !s.is_paused;
-            }
-
+            s.update(event);
             render();
 
             SDL_Delay(25);

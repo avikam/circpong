@@ -30,6 +30,7 @@ set(SOURCE_FILES
         src/scenes/scene.cpp
         src/scenes/arena.cpp
 
+        src/state.cpp
         src/environment.cpp
         src/start_game.cpp
         src/player.cpp
