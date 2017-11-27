@@ -62,26 +62,41 @@ namespace pong {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        scene_->render(s);
+        if (!s.is_paused) {
+            scene_->render(s);
+        }
         arena_->render(s);
-
-        std::cout << s.player_1_pos_xy[0].first << ", " << s.player_1_pos_xy[0].second << std::endl;
-        s.player_1_ang++;
 
         /* Swap our back buffer to the front */
         SDL_GL_SwapWindow(window);
     }
 
     void game::play() {
-
         start_game_.render();
-        while (env_.is_active()) {
+        while (true) {
+            auto event = env_.get_event();
+            if (event == input_t::quit) {
+                return;
+            }
+
+            if (event == input_t::player_1_up) {
+                s.player_1_ang+=1;
+                std::cout << s.player_1_pos_xy[0].first << ", " << s.player_1_pos_xy[0].second << std::endl;
+
+            }
+            if (event == input_t::player_1_down) {
+                s.player_1_ang-=1;
+                std::cout << s.player_1_pos_xy[0].first << ", " << s.player_1_pos_xy[0].second << std::endl;
+
+            }
+
+            if (event == input_t::pause) {
+                s.is_paused = !s.is_paused;
+            }
+
             render();
-            env_.update();
 
             SDL_Delay(25);
-
-            env_.get_event();
         }
     }
 }

@@ -2,42 +2,36 @@
 // Created by Avikam Agur on 10/11/2017.
 //
 
-#ifndef CIRPONG_WINDOW_H
-#define CIRPONG_WINDOW_H
+#ifndef CIRPONG_INPUT_HANDLER_H
+#define CIRPONG_INPUT_HANDLER_H
 
 #include "src/ball.h"
 #include "src/player.h"
 #include "src/control.h"
 
 namespace pong {
-    enum class state_t {
-        active,
-        user_quit
+    enum class input_t {
+        // no input between frames
+        idle,
+
+        player_1_up,
+        player_1_down,
+        player_2_up,
+        player_2_down,
+
+        pause,
+        quit
     };
 
+    /*
+     * Input handler - reads from controls and SDLs events.
+     */
     class environment {
-        int tick;
-        double unit;
-        void renderAndSetCoordinate(player &p);
-        void render(const ball& p);
-
-        bool turn_p1;
-
         PowermateControl pm_ct;
 
-        state_t state ;
-        player p1;
-        player p2;
-        ball b;
-
     public:
-        environment();
-        ~environment();
-
-        bool get_event();
-        void update();
-        bool is_active();
+        input_t get_event();
     };
 }
 
-#endif //CIRPONG_WINDOW_H
+#endif //CIRPONG_INPUT_HANDLER
