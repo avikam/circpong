@@ -8,7 +8,7 @@
 #include "src/state.h"
 
 #include "src/environment.h"
-#include "src/start_game.h"
+#include "src/text_drawer.h"
 #include "src/scenes/scene.h"
 #include "src/scenes/arena.h"
 
@@ -16,7 +16,7 @@ namespace pong {
     class game {
     private:
         environment env_;
-        start_game start_game_;
+        text_drawer txt_drawer;
         scene* scene_;
         arena* arena_;
 

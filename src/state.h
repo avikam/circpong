@@ -12,8 +12,17 @@
 #include <tuple>
 
 namespace pong {
-    struct state {
+    class state {
+        /*
+         * return nullptr if no goal occurred or player scored the goal.
+         */
+        player* test_goal();
+
+        bool is_ball_player_collision(const player_pos_t &p);
+
+    public:
         bool is_paused;
+        bool is_goal;
 
         float ball_speed_x;
         float ball_speed_y;
@@ -28,6 +37,7 @@ namespace pong {
 
         state() :
             is_paused { true  },
+            is_goal { false },
             p1(0),
             p2(180),
 
@@ -39,13 +49,6 @@ namespace pong {
             {};
 
         void update(input_t);
-
-        bool is_ball_player_collision(const player_pos_t &p);
-
-        /*
-         * return nullptr if no goal occurred or player scored the goal.
-         */
-        int test_goal();
     };
 }
 

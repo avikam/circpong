@@ -8,6 +8,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 #include "src/scenes/scene.h"
 #include "src/scenes/utils.h"
@@ -50,7 +51,9 @@ namespace pong {
 
     }
 
-    scene::scene() {
+    scene::scene(text_drawer& txt_drawer) :
+        _txt_drawer { txt_drawer }
+    {
         // Create Vertex Array Object
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -129,15 +132,17 @@ namespace pong {
         glDeleteVertexArrays(1, &vao);
     }
 
-    void scene::draw_texture(const GLvoid *pixels, int width, int height, int tex_num) {
+    void scene::draw_texture(int tex_num, int score) {
+        std::ostringstream stream;
+        stream << "Score: " << score;;
+
         // Load textures
         GLuint textures[2];
         glGenTextures(1, textures);
 
         glActiveTexture(GL_TEXTURE0 + tex_num);
         glBindTexture(GL_TEXTURE_2D, textures[tex_num]);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-
+        _txt_drawer.draw(stream.str());
 
         //Set Some basic parameters
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -152,6 +157,26 @@ namespace pong {
         glBindVertexArray(vao);
         glUseProgram(shaderProgram);
 
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+
+        // Specify the layout of the vertex data
+        // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of
+        // invalid op
+        GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
+        // uses currently bound vertex array object for the operation
+        glEnableVertexAttribArray(posAttrib);
+        glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), nullptr);
+
+        GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
+        glEnableVertexAttribArray(colAttrib);
+        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void *) (2 * sizeof(GLfloat)));
+
+        GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
+        glEnableVertexAttribArray(texAttrib);
+        glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void *) (5 * sizeof(GLfloat)));
+
+
         GLint uniTex = glGetUniformLocation(shaderProgram, "tex");
         GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
 
@@ -160,11 +185,12 @@ namespace pong {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        // Score of p1:
         {
             glm::mat4 identity{1};
 
             auto t = glm::scale(
-                    glm::translate(identity, glm::vec3(-0.7f, 0.85f, 0)),
+                    glm::translate(identity, glm::vec3(0.7f, 0.85f, 0)),
                     glm::vec3(0.5, 0.125, 0));
 
             glUniform1i(uniTex, 0);
@@ -174,11 +200,13 @@ namespace pong {
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             debug_err();
         }
+
+        // Score of p2:
         {
             glm::mat4 identity{1};
 
             auto t = glm::scale(
-                    glm::translate(identity, glm::vec3(0.7f, 0.85f, 0)),
+                    glm::translate(identity, glm::vec3(-0.7f, 0.85f, 0)),
                     glm::vec3(0.5, 0.125, 0));
 
             glUniform1i(uniTex, 1);
@@ -188,6 +216,11 @@ namespace pong {
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             debug_err();
         }
+    }
+
+    void scene::invalidate(const pong::state& s) {
+        draw_texture(0, s.p1.score);
+        draw_texture(1, s.p2.score);
     }
 
 }
