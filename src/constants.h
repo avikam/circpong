@@ -5,7 +5,14 @@
 #ifndef CIRPONG_CONSTANTS_H
 #define CIRPONG_CONSTANTS_H
 
+#include <vector>
+#include <tuple>
+
 namespace pong {
+    using pos_t = std::pair<float, float>;
+    // (x,y) for each center of pixel. there are 2 pixels in every level and 1 as the base.
+    using player_pos_t = std::vector<pos_t>;
+
     namespace constants {
         // arena radius
         static double radius = 1;

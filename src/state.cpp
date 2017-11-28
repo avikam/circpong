@@ -14,20 +14,20 @@ namespace pong {
             return;
 
         if (event == input_t::player_1_up) {
-            player_1_ang+=2;
-            std::cout << player_1_pos_xy[0].first << ", " << player_1_pos_xy[0].second << std::endl;
+            p1.go_up();
+            std::cout << p1.pos[0].first << ", " << p1.pos[0].second << std::endl;
 
         }
         if (event == input_t::player_1_down) {
-            player_1_ang-=2;
-            std::cout << player_1_pos_xy[0].first << ", " << player_1_pos_xy[0].second << std::endl;
+            p1.go_down();
+            std::cout << p1.pos[0].first << ", " << p1.pos[0].second << std::endl;
         }
 
         if (event == input_t::player_2_up) {
-            player_2_ang+=2;
+            p2.go_up();
         }
         if (event == input_t::player_2_down) {
-            player_2_ang-=2;
+            p2.go_down();
         }
 
 
@@ -37,7 +37,7 @@ namespace pong {
         if (collision_cooldown > 0) {
             collision_cooldown -= 1;
         } else {
-            if (is_ball_player_collision(player_1_pos_xy)) {
+            if (is_ball_player_collision(p1.pos)) {
                 std::cout << "player 1 collision";
 
                 collision_cooldown = constants::collision_cooldown_max_val;
@@ -45,7 +45,7 @@ namespace pong {
                 ball_speed_y *= -1;
             }
 
-            if (is_ball_player_collision(player_2_pos_xy)) {
+            if (is_ball_player_collision(p2.pos)) {
                 std::cout << "player 2 collision";
 
                 collision_cooldown = constants::collision_cooldown_max_val;
@@ -74,7 +74,6 @@ namespace pong {
             }
         }
 
-        std::cout << min_dist_sq << std::endl;
         if (min_dist_sq < constants::hit_threshold) {
             return true;
         }
