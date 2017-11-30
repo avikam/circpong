@@ -33,13 +33,21 @@ namespace pong {
                                   constants::screen_width, constants::screen_height,
                                   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
+        // Full screen
+//        int flags = SDL_GetWindowFlags(window);
+//        if (flags & SDL_WINDOW_FULLSCREEN) {
+//            SDL_SetWindowFullscreen(window, 0);
+//        } else {
+//            SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+//        }
+
         maincontext = SDL_GL_CreateContext(window);
         if (maincontext == nullptr) {
             std::cout << "Error initing opengl context " << SDL_GetError() << std::endl;
             throw std::runtime_error("maincontext init error");
         }
-        printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
+        printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
         // Needs to be initialized after we have an OpenGl context
         scene_ = new scene{txt_drawer};
         arena_ = new arena{};

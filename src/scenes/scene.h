@@ -19,6 +19,8 @@ namespace pong{
         GLuint vbo;
         GLuint ebo;
 
+        GLuint textures[2];
+
         text_drawer& _txt_drawer;
 
         void draw_texture(int tex_num, int score);

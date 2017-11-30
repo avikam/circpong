@@ -10,6 +10,7 @@
 #include "src/player.h"
 #include <vector>
 #include <tuple>
+#include <random>
 
 namespace pong {
     class state {
@@ -19,6 +20,11 @@ namespace pong {
         player* test_goal();
 
         bool is_ball_player_collision(const player_pos_t &p);
+        void hit();
+        std::random_device rd;     // only used once to initialise (seed) engine
+        std::mt19937_64 rng;    // random-number engine used (Mersenne-Twister in this case)
+        std::uniform_int_distribution<int> uni; // guaranteed unbiased
+
 
     public:
         bool is_paused;
@@ -45,7 +51,9 @@ namespace pong {
             ball_speed_y {0.01},
             ball_pos {0, 0},
 
-            collision_cooldown { constants::collision_cooldown_max_val }
+            collision_cooldown { constants::collision_cooldown_max_val },
+            rng { rd() },
+            uni {-50,50}
             {};
 
         void update(input_t);

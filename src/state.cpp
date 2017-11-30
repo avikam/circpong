@@ -41,18 +41,12 @@ namespace pong {
         } else {
             if (is_ball_player_collision(p1.pos)) {
                 std::cout << "player 1 collision";
-
-                collision_cooldown = constants::collision_cooldown_max_val;
-                ball_speed_x *= -1;
-                ball_speed_y *= -1;
+                hit();
             }
 
             if (is_ball_player_collision(p2.pos)) {
                 std::cout << "player 2 collision";
-
-                collision_cooldown = constants::collision_cooldown_max_val;
-                ball_speed_x *= -1;
-                ball_speed_y *= -1;
+                hit();
             }
         }
 
@@ -97,5 +91,18 @@ namespace pong {
         }
 
         return &p1;
+    }
+
+    void state::hit() {
+        collision_cooldown = constants::collision_cooldown_max_val;
+
+        auto Angle_shift = uni(rng);
+        // rotate speed vector by random angle
+        float shift_cos = cos(Angle_shift * constants::PI/180);
+        float shift_sin = sin(Angle_shift * constants::PI/180);
+
+        auto speed_x_tmp = ball_speed_x*shift_cos - ball_speed_y*shift_sin;
+        ball_speed_y = -1 * (ball_speed_x*shift_sin + ball_speed_y*shift_cos);
+        ball_speed_x = -1 * speed_x_tmp;
     }
 }

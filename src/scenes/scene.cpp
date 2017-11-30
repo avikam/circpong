@@ -100,6 +100,8 @@ namespace pong {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
+        glGenTextures(2, textures);
+
 
         // Specify the layout of the vertex data
         // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of
@@ -123,6 +125,8 @@ namespace pong {
     };
 
     scene::~scene() {
+        glDeleteTextures(2, textures);
+
         glDeleteProgram(shaderProgram);
         // delete elements buffer
         glDeleteBuffers(1, &ebo);
@@ -134,11 +138,7 @@ namespace pong {
 
     void scene::draw_texture(int tex_num, int score) {
         std::ostringstream stream;
-        stream << "Score: " << score;;
-
-        // Load textures
-        GLuint textures[2];
-        glGenTextures(1, textures);
+        stream << "Score: " << score;
 
         glActiveTexture(GL_TEXTURE0 + tex_num);
         glBindTexture(GL_TEXTURE_2D, textures[tex_num]);
@@ -148,9 +148,9 @@ namespace pong {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        //Set up Sampler
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures[tex_num]);
+//        //Set up Sampler
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D, textures[tex_num]);
     }
 
     void scene::render(pong::state& s) {
