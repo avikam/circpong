@@ -13,12 +13,16 @@ namespace pong {
         unsigned long nfds;
         int timeout;
         struct pollfd *pfds;
-        int devfd;
+        int devfd1;
+        int devfd2;
 
         void set_led(unsigned int val);
 
-        void go_up();
-        void go_down();
+        void go_up1();
+        void go_down1();
+
+        void go_up2();
+        void go_down2();
         void post_key(SDL_Keycode key_code);
 
     public:
