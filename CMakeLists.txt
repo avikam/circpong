@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.5)
 project(cirpong)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -26,4 +26,4 @@ set(SOURCE_FILES
         src/game.cpp
         src/control.cpp)
 add_executable(cirpong ${SOURCE_FILES})
-target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf SDL2_mixer)
+target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf)

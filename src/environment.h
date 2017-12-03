@@ -7,7 +7,7 @@
 
 #include <SDL2/SDL.h>                       // SDL library.
 #include <SDL2/SDL_ttf.h>                   // SDL font library.
-#include <SDL2/SDL_mixer.h>                 // SDL sound library.
+// #include <SDL2/SDL_mixer.h>                 // SDL sound library.
 
 #include "src/ball.h"
 #include "src/player.h"

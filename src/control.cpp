@@ -12,7 +12,7 @@
 #include "src/control.h"
 
 #define dev1 "/dev/input/powermate_13"
-#define dev2 "/dev/input/powermate_14"
+#define dev2 "/dev/input/powermate_12"
 
 namespace pong {
     PowermateControl::PowermateControl() {
