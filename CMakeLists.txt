@@ -18,7 +18,8 @@ ELSE()
 ENDIF ()
 
 if(UNIX AND NOT APPLE)
-    SET(SRC_CONTROL src/control.cpp)
+    # SET(SRC_CONTROL src/control.cpp)
+    SET(SRC_CONTROL src/control_non.cpp)
 else()
     SET(SRC_CONTROL src/control_non.cpp)
 endif()
@@ -39,5 +40,5 @@ set(SOURCE_FILES
         ${SRC_CONTROL}
 )
 add_executable(cirpong ${SOURCE_FILES})
-target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf)
+target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf GLEW)
 

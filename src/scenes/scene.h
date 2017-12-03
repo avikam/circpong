@@ -5,7 +5,7 @@
 #ifndef CIRPONG_SCENE_H
 #define CIRPONG_SCENE_H
 
-#include <OpenGL/gl3.h>
+#include <OpenGl/glew.h>
 #include "src/state.h"
 
 namespace pong{

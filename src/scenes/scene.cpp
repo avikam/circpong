@@ -2,7 +2,7 @@
 // Created by Avikam Agur on 24/11/2017.
 //
 
-#include <OpenGL/gl3.h>
+#include <OpenGl/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>

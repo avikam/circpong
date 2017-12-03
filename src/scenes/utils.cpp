@@ -2,7 +2,8 @@
 // Created by Avikam Agur on 25/11/2017.
 //
 
-#include <OpenGL/gl3.h>
+#include <OpenGl/glew.h>
+#include <OpenGl/glext.h>
 #include <iostream>
 #include <vector>
 
