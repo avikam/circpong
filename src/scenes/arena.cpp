@@ -38,7 +38,7 @@ namespace pong {
         #version 150 core
 
         layout(points) in;
-        layout(line_strip, max_vertices = 300) out;
+        layout(line_strip, max_vertices = 100) out;
 
         const float PI = 3.1415926;
         const int SIZE = 50;
@@ -179,11 +179,11 @@ namespace pong {
 
         render_ball(s.ball_pos);
 
-        render_player_set_pos(s.player_1_ang, s.player_1_pos_xy);
-        render_player_set_pos(s.player_2_ang, s.player_2_pos_xy);
+        render_player_set_pos(s.p1);
+        render_player_set_pos(s.p2);
     }
 
-    void arena::render_ball(state::pos_t ball_pos) {
+    void arena::render_ball(pos_t ball_pos) {
         glUseProgram(ballShaderProgram);
         glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 
@@ -203,7 +203,7 @@ namespace pong {
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
 
-    void arena::render_player_set_pos(float angle, state::player_pos_t& player_pos_out) {
+    void arena::render_player_set_pos(player& p) {
         glUseProgram(playerShaderProgram);
         glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
         {
@@ -229,12 +229,12 @@ namespace pong {
         // 0.90 is little far of the edge of the arena.
         // TODO: this number should be integrated with the shader's factor (0.95)
         glm::mat4 pos = glm::translate(
-                glm::rotate(glm::mat4 {1.0f}, glm::radians(angle), glm::vec3(0,0,1)),
+                glm::rotate(glm::mat4 {1.0f}, glm::radians(p.angle_), glm::vec3(0,0,1)),
                 glm::vec3(0.90, 0, 0)
         );
 
         // Base pixel
-        auto out_iter = player_pos_out.begin();
+        auto out_iter = p.pos.begin();
 
         glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos));
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);

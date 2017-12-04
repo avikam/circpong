@@ -5,28 +5,21 @@
 #ifndef CIRPONG_PLAYER_H
 #define CIRPONG_PLAYER_H
 
+#include "src/constants.h"
+
 namespace pong {
-    class player {
-        double angle_;
-        double width;
-        double height;
-        double unit_;
-        int edge_points;
+    struct player {
+        float angle_;
+        // how many angles are change on player movement (0-360)
+        float angular_speed;
+        int score;
+        player_pos_t pos;
 
-        double coordinates[4 * 4];
 
-//        double* get_coordinates();
+        explicit player(float angle);
 
-    public:
-        player(double origin, bool direction_up, double unit);
         void go_up();
         void go_down();
-        double get_origin() const;
-        float collision_with_ball(double distance, double theta) const;
-
-        void set_coordinates(const double new_coordinates[]);
-
-        void get_point_x_y(int point_num, double* x, double* y) const;
     };
 }
 

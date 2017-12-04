@@ -7,28 +7,35 @@
 
 #include "src/constants.h"
 #include "src/environment.h"
+#include "src/player.h"
 #include <vector>
 #include <tuple>
+#include <random>
 
 namespace pong {
-    struct state {
-        using pos_t = std::pair<float, float>;
-        using player_pos_t = std::vector<pos_t>;
+    class state {
+        /*
+         * return nullptr if no goal occurred or player scored the goal.
+         */
+        player* test_goal();
 
+        bool is_ball_player_collision(const player_pos_t &p);
+        void hit();
+        std::random_device rd;     // only used once to initialise (seed) engine
+        std::mt19937_64 rng;    // random-number engine used (Mersenne-Twister in this case)
+        std::uniform_int_distribution<int> uni; // guaranteed unbiased
+
+
+    public:
         bool is_paused;
-        int score_1;
-        int score_2;
-
-        float player_1_ang;
-        float player_2_ang;
-
-        // (x,y) for each center of pixel. there are 2 pixels in every level and 1 as the base.
-        player_pos_t player_1_pos_xy;
-        player_pos_t player_2_pos_xy;
+        bool is_goal;
 
         float ball_speed_x;
         float ball_speed_y;
         pos_t ball_pos;
+
+        player p1;
+        player p2;
 
         // After detecting a collision we start this timer that is reduced every frame
         // in which collision detection is disabled so we won't have "collision loop"
@@ -36,23 +43,20 @@ namespace pong {
 
         state() :
             is_paused { true  },
-            score_1 { 0 },
-            score_2 { 0 },
-            player_1_pos_xy (2 * constants::player_pixel_levels + 1),
-            player_2_pos_xy (2 * constants::player_pixel_levels + 1),
-            player_1_ang(0),
-            player_2_ang(180),
+            is_goal { false },
+            p1(0),
+            p2(180),
 
             ball_speed_x {0.01},
             ball_speed_y {0.01},
             ball_pos {0, 0},
 
-            collision_cooldown { constants::collision_cooldown_max_val }
+            collision_cooldown { constants::collision_cooldown_max_val },
+            rng { rd() },
+            uni {-50,50}
             {};
 
         void update(input_t);
-
-        bool ball_player_collision(const player_pos_t& p);
     };
 }
 

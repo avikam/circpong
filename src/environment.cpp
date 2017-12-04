@@ -54,15 +54,12 @@ namespace pong{
 
                     case SDLK_UP:
                         return input_t::player_1_up;
-
                     case SDLK_DOWN:
                         return input_t::player_1_down;
-
                     case SDLK_q:
-                        return input_t::player_2_up;
-
-                    case SDLK_a:
                         return input_t::player_2_down;
+                    case SDLK_a:
+                        return input_t::player_2_up;
 
 //                    case SDLK_t:
 //                        b.move_(0.01, 0);
@@ -79,15 +76,6 @@ namespace pong{
 
                     case SDLK_z:
                         break;
-                        // Pressing F11 to toggle fullscreen.
-//                    case SDLK_F11:
-//                        int flags = SDL_GetWindowFlags(window);
-//                        if (flags & SDL_WINDOW_FULLSCREEN) {
-//                            SDL_SetWindowFullscreen(window, 0);
-//                        } else {
-//                            SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-//                        }
-//                        break;
                     default:
                         break;
                 }

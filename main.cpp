@@ -3,4 +3,5 @@
 int main() {
     pong::game g;
     g.play();
+    return 0;
 }
