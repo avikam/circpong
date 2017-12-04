@@ -19,11 +19,11 @@ namespace pong{
         GLuint vbo;
         GLuint ebo;
 
-        GLuint textures[2];
+        GLuint textures[3];
 
         text_drawer& _txt_drawer;
 
-        void draw_texture(int tex_num, int score);
+        void draw_text_in_texture(int tex_num, const std::string& s);
     public:
         explicit scene(text_drawer& txt_drawer);
         ~scene();

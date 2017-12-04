@@ -136,21 +136,15 @@ namespace pong {
         glDeleteVertexArrays(1, &vao);
     }
 
-    void scene::draw_texture(int tex_num, int score) {
-        std::ostringstream stream;
-        stream << "Score: " << score;
+    void scene::draw_text_in_texture(int tex_num, const std::string& s) {
 
         glActiveTexture(GL_TEXTURE0 + tex_num);
         glBindTexture(GL_TEXTURE_2D, textures[tex_num]);
-        _txt_drawer.draw(stream.str());
+        _txt_drawer.draw(s);
 
         //Set Some basic parameters
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-//        //Set up Sampler
-//        glActiveTexture(GL_TEXTURE0);
-//        glBindTexture(GL_TEXTURE_2D, textures[tex_num]);
     }
 
     void scene::render(pong::state& s) {
@@ -216,11 +210,43 @@ namespace pong {
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             debug_err();
         }
+
+        // Who won?:
+        {
+            glm::mat4 identity{1};
+
+            auto t = glm::scale(
+                    glm::translate(identity, glm::vec3(0, 0, 0)),
+                    glm::vec3(1, 0.125, 0));
+
+            glUniform1i(uniTex, 2);
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+
+            // Create a Vertex Buffer Object and copy the vertex data to i
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            debug_err();
+        }
     }
 
     void scene::invalidate(const pong::state& s) {
-        draw_texture(0, s.p1.score);
-        draw_texture(1, s.p2.score);
+        {
+            std::ostringstream stream;
+            stream << "Score: " << s.p1.score;
+            draw_text_in_texture(0, stream.str());
+
+        }
+        {
+            std::ostringstream stream;
+            stream << "Score: " << s.p2.score;
+            draw_text_in_texture(1, stream.str());
+
+        }
+        {
+            std::ostringstream stream;
+            stream << "Player 1 Wins!";
+            draw_text_in_texture(2, stream.str());
+
+        }
     }
 
 }
