@@ -38,7 +38,7 @@ namespace pong {
         #version 150 core
 
         layout(points) in;
-        layout(line_strip, max_vertices = 100) out;
+        layout(line_strip, max_vertices = 250) out;
 
         const float PI = 3.1415926;
         const int SIZE = 50;
