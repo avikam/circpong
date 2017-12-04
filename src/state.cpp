@@ -6,6 +6,8 @@
 
 namespace pong {
     void state::update(input_t event) {
+        is_goal = false;
+
         if (event == input_t::pause) {
             is_paused = !is_paused;
         }
@@ -14,20 +16,20 @@ namespace pong {
             return;
 
         if (event == input_t::player_1_up) {
-            player_1_ang+=2;
-            std::cout << player_1_pos_xy[0].first << ", " << player_1_pos_xy[0].second << std::endl;
+            p1.go_up();
+            std::cout << p1.pos[0].first << ", " << p1.pos[0].second << std::endl;
 
         }
         if (event == input_t::player_1_down) {
-            player_1_ang-=2;
-            std::cout << player_1_pos_xy[0].first << ", " << player_1_pos_xy[0].second << std::endl;
+            p1.go_down();
+            std::cout << p1.pos[0].first << ", " << p1.pos[0].second << std::endl;
         }
 
         if (event == input_t::player_2_up) {
-            player_2_ang+=2;
+            p2.go_up();
         }
         if (event == input_t::player_2_down) {
-            player_2_ang-=2;
+            p2.go_down();
         }
 
 
@@ -37,25 +39,31 @@ namespace pong {
         if (collision_cooldown > 0) {
             collision_cooldown -= 1;
         } else {
-            if (ball_player_collision(player_1_pos_xy)) {
+            if (is_ball_player_collision(p1.pos)) {
                 std::cout << "player 1 collision";
-
-                collision_cooldown = constants::collision_cooldown_max_val;
-                ball_speed_x *= -1;
-                ball_speed_y *= -1;
+                hit();
             }
 
-            if (ball_player_collision(player_2_pos_xy)) {
+            if (is_ball_player_collision(p2.pos)) {
                 std::cout << "player 2 collision";
-
-                collision_cooldown = constants::collision_cooldown_max_val;
-                ball_speed_x *= -1;
-                ball_speed_y *= -1;
+                hit();
             }
+        }
+
+        auto winner = test_goal();
+        if (winner != nullptr) {
+            is_paused = true;
+            is_goal = true;
+
+            ball_speed_x = 0.01;
+            ball_speed_y = 0.01;
+            ball_pos = {0, 0};
+
+            winner->score += 1;
         }
     }
 
-    bool state::ball_player_collision(const player_pos_t& p) {
+    bool state::is_ball_player_collision(const player_pos_t &p) {
         double min_dist_sq = 1000;
 
         for (const auto& pixel : p) {
@@ -70,5 +78,31 @@ namespace pong {
         }
 
         return false;
+    }
+
+    player* state::test_goal() {
+        if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) <= (0.95*0.95) ) {
+            return nullptr;
+        }
+
+        // check x coordinate (first coordinate) of the ball being to the left or to the right of the center
+        if (ball_pos.first > 0) {
+            return &p2;
+        }
+
+        return &p1;
+    }
+
+    void state::hit() {
+        collision_cooldown = constants::collision_cooldown_max_val;
+
+        auto Angle_shift = uni(rng);
+        // rotate speed vector by random angle
+        float shift_cos = cos(Angle_shift * constants::PI/180);
+        float shift_sin = sin(Angle_shift * constants::PI/180);
+
+        auto speed_x_tmp = ball_speed_x*shift_cos - ball_speed_y*shift_sin;
+        ball_speed_y = -1 * (ball_speed_x*shift_sin + ball_speed_y*shift_cos);
+        ball_speed_x = -1 * speed_x_tmp;
     }
 }

@@ -8,7 +8,7 @@ namespace pong {
     game::game() :
             exit_ {false},
             scene_ {nullptr},
-            start_game_ {&scene_}
+            txt_drawer {}
     {
         // Intialize SDL.
         SDL_Init(SDL_INIT_EVERYTHING);
@@ -33,15 +33,23 @@ namespace pong {
                                   constants::screen_width, constants::screen_height,
                                   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
+        // Full screen
+//        int flags = SDL_GetWindowFlags(window);
+//        if (flags & SDL_WINDOW_FULLSCREEN) {
+//            SDL_SetWindowFullscreen(window, 0);
+//        } else {
+//            SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+//        }
+
         maincontext = SDL_GL_CreateContext(window);
         if (maincontext == nullptr) {
             std::cout << "Error initing opengl context " << SDL_GetError() << std::endl;
             throw std::runtime_error("maincontext init error");
         }
-        printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
+        printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
         // Needs to be initialized after we have an OpenGl context
-        scene_ = new scene{};
+        scene_ = new scene{txt_drawer};
         arena_ = new arena{};
     }
 
@@ -63,6 +71,10 @@ namespace pong {
         glClear(GL_COLOR_BUFFER_BIT);
 
         if (s.is_paused) {
+            if (s.is_goal) {
+                scene_->invalidate(s);   // TODO: Although this is a "good" behaviour (don't draw unless it was a score
+                                         // it actually hides a bug while drawing the scene ("invalid op")
+            }
             scene_->render(s);
         }
         arena_->render(s);
@@ -72,7 +84,7 @@ namespace pong {
     }
 
     void game::play() {
-        start_game_.render();
+        scene_->invalidate(s);
         while (true) {
             auto event = env_.get_event();
             if (event == input_t::quit) {

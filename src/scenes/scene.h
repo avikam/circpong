@@ -6,6 +6,7 @@
 #define CIRPONG_SCENE_H
 
 #include <OpenGL/gl3.h>
+#include "src/text_drawer.h"
 #include "src/state.h"
 
 namespace pong{
@@ -18,11 +19,17 @@ namespace pong{
         GLuint vbo;
         GLuint ebo;
 
+        GLuint textures[3];
+
+        text_drawer& _txt_drawer;
+
+        void draw_text_in_texture(int tex_num, const std::string& s);
     public:
-        scene();
+        explicit scene(text_drawer& txt_drawer);
         ~scene();
-        void draw_texture(const GLvoid *pixels, int width, int height, int tex_num);
         void render(pong::state& s);
+
+        void invalidate(const pong::state& s);
     };
 }
 

@@ -5,12 +5,17 @@
 #ifndef CIRPONG_CONSTANTS_H
 #define CIRPONG_CONSTANTS_H
 
+#include <vector>
+#include <tuple>
+
 namespace pong {
+    using pos_t = std::pair<float, float>;
+    // (x,y) for each center of pixel. there are 2 pixels in every level and 1 as the base.
+    using player_pos_t = std::vector<pos_t>;
+
     namespace constants {
         // arena radius
-        static double radius = 1;
-        static double PI = 3.1415926535897932384626433832795;
-        static double arc_size = (2 * PI * radius) / 10;
+        static float PI = 3.14159265358;
 
         // TODO: Consider calculating by player speed or other player position
         static int collision_cooldown_max_val = 10;
@@ -21,7 +26,9 @@ namespace pong {
         static float player_size = 0.03;
         constexpr unsigned player_pixel_levels = 2;
 
-        static float hit_threshold = 0.005;
+        static float hit_threshold = 0.009;
+
+        static int max_score = 5;
     }
 }
 

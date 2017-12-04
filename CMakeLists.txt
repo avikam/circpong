@@ -32,7 +32,7 @@ set(SOURCE_FILES
 
         src/state.cpp
         src/environment.cpp
-        src/start_game.cpp
+        src/text_drawer.cpp
         src/player.cpp
         src/ball.cpp
         src/game.cpp
