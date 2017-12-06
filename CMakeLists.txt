@@ -20,6 +20,10 @@ ENDIF ()
 if(UNIX AND NOT APPLE)
     # SET(SRC_CONTROL src/control.cpp)
     SET(SRC_CONTROL src/control_non.cpp)
+
+    # ADD_CUSTOM_TARGET(link_target ALL
+    #   COMMAND ${CMAKE_COMMAND} -E create_symlink OpenGl /usr/include/GL)
+
 else()
     SET(SRC_CONTROL src/control_non.cpp)
 endif()
