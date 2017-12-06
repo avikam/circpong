@@ -3,22 +3,27 @@
 //
 
 #include <SDL2/SDL_events.h>
-#include <poll.h>
-// #include <unistd.h>
-// #include <linux/input.h>
+#include <poll.h> // struct pollfd
 #include <iostream>
+
+// Thit constant is from udev rule, don't change!
+#define controls_path "/dev/input/powermate/"
+#define max_controls 2
 
 namespace pong {
     class PowermateControl {
         unsigned long nfds;
         int timeout;
         struct pollfd *pfds;
-        int devfd;
+        int devfds[max_controls];
 
-        void set_led(unsigned int val);
+        void set_led(int fd, unsigned int val);
 
-        void go_up();
-        void go_down();
+        void go_up1();
+        void go_down1();
+
+        void go_up2();
+        void go_down2();
         void post_key(SDL_Keycode key_code);
 
     public:

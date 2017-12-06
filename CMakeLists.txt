@@ -18,8 +18,8 @@ ELSE()
 ENDIF ()
 
 if(UNIX AND NOT APPLE)
-    # SET(SRC_CONTROL src/control.cpp)
-    SET(SRC_CONTROL src/control_non.cpp)
+    # Use powermates controls, not on MAC :/
+    SET(SRC_CONTROL src/control.cpp)
 
     # ADD_CUSTOM_TARGET(link_target ALL
     #   COMMAND ${CMAKE_COMMAND} -E create_symlink OpenGl /usr/include/GL)
@@ -45,4 +45,3 @@ set(SOURCE_FILES
 )
 add_executable(cirpong ${SOURCE_FILES})
 target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf GLEW)
-

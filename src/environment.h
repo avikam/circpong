@@ -1,9 +1,9 @@
 //
 // Created by Avikam Agur on 10/11/2017.
 //
-
 #ifndef CIRPONG_INPUT_HANDLER_H
 #define CIRPONG_INPUT_HANDLER_H
+
 
 #include "src/ball.h"
 #include "src/player.h"
