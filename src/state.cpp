@@ -15,6 +15,16 @@ namespace pong {
         if (is_paused)
             return;
 
+        if (is_game_over) {
+            is_game_over = false;
+            p1.score = 0;
+            p2.score = 0;
+            curr_winner = nullptr;
+
+            p1.angle_ = 0;
+            p2.angle_ = 180;
+        }
+
         if (event == input_t::player_1_up) {
             p1.go_up();
             std::cout << p1.pos[0].first << ", " << p1.pos[0].second << std::endl;
@@ -60,6 +70,11 @@ namespace pong {
             ball_pos = {0, 0};
 
             winner->score += 1;
+
+            if (winner->score == constants::max_score) {
+                is_game_over = true;
+                curr_winner = winner;
+            }
         }
     }
 

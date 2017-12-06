@@ -11,7 +11,8 @@
 
 
 namespace pong {
-    player::player(float angle)  :
+    player::player(std::string name, float angle)  :
+        name { std::move(name) },
         angular_speed { 2 },
         angle_ { angle },
         score {0},

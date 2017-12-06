@@ -242,10 +242,11 @@ namespace pong {
 
         }
         {
-            std::ostringstream stream;
-            stream << "Player 1 Wins!";
-            draw_text_in_texture(2, stream.str());
-
+            if (s.is_game_over && s.curr_winner != nullptr) {
+                std::ostringstream stream;
+                stream << s.curr_winner->name << " wins!";
+                draw_text_in_texture(2, stream.str());
+            }
         }
     }
 

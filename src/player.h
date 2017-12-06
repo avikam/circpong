@@ -5,6 +5,7 @@
 #ifndef CIRPONG_PLAYER_H
 #define CIRPONG_PLAYER_H
 
+#include <string>
 #include "src/constants.h"
 
 namespace pong {
@@ -14,9 +15,10 @@ namespace pong {
         float angular_speed;
         int score;
         player_pos_t pos;
+        std::string name;
 
 
-        explicit player(float angle);
+        explicit player(std::string name, float angle);
 
         void go_up();
         void go_down();

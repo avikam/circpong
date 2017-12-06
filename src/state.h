@@ -29,6 +29,7 @@ namespace pong {
     public:
         bool is_paused;
         bool is_goal;
+        bool is_game_over;
 
         float ball_speed_x;
         float ball_speed_y;
@@ -37,6 +38,8 @@ namespace pong {
         player p1;
         player p2;
 
+        player* curr_winner;
+
         // After detecting a collision we start this timer that is reduced every frame
         // in which collision detection is disabled so we won't have "collision loop"
         int collision_cooldown;
@@ -44,8 +47,10 @@ namespace pong {
         state() :
             is_paused { true  },
             is_goal { false },
-            p1(0),
-            p2(180),
+            is_game_over {false },
+            p1("Player 1", 0),
+            p2("Player 2", 180),
+            curr_winner {nullptr},
 
             ball_speed_x {0.01},
             ball_speed_y {0.01},

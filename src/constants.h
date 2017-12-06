@@ -28,7 +28,7 @@ namespace pong {
 
         static float hit_threshold = 0.009;
 
-        static int max_score = 5;
+        static int max_score = 3;
     }
 }
 
