@@ -103,7 +103,8 @@ namespace pong {
                         std::cout << "click" << std::endl;
                         if (ev.value == 1) {
                             // knob depressed
-                            set_led(pfds[i].fd, 0);
+                            // set_led(pfds[i].fd, 0);
+                            post_key(SDLK_SPACE);
                         } else if (ev.value == 0) {
                             // knob released
                         }
