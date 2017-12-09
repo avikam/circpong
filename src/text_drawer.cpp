@@ -18,7 +18,7 @@ namespace pong {
         // Load our fonts, with a huge size
         font = TTF_OpenFont( FONT_PATH, 16 );
         if (font == nullptr) {
-            throw std::runtime_error("Can't open fond");
+            throw std::runtime_error("Can't open font");
         }
     }
 
