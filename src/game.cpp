@@ -33,19 +33,14 @@ namespace pong {
                                   constants::screen_width, constants::screen_height,
                                   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
-        // Full screen
-//        int flags = SDL_GetWindowFlags(window);
-//        if (flags & SDL_WINDOW_FULLSCREEN) {
-//            SDL_SetWindowFullscreen(window, 0);
-//        } else {
-//            SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-//        }
-
         maincontext = SDL_GL_CreateContext(window);
         if (maincontext == nullptr) {
             std::cout << "Error initing opengl context " << SDL_GetError() << std::endl;
             throw std::runtime_error("maincontext init error");
         }
+
+        // Create full screen
+        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
@@ -103,6 +98,10 @@ namespace pong {
             auto event = env_.get_event();
             if (event == input_t::quit) {
                 return;
+            }
+            if (event == input_t::toggle_fullscreen) {
+                (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ?
+                    SDL_SetWindowFullscreen(window, 0) : SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
             }
 
             s.update(event);

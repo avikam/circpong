@@ -212,6 +212,7 @@ namespace pong {
         }
 
         // Who won?:
+        if (s.is_game_over && s.curr_winner != nullptr)
         {
             glm::mat4 identity{1};
 

@@ -19,6 +19,8 @@ namespace pong {
         player_2_up,
         player_2_down,
 
+        toggle_fullscreen,
+
         pause,
         quit
     };
