@@ -16,6 +16,7 @@ namespace pong {
         int score;
         player_pos_t pos;
         std::string name;
+        std::pair<float,float> boundaries;
 
 
         explicit player(std::string name, float angle);

@@ -15,14 +15,19 @@ namespace pong {
         name { std::move(name) },
         angular_speed { 2 },
         angle_ { angle },
+        boundaries {angle-85,angle+85},
         score {0},
         pos(2 * constants::player_pixel_levels + 1)
     {}
 
     void player::go_up() {
-        angle_ += angular_speed;
+        auto new_angle = angle_ + angular_speed;
+        if (boundaries.first <= new_angle && new_angle <= boundaries.second)
+            angle_ = new_angle;
     }
     void player::go_down() {
-        angle_ -= angular_speed;
+        auto new_angle = angle_ - angular_speed;
+        if (boundaries.first <= new_angle && new_angle <= boundaries.second)
+            angle_ = new_angle;
     }
 }

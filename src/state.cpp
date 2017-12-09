@@ -27,12 +27,11 @@ namespace pong {
 
         if (event == input_t::player_1_up) {
             p1.go_up();
-            std::cout << p1.pos[0].first << ", " << p1.pos[0].second << std::endl;
+            // std::cout << abs(int(p1.angle_)%180) << ", "  << p1.pos[0].first << ", " << p1.pos[0].second << std::endl;
 
         }
         if (event == input_t::player_1_down) {
             p1.go_down();
-            std::cout << p1.pos[0].first << ", " << p1.pos[0].second << std::endl;
         }
 
         if (event == input_t::player_2_up) {
