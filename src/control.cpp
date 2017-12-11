@@ -54,8 +54,16 @@ namespace pong {
 
 
         for (int i=0; i<max_controls; i++) {
-            devfds[i] = open(controls_paths[i].c_str(), O_RDWR);
-            if (devfds[i] == -1) {
+            int j;
+            if (0 == controls_paths[i].compare(0, strlen(bottom_path), bottom_path))
+                j = bottom_fd;
+            else if (0 == controls_paths[i].compare(0, strlen(upper_path), upper_path))
+                j = upper_fd;
+            else
+                throw std::runtime_error("control not in the correct socket");
+
+            devfds[j] = open(controls_paths[i].c_str(), O_RDWR);
+            if (devfds[j] == -1) {
                 std::cerr << "Could not open " << controls_paths[i] << ", " << strerror(errno) << std::endl;
                 throw std::runtime_error("Cannot open control");
             }
@@ -79,6 +87,7 @@ namespace pong {
             fprintf(stderr, "poll failed\n");
             exit(1);
         }
+
         if (ret == 0) {
             return;
         }
@@ -94,10 +103,10 @@ namespace pong {
                     if (ev.type == EV_REL && ev.code == 7) {
                         if (ev.value == -1) {
                             // counter clock-wise turn
-                            if (i==1) go_up1(); else go_up2();
+                            if (pfds[i].fd==devfds[bottom_fd]) go_up1(); else go_up2();
                         } else if (ev.value == 1) {
                             // clock-wise turn
-                            if (i==1) go_down1(); else go_down2();
+                            if (pfds[i].fd == devfds[bottom_fd]) go_down1(); else go_down2();
                         }
                     } else if (ev.type == EV_KEY && ev.code == 256) {
                         std::cout << "click" << std::endl;
