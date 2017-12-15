@@ -4,6 +4,7 @@
 
 #ifndef CIRPONG_UTILS_H
 #define CIRPONG_UTILS_H
+#include "src/opengl.h"
 
 namespace pong {
     #define odd_sign(n) (1 - 2*( (n) & 1) )

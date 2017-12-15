@@ -54,19 +54,6 @@ namespace pong {
 
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
-        glewExperimental = GL_TRUE;
-        GLenum err = glewInit();
-        if (GLEW_OK != err) {
-            /* Problem: glewInit failed, something is seriously wrong. */
-            fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-            throw std::runtime_error("Cant init glew");
-        }
-
-        if(!GLEW_ARB_vertex_array_object) {
-            std::cout << "ARB_vertex_array_object not available." << std::endl;
-            throw std::runtime_error("Cant use needed extension");
-        }
-
         // Needs to be initialized after we have an OpenGl context
         scene_ = new scene{txt_drawer};
         arena_ = new arena{};

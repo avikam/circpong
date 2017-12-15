@@ -2,10 +2,10 @@
 // Created by Avikam Agur on 25/11/2017.
 //
 
-#include <OpenGl/glew.h>
-#include <OpenGl/glext.h>
 #include <iostream>
 #include <vector>
+
+#include "src/opengl.h"
 
 namespace pong {
     void compile_shader(GLuint shader) {

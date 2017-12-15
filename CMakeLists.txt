@@ -9,12 +9,14 @@ include_directories(
 )
 
 IF(APPLE)
-    #SET(GUI_TYPE MACOSX_BUNDLE)
     FIND_LIBRARY(OPENGL OpenGL)
     MARK_AS_ADVANCED (OPENGL)
     SET(EXTRA_LIBS ${OPENGL})
+
+    add_definitions(-DAPPLE)
+
 ELSE()
-    SET(EXTRA_LIBS GL)
+    SET(EXTRA_LIBS GL GLEW)
 ENDIF ()
 
 if(UNIX AND NOT APPLE)
@@ -44,4 +46,4 @@ set(SOURCE_FILES
         ${SRC_CONTROL}
 )
 add_executable(cirpong ${SOURCE_FILES})
-target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf GLEW)
+target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf)

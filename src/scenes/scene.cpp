@@ -2,7 +2,7 @@
 // Created by Avikam Agur on 24/11/2017.
 //
 
-#include <OpenGl/glew.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -10,6 +10,7 @@
 #include <vector>
 #include <sstream>
 
+#include "src/opengl.h"
 #include "src/scenes/scene.h"
 #include "src/scenes/utils.h"
 

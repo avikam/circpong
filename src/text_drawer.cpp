@@ -2,7 +2,7 @@
 // Created by Avikam Agur on 20/11/2017.
 //
 
-#include <OpenGl/glew.h>
+#include "src/opengl.h"
 #include <stdexcept>
 #include "src/text_drawer.h"
 

@@ -5,7 +5,7 @@
 #ifndef CIRPONG_SCENE_H
 #define CIRPONG_SCENE_H
 
-#include <OpenGl/glew.h>
+#include "src/opengl.h"
 #include "src/text_drawer.h"
 #include "src/state.h"
 

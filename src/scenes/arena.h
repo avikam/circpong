@@ -6,8 +6,7 @@
 #define CIRPONG_ARENA_H
 
 #include "src/state.h"
-#include <OpenGl/glew.h>
-
+#include "src/opengl.h"
 
 namespace pong {
     class arena {
