@@ -51,7 +51,7 @@ namespace pong {
 //        SDL_SetWindowBordered( window, SDL_FALSE );
 //        SDL_SetWindowPosition( window, bounds.x, bounds.y );
 //        SDL_SetWindowSize( window, bounds.w, bounds.h );
-
+        opengl_init();
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
         // Needs to be initialized after we have an OpenGl context
