@@ -48,7 +48,7 @@ namespace pong {
 //        int idx = SDL_GetWindowDisplayIndex( window );
 //        SDL_Rect bounds;
 //        SDL_GetDisplayBounds( idx, &bounds );
-//        SDL_SetWindowBordered( window, SDL_FALSE );
+        SDL_SetWindowBordered( window, SDL_FALSE );
 //        SDL_SetWindowPosition( window, bounds.x, bounds.y );
 //        SDL_SetWindowSize( window, bounds.w, bounds.h );
         opengl_init();
