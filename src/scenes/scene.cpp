@@ -232,13 +232,13 @@ namespace pong {
     void scene::invalidate(const pong::state& s) {
         {
             std::ostringstream stream;
-            stream << "Score: " << s.p1.score;
+            stream << "       " << s.p1.score;
             draw_text_in_texture(0, stream.str());
 
         }
         {
             std::ostringstream stream;
-            stream << "Score: " << s.p2.score;
+            stream << "       " << s.p2.score;
             draw_text_in_texture(1, stream.str());
 
         }

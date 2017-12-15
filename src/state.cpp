@@ -21,8 +21,8 @@ namespace pong {
             p2.score = 0;
             curr_winner = nullptr;
 
-            p1.angle_ = 0;
-            p2.angle_ = 180;
+            p1.angle_ = 90;
+            p2.angle_ = 90+180;
         }
 
         if (event == input_t::player_1_up) {

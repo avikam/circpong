@@ -40,7 +40,17 @@ namespace pong {
         }
 
         // Create full screen
-        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+//         SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+//        SDL_Rect curBounds;
+//        SDL_GetWindowPosition( window, &curBounds.x, &curBounds.y );
+//        SDL_GetWindowSize( window, &curBounds.w, &curBounds.h );
+//
+//        int idx = SDL_GetWindowDisplayIndex( window );
+//        SDL_Rect bounds;
+//        SDL_GetDisplayBounds( idx, &bounds );
+//        SDL_SetWindowBordered( window, SDL_FALSE );
+//        SDL_SetWindowPosition( window, bounds.x, bounds.y );
+//        SDL_SetWindowSize( window, bounds.w, bounds.h );
 
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
@@ -93,6 +103,7 @@ namespace pong {
     }
 
     void game::play() {
+        std::cout << "start playing" << std::endl;
         scene_->invalidate(s);
         while (true) {
             auto event = env_.get_event();

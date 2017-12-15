@@ -48,8 +48,8 @@ namespace pong {
             is_paused { true  },
             is_goal { false },
             is_game_over {false },
-            p1("Player 1", 0),
-            p2("Player 2", 180),
+            p1("Player 1", 90),
+            p2("Player 2", 90+180),
             curr_winner {nullptr},
 
             ball_speed_x {0.01},
@@ -58,7 +58,7 @@ namespace pong {
 
             collision_cooldown { constants::collision_cooldown_max_val },
             rng { rd() },
-            uni {-50,50}
+            uni {-20,20}
             {};
 
         void update(input_t);

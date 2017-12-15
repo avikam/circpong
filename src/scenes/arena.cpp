@@ -62,10 +62,10 @@ namespace pong {
 
             // Draw field separation
             for (int i = -47; i <= 47; i++) {
-                gl_Position = gl_in[0].gl_Position + vec4(0, 0.01 * 2 * i, 0, 0);
+                gl_Position = gl_in[0].gl_Position + vec4(0.01 * 2 * i, 0, 0, 0);
                 EmitVertex();
 
-                gl_Position = gl_in[0].gl_Position + vec4(0, 0.01 * (2 * i+1), 0, 0);
+                gl_Position = gl_in[0].gl_Position + vec4(0.01 * (2 * i+1), 0, 0, 0);
                 EmitVertex();
 
                 EndPrimitive();
@@ -136,10 +136,10 @@ namespace pong {
 
         glUseProgram(ballShaderProgram);
         GLfloat ball[] = {
-            -constants::player_size / 2, constants::player_size / 2,
-            constants::player_size / 2, constants::player_size / 2,
-            constants::player_size / 2, -constants::player_size / 2,
-            -constants::player_size / 2, -constants::player_size / 2
+            -constants::ball_size / 2, constants::ball_size / 2,
+            constants::ball_size / 2, constants::ball_size / 2,
+            constants::ball_size / 2, -constants::ball_size / 2,
+            -constants::ball_size / 2, -constants::ball_size / 2
         };
         glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(ball), ball, GL_STATIC_DRAW);
@@ -225,11 +225,12 @@ namespace pong {
 
         GLint uniTrans = glGetUniformLocation(playerShaderProgram, "trans");
         glm::mat4 trans { 1 };
+        //glm::mat4 trans = glm::rotate(glm::mat4 {1.0f}, glm::radians(p.angle_), glm::vec3(0,0,1));
 
         // 0.90 is little far of the edge of the arena.
         // TODO: this number should be integrated with the shader's factor (0.95)
         glm::mat4 pos = glm::translate(
-                glm::rotate(glm::mat4 {1.0f}, glm::radians(p.angle_), glm::vec3(0,0,1)),
+                glm::rotate(trans, glm::radians(p.angle_), glm::vec3(0,0,1)),
                 glm::vec3(0.90, 0, 0)
         );
 
@@ -244,11 +245,12 @@ namespace pong {
 
 
         // Level n
+        float straightness_factor = 0.25f;
         for (int i=1; i <=constants::player_pixel_levels; i++) {
             {
                 // 0.75 is the factor of congruence
                 auto t = pos * glm::translate(glm::mat4 {1},
-                                              glm::vec3{-i * constants::player_size * .75f, i * constants::player_size, 0});
+                                              glm::vec3{-i * constants::player_size * straightness_factor, i * constants::player_size, 0});
                 glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
@@ -257,7 +259,7 @@ namespace pong {
             }
             {
                 auto t = pos * glm::translate(glm::mat4 {1},
-                                        glm::vec3{-i * constants::player_size * .75f, -i * constants::player_size, 0});
+                                        glm::vec3{-i * constants::player_size * straightness_factor, -i * constants::player_size, 0});
                 glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 

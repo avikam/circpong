@@ -13,32 +13,10 @@ namespace pong{
         // Handle events.
         SDL_Event event {};
         while (SDL_PollEvent(&event)) {
-            // Track mouse movement.
-            if (event.type == SDL_MOUSEMOTION) {
-                int mouse_x;
-                //SDL_GetMouseState(&mouse_x, &tick);
-            }
-
             // Clicking 'x' or pressing F4.
             if (event.type == SDL_QUIT) {
                 return input_t::quit;
             }
-
-//            // Joystick direction controller moved.
-//            if (event.type == SDL_JOYAXISMOTION) {
-//                // 32767.
-//                // Up or down.
-//                if (event.jaxis.axis == 1) {
-//                    gamepad_direction = event.jaxis.value/5461;
-//                }
-//            }
-
-            // Joystick action button pressed.
-//            if (event.type == SDL_JOYBUTTONDOWN) {
-//                if (ball->status == ball->READY) {
-//                    ball->status = ball->LAUNCH;
-//                }
-//            }
 
             // Pressing a key.
             if (event.type == SDL_KEYDOWN) {
