@@ -23,7 +23,7 @@ namespace pong {
          */
         player* test_goal();
 
-        bool is_ball_player_collision(const player_pos_t &p);
+        bool is_ball_player_collision(float angle);
         void hit();
         std::random_device rd;     // only used once to initialise (seed) engine
         std::mt19937_64 rng;    // random-number engine used (Mersenne-Twister in this case)

@@ -58,12 +58,12 @@ namespace pong {
         if (collision_cooldown > 0) {
             collision_cooldown -= 1;
         } else {
-            if (is_ball_player_collision(p1.pos)) {
+            if (ball_pos.second >= 0 && is_ball_player_collision(p1.angle_)) {
                 std::cout << "player 1 collision";
                 hit();
             }
 
-            if (is_ball_player_collision(p2.pos)) {
+            if (ball_pos.second <= 0 &&  is_ball_player_collision(p2.angle_ - 180)) {
                 std::cout << "player 2 collision";
                 hit();
             }
@@ -77,6 +77,7 @@ namespace pong {
             ball_speed_x = 0.01;
             ball_speed_y = 0.01;
             ball_pos = {0, 0};
+            collision_cooldown = 0;
 
             winner->score += 1;
 
@@ -87,20 +88,19 @@ namespace pong {
         }
     }
 
-    bool state::is_ball_player_collision(const player_pos_t &p) {
-        double min_dist_sq = 1000;
-
-        for (const auto& pixel : p) {
-            auto dist_sq = pow(pixel.first - ball_pos.first, 2) + pow(pixel.second - ball_pos.second, 2);
-            if (dist_sq < min_dist_sq) {
-                min_dist_sq = dist_sq;
-            }
+    bool state::is_ball_player_collision(float player_theta) {
+        auto ball_theta = (atan(ball_pos.second / ball_pos.first ) * 180 / constants::PI);
+        if (ball_pos.first * ball_pos.second < 0) {
+            ball_theta += 180;
         }
 
-        if (min_dist_sq < constants::hit_threshold) {
-            return true;
+         std::cout << ball_pos.first << ", " << ball_pos.second << ": " <<
+               pow(ball_pos.first, 2) + pow(ball_pos.second, 2) << ", " << ball_theta <<std::endl;
+        if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) >= 0.85*0.85) {
+            std::cout << "theta: " << ball_theta << ", p:" << player_theta << std::endl;
+            if (player_theta - 6 <= ball_theta && ball_theta <= player_theta + 6)
+                return true;
         }
-
         return false;
     }
 
