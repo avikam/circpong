@@ -47,7 +47,7 @@ namespace pong {
     game_start::game_start(text_drawer &txt_drawer) :
         _txt_drawer{txt_drawer},
         texts {
-                {
+                text_positions_t {
                     [](const state& s) -> std::string {
                         std::ostringstream stream;
                         stream << (constants::start_game_counter - s.start_game_count_down.count());
@@ -58,12 +58,12 @@ namespace pong {
                                glm::mat4{1}, glm::vec3 { 0.0f, -0.25f, 0 }
                        ), glm::vec3 { 0.05f, 0.2f, 0 })
                 },
-                {
+                text_positions_t {
                     [](const state& s) -> std::string { return "START GAME"; },
                     glm::scale(glm::mat4{1}, glm::vec3 { .55f, .25f, 0 })
                 },
 
-                {
+                text_positions_t {
                         [](const state& s) -> std::string { return "PONG"; },
                         glm::scale(glm::translate(
                                 glm::mat4{1}, glm::vec3 {.0f, 0.25f, 0 }
