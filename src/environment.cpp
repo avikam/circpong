@@ -27,17 +27,22 @@ namespace pong{
                         r |=input_t::quit;
 //                        // Pressing space will launch the ball if it isn't
 //                        // already launched.
+                        break;
                     case SDLK_SPACE:
                         r |= input_t::pause;
-
+                        break;
                     case SDLK_UP:
                         r |=input_t::player_1_up;
+                        break;
                     case SDLK_DOWN:
                         r |=input_t::player_1_down;
+                        break;
                     case SDLK_q:
                         r |= input_t::player_2_down;
+                        break;
                     case SDLK_a:
                         r |= input_t::player_2_up;
+                        break;
 //                    case SD LK_f:
 //                        return input_t::toggle_fullscreen;
                 }

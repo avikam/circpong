@@ -20,8 +20,8 @@ namespace pong {
         // TODO: Consider calculating by player speed or other player position
         static int collision_cooldown_max_val = 10;
 
-        static int screen_width = 640;
-        static int screen_height = 640;
+        static int screen_width = 768;
+        static int screen_height = 768;
 
         static float player_size = 0.03;
         static float ball_size = 0.04;
