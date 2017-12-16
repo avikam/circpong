@@ -94,10 +94,10 @@ namespace pong {
             ball_theta += 180;
         }
 
-         std::cout << ball_pos.first << ", " << ball_pos.second << ": " <<
-               pow(ball_pos.first, 2) + pow(ball_pos.second, 2) << ", " << ball_theta <<std::endl;
+//         std::cout << ball_pos.first << ", " << ball_pos.second << ": " <<
+//               pow(ball_pos.first, 2) + pow(ball_pos.second, 2) << ", " << ball_theta <<std::endl;
         if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) >= 0.85*0.85) {
-            std::cout << "theta: " << ball_theta << ", p:" << player_theta << std::endl;
+//            std::cout << "theta: " << ball_theta << ", p:" << player_theta << std::endl;
             if (player_theta - 6 <= ball_theta && ball_theta <= player_theta + 6)
                 return true;
         }

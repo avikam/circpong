@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <utility>
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -44,7 +45,33 @@ static const GLchar* fragmentSource = R"glsl(
 
 namespace pong {
     game_start::game_start(text_drawer &txt_drawer) :
-            _txt_drawer{txt_drawer} {
+        _txt_drawer{txt_drawer},
+        texts {
+                {
+                    [](const state& s) -> std::string {
+                        std::ostringstream stream;
+                        stream << (constants::start_game_counter - s.start_game_count_down.count());
+                        return stream.str();
+                    },
+                    glm::scale(
+                       glm::translate(
+                               glm::mat4{1}, glm::vec3 { 0.0f, -0.25f, 0 }
+                       ), glm::vec3 { 0.05f, 0.2f, 0 })
+                },
+                {
+                    [](const state& s) -> std::string { return "START GAME"; },
+                    glm::scale(glm::mat4{1}, glm::vec3 { .55f, .25f, 0 })
+                },
+
+                {
+                        [](const state& s) -> std::string { return "PONG"; },
+                        glm::scale(glm::translate(
+                                glm::mat4{1}, glm::vec3 {.0f, 0.25f, 0 }
+                        ), glm::vec3 { .65f, .25f, 0 })
+                }
+        }
+
+    {
         // Create Vertex Array Object
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -71,12 +98,6 @@ namespace pong {
 
         GLfloat vertices[] = {
                 //  Position      Color             Texcoords
-                // Score
-                -0.125f, 0.0f,    1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Top-left
-                0.125f,  0.0f,     1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // Top-right
-                0.125f, -1.0f,    1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
-                -.125f, -1.0f,   1.0f, 1.0f, 1.0f, 0.0f, 1.0f,  // Bottom-left
-
                 // Game Over
                 -1.0f,   1.0f,     1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Top-left
                 1.0f,  1.0f,     1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // Top-right
@@ -88,26 +109,15 @@ namespace pong {
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         // Create an element array
-        glGenBuffers(2, ebo);
+        glGenBuffers(1, ebo);
 
-        {
-            GLuint elements[] = {
-                    0, 1, 2,
-                    2, 3, 0
-            };
+        GLuint elements[] = {
+                0, 1, 2,
+                2, 3, 0
+        };
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-        }
-        {
-            GLuint elements[] = {
-                    4, 5, 6,
-                    6, 7, 4
-            };
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[1]);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-        }
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
         glGenTextures(2, textures);
 
@@ -140,11 +150,9 @@ namespace pong {
     }
 
     void game_start::invalidate(const pong::state &s) {
-        std::ostringstream stream;
-        stream << (constants::start_game_counter - s.start_game_count_down.count());
-        draw_text_in_texture(0, stream.str());
-        draw_text_in_texture(1, "START GAME");
-
+        for (int i = 0; i < texts.size(); i++) {
+            draw_text_in_texture(i, std::get<0>(texts[i])(s));
+        }
     }
 
     void game_start::render(pong::state &s) {
@@ -169,39 +177,38 @@ namespace pong {
         glEnableVertexAttribArray(texAttrib);
         glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void *) (5 * sizeof(GLfloat)));
 
-
-        GLint uniTex = glGetUniformLocation(shaderProgram, "tex");
-        GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
-
         //Set Blending
         //Required so that the alpha channels show up from the surface
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // counter
-        {
-            glm::mat4 transformation = glm::mat4{1};
-            transformation = glm::scale(transformation, glm::vec3 { 0.5f, 0.25f, 0 });
-            transformation = glm::translate(transformation, glm::vec3 { 0.0f, -0.5f, 0 });
+        if (s.is_welcome)
+            _render_text(std::index_sequence<size_t(texts_idx::pong)>{});
+        else if (s.is_game_start)
+            _render_text(std::index_sequence<size_t(texts_idx::counter), size_t(texts_idx::start_game)>{});
+        else
+            throw std::runtime_error("No reason to rander this scene"); // shouldnt be here
+    }
 
+
+    template<std::size_t... I>
+    void game_start::_render_text(std::index_sequence<I...>) {
+        GLint uniTex = glGetUniformLocation(shaderProgram, "tex");
+        GLint uniTrans = glGetUniformLocation(shaderProgram, "trans");
+
+        (void) std::initializer_list<int>{(
             // set texture
-            glUniform1i(uniTex, 0);
+            glUniform1i(uniTex, I),
             // set transformation
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(std::get<1>(texts[I]))),
+
             // set elements and draw
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]);
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        }
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]),
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0),
 
-        // start game
-        {
-            glm::mat4 transformation = glm::mat4{1};
-            transformation = glm::scale(transformation, glm::vec3 { 0.5f, 0.25f, 0 });
+            0
+        )...};
 
-            glUniform1i(uniTex, 1);
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[1]);
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        }
+
     }
 }

@@ -31,6 +31,7 @@ namespace pong {
 
 
     public:
+        bool is_welcome;
         bool is_game_start;
         bool is_paused;
         bool is_goal;
@@ -54,7 +55,8 @@ namespace pong {
         std::chrono::seconds start_game_count_down;
 
         state() :
-            is_game_start { true },
+            is_welcome { true },
+            is_game_start { false },
             is_paused { true  },
             is_goal { false },
             is_game_over {false },

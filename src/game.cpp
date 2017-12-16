@@ -78,7 +78,7 @@ namespace pong {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        if (s.is_game_start) {
+        if (s.is_welcome || s.is_game_start) {
             game_start_->invalidate(s);
             game_start_->render(s);
         } else {
