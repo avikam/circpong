@@ -4,7 +4,7 @@
 
 #include "src/opengl.h"
 #include <stdexcept>
-#include "src/text_drawer.h"
+#include "src/scenes/text_drawer.h"
 
 #define FONT_PATH "resources/fonts/NES-Chimera/NES-Chimera.ttf"
 

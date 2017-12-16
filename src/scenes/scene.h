@@ -6,7 +6,7 @@
 #define CIRPONG_SCENE_H
 
 #include "src/opengl.h"
-#include "src/text_drawer.h"
+#include "text_drawer.h"
 #include "src/state.h"
 
 namespace pong{

@@ -12,6 +12,9 @@
 #include <tuple>
 #include <random>
 
+using namespace std::chrono;
+
+
 namespace pong {
     class state {
         /*
@@ -27,6 +30,7 @@ namespace pong {
 
 
     public:
+        bool is_game_start;
         bool is_paused;
         bool is_goal;
         bool is_game_over;
@@ -34,6 +38,8 @@ namespace pong {
         float ball_speed_x;
         float ball_speed_y;
         pos_t ball_pos;
+
+        high_resolution_clock::time_point game_start_time;
 
         player p1;
         player p2;
@@ -45,6 +51,7 @@ namespace pong {
         int collision_cooldown;
 
         state() :
+            is_game_start { true },
             is_paused { true  },
             is_goal { false },
             is_game_over {false },
@@ -58,7 +65,8 @@ namespace pong {
 
             collision_cooldown { constants::collision_cooldown_max_val },
             rng { rd() },
-            uni {-20,20}
+            uni {-20,20},
+            game_start_time { high_resolution_clock::now() }
             {};
 
         void update(input_t);

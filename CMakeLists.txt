@@ -33,13 +33,15 @@ endif()
 
 set(SOURCE_FILES
         main.cpp
+        src/scenes/text_drawer.cpp
         src/scenes/utils.cpp
+
         src/scenes/scene.cpp
         src/scenes/arena.cpp
+        src/scenes/game_start.cpp
 
         src/state.cpp
         src/environment.cpp
-        src/text_drawer.cpp
         src/player.cpp
         src/ball.cpp
         src/game.cpp

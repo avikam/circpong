@@ -100,7 +100,7 @@ namespace pong {
         }
 
         // check x coordinate (first coordinate) of the ball being to the left or to the right of the center
-        if (ball_pos.first > 0) {
+        if (ball_pos.second > 0) {
             return &p2;
         }
 

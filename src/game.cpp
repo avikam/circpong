@@ -49,13 +49,14 @@ namespace pong {
 //        SDL_Rect bounds;
 //        SDL_GetDisplayBounds( idx, &bounds );
         SDL_SetWindowBordered( window, SDL_FALSE );
-//        SDL_SetWindowPosition( window, bounds.x, bounds.y );
+        SDL_SetWindowPosition( window, 0, 0);
 //        SDL_SetWindowSize( window, bounds.w, bounds.h );
         opengl_init();
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
         // Needs to be initialized after we have an OpenGl context
         scene_ = new scene{txt_drawer};
+        game_start_ = new game_start{txt_drawer};
         arena_ = new arena{};
     }
 
@@ -63,6 +64,7 @@ namespace pong {
         SDL_GL_DeleteContext(maincontext);
         delete scene_;
         delete arena_;
+        delete game_start_;
         // Destroy  window.
         SDL_DestroyWindow(window);
 
@@ -76,14 +78,19 @@ namespace pong {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        if (s.is_paused) {
-            if (s.is_goal) {
-                scene_->invalidate(s);   // TODO: Although this is a "good" behaviour (don't draw unless it was a score
-                                         // it actually hides a bug while drawing the scene ("invalid op")
+        if (s.is_game_start) {
+            game_start_->invalidate(s);
+            game_start_->render(s);
+        } else {
+            if (s.is_paused) {
+                if (s.is_goal) {
+                    scene_->invalidate(s);   // TODO: Although this is a "good" behaviour (don't draw unless it was a score
+                    // it actually hides a bug while drawing the scene ("invalid op")
+                }
+                scene_->render(s);
             }
-            scene_->render(s);
+            arena_->render(s);
         }
-        arena_->render(s);
 
         /* Swap our back buffer to the front */
         SDL_GL_SwapWindow(window);

@@ -8,9 +8,10 @@
 #include "src/state.h"
 
 #include "src/environment.h"
-#include "src/text_drawer.h"
+#include "src/scenes/text_drawer.h"
 #include "src/scenes/scene.h"
 #include "src/scenes/arena.h"
+#include "src/scenes/game_start.h"
 
 namespace pong {
     class game {
@@ -19,6 +20,7 @@ namespace pong {
         text_drawer txt_drawer;
         scene* scene_;
         arena* arena_;
+        game_start* game_start_;
 
         bool exit_;
         SDL_Window * window;
