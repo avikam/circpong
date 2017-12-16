@@ -105,22 +105,6 @@ namespace pong {
         glGenTextures(3, textures);
 
 
-        // Specify the layout of the vertex data
-        // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of
-        // invalid op
-        GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-        // uses currently bound vertex array object for the operation
-        glEnableVertexAttribArray(posAttrib);
-        glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), nullptr);
-
-        GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
-        glEnableVertexAttribArray(colAttrib);
-        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void *) (2 * sizeof(GLfloat)));
-
-        GLint texAttrib = glGetAttribLocation(shaderProgram, "texcoord");
-        glEnableVertexAttribArray(texAttrib);
-        glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void *) (5 * sizeof(GLfloat)));
-
         glDeleteShader(fragmentShader);
         glDeleteShader(vertexShader);
 
@@ -154,7 +138,6 @@ namespace pong {
         glUseProgram(shaderProgram);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
         // Specify the layout of the vertex data
         // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of
@@ -183,30 +166,27 @@ namespace pong {
 
         // Score of p1:
         {
-            glm::mat4 identity{1};
+            glm::mat4 transformation = glm::mat4{1};
+            transformation = glm::translate(transformation, glm::vec3 { 0.85f, 0.1f, 0 });
+            transformation = glm::scale(transformation, glm::vec3 { 0.125f, 0.125f, 0 });
 
-            auto t = glm::scale(
-                    glm::translate(identity, glm::vec3(0.7f, 0.85f, 0)),
-                    glm::vec3(0.5, 0.125, 0));
 
             glUniform1i(uniTex, 0);
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
 
-            // Create a Vertex Buffer Object and copy the vertex data to i
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             debug_err();
         }
 
         // Score of p2:
         {
-            glm::mat4 identity{1};
-
-            auto t = glm::scale(
-                    glm::translate(identity, glm::vec3(-0.7f, 0.85f, 0)),
-                    glm::vec3(0.5, 0.125, 0));
+            glm::mat4 transformation = glm::mat4{1};
+            transformation = glm::translate(transformation, glm::vec3 { 0.85f, -0.1f, 0 });
+            transformation = glm::scale(transformation, glm::vec3 { 0.125f, 0.125f, 0 });
 
             glUniform1i(uniTex, 1);
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
 
             // Create a Vertex Buffer Object and copy the vertex data to i
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -216,14 +196,13 @@ namespace pong {
         // Who won?:
         if (s.is_game_over && s.curr_winner != nullptr)
         {
-            glm::mat4 identity{1};
-
-            auto t = glm::scale(
-                    glm::translate(identity, glm::vec3(0, 0, 0)),
-                    glm::vec3(1, 0.125, 0));
+            glm::mat4 transformation = glm::mat4{1};
+            transformation = glm::translate(transformation, glm::vec3 { 0.0, 0.5 * (s.curr_winner == &s.p1 ? 1 : -1), 0 });
+            transformation = glm::scale(transformation, glm::vec3 { 1.0f, 0.2f, 0 });
+            transformation = glm::rotate(transformation, glm::radians(180.0f) * (s.curr_winner == &s.p1 ? 1 : 0),  glm::vec3 {0,0,1});
 
             glUniform1i(uniTex, 2);
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
 
             // Create a Vertex Buffer Object and copy the vertex data to i
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -234,20 +213,20 @@ namespace pong {
     void scene::invalidate(const pong::state& s) {
         {
             std::ostringstream stream;
-            stream << "       " << s.p1.score;
+            stream << s.p1.score;
             draw_text_in_texture(0, stream.str());
 
         }
         {
             std::ostringstream stream;
-            stream << "       " << s.p2.score;
+            stream << s.p2.score;
             draw_text_in_texture(1, stream.str());
 
         }
         {
             if (s.is_game_over && s.curr_winner != nullptr) {
                 std::ostringstream stream;
-                stream << s.curr_winner->name << " wins!";
+                stream << "WIN";
                 draw_text_in_texture(2, stream.str());
             }
         }
