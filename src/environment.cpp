@@ -25,8 +25,6 @@ namespace pong{
                     // Pressing ESC exits from the game.
                     case SDLK_ESCAPE:
                         r |=input_t::quit;
-//                        // Pressing space will launch the ball if it isn't
-//                        // already launched.
                         break;
                     case SDLK_SPACE:
                         r |= input_t::pause;
