@@ -125,6 +125,11 @@ namespace pong {
         float shift_cos = cos(Angle_shift * constants::PI/180);
         float shift_sin = sin(Angle_shift * constants::PI/180);
 
+        // change speed
+        ball_speed_y *= 1.05;
+        ball_speed_x *= 1.05;
+
+        // change direction
         auto speed_x_tmp = ball_speed_x*shift_cos - ball_speed_y*shift_sin;
         ball_speed_y = -1 * (ball_speed_x*shift_sin + ball_speed_y*shift_cos);
         ball_speed_x = -1 * speed_x_tmp;

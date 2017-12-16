@@ -113,7 +113,8 @@ namespace pong {
             s.update(event);
             render();
 
-            SDL_Delay(25);
+            // TODO: Get the amount of time we waited while polling and deduce how much time to delay
+            SDL_Delay(2);
         }
     }
 }
