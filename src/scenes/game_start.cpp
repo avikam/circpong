@@ -67,7 +67,28 @@ namespace pong {
                         [](const state& s) -> std::string { return "PONG"; },
                         glm::scale(glm::translate(
                                 glm::mat4{1}, glm::vec3 {.0f, 0.25f, 0 }
-                        ), glm::vec3 { .65f, .25f, 0 })
+                        ), glm::vec3 { .45f, .25f, 0 })
+                },
+
+                text_positions_t {
+                    [](const state& s) -> std::string { return "Loren ipsum instruction line1"; },
+                            glm::scale(glm::translate(
+                                    glm::mat4{1}, glm::vec3 {.0f, 0.0f, 0 }
+                            ), glm::vec3 { .65f, .07f, 0 })
+                },
+
+                text_positions_t {
+                        [](const state& s) -> std::string { return "instruction line 2"; },
+                        glm::scale(glm::translate(
+                                glm::mat4{1}, glm::vec3 {-.2f, -.1f, 0 }
+                        ), glm::vec3 { .45f, .07f, 0 })
+                },
+
+                text_positions_t {
+                        [](const state& s) -> std::string { return "PLAY"; },
+                        glm::scale(glm::translate(
+                                glm::mat4{1}, glm::vec3 {.0f, -0.5f, 0 }
+                        ), glm::vec3 { .15f, .1f, 0 })
                 }
         }
 
@@ -119,7 +140,7 @@ namespace pong {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
-        glGenTextures(2, textures);
+        glGenTextures(texts.size(), textures);
 
         glDeleteShader(fragmentShader);
         glDeleteShader(vertexShader);
@@ -127,11 +148,11 @@ namespace pong {
     }
 
     game_start::~game_start() {
-        glDeleteTextures(2, textures);
+        glDeleteTextures(texts.size(), textures);
 
         glDeleteProgram(shaderProgram);
         // delete elements buffer
-        glDeleteBuffers(2, ebo);
+        glDeleteBuffers(1, ebo);
         // delete vertex buffer
         glDeleteBuffers(1, &vbo);
         // delete vertex array data
@@ -183,7 +204,12 @@ namespace pong {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         if (s.is_welcome)
-            _render_text(std::index_sequence<size_t(texts_idx::pong)>{});
+            _render_text(std::index_sequence<
+                    size_t(texts_idx::pong),
+                    size_t(texts_idx::instruction1),
+                    size_t(texts_idx::instruction2),
+                    size_t(texts_idx::play)
+            >{});
         else if (s.is_game_start)
             _render_text(std::index_sequence<size_t(texts_idx::counter), size_t(texts_idx::start_game)>{});
         else

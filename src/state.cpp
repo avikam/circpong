@@ -8,6 +8,18 @@ namespace pong {
     void state::update(input_t event) {
         is_goal = false;
 
+        if (is_welcome) {
+            if (input_t::idle != (event & input_t::pause) /* todo: both clicks */) {
+                is_welcome = false;
+
+                is_paused = true;
+                is_game_start = true;
+                game_start_time = high_resolution_clock::now();
+            }
+
+            return;
+        }
+
         if (is_game_start) {
             start_game_count_down = duration_cast<seconds>( high_resolution_clock::now() - game_start_time );
             if (start_game_count_down.count() >= constants::start_game_counter) {
@@ -33,6 +45,10 @@ namespace pong {
 
             p1.angle_ = 90;
             p2.angle_ = 90+180;
+
+            is_paused = true;
+            is_game_start = false;
+            is_welcome = true;
         }
 
         if (input_t::idle != (event & input_t::player_1_up)) {
