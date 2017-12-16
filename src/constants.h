@@ -32,6 +32,8 @@ namespace pong {
         static int max_score = 3;
 
         static int start_game_counter = 3;
+
+        static bool always_draw_scores = true;
     }
 }
 

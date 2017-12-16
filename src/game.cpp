@@ -82,11 +82,12 @@ namespace pong {
             game_start_->invalidate(s);
             game_start_->render(s);
         } else {
-            if (s.is_paused) {
+            if (s.is_paused || constants::always_draw_scores) { // Always draw scores
                 if (s.is_goal) {
                     scene_->invalidate(s);   // TODO: Although this is a "good" behaviour (don't draw unless it was a score
                     // it actually hides a bug while drawing the scene ("invalid op")
                 }
+                scene_->invalidate(s);
                 scene_->render(s);
             }
             arena_->render(s);
