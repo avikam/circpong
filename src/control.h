@@ -1,12 +1,15 @@
 //
 // Created by avikam on 18/11/17.
 //
-#ifndef CIRPONG_CONTROL_H__
-#define CIRPONG_CONTROL_H__
+#ifndef __CIRPONG_CONTROL_H__
+#define __CIRPONG_CONTROL_H__
+
 
 #include <SDL2/SDL_events.h>
 #include <poll.h> // struct pollfd
 #include <iostream>
+
+#include "src/input.h"
 
 // Thit constant is from udev rule, don't change!
 #define controls_path "/dev/input/powermate/"
@@ -37,13 +40,7 @@ namespace pong {
     public:
         PowermateControl();
 
-        enum class EventType {
-            GoLeft,
-            GoRight,
-            PressKnob
-        };
-
-        void poll_event();
+        input_t poll_event();
     };
 }
 

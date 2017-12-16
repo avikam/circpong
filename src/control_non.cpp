@@ -8,7 +8,8 @@ namespace pong {
     PowermateControl::PowermateControl() {
     }
 
-    void PowermateControl::poll_event() {
+    input_t PowermateControl::poll_event() {
+        return input_t::idle;
     };
 
 }

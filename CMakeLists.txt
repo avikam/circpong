@@ -46,6 +46,6 @@ set(SOURCE_FILES
         src/ball.cpp
         src/game.cpp
         ${SRC_CONTROL}
-)
+        src/input.h)
 add_executable(cirpong ${SOURCE_FILES})
 target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf)

@@ -74,7 +74,7 @@ namespace pong {
         pfds = new struct pollfd[nfds + 1];
     }
 
-    void PowermateControl::poll_event() {
+    input_t PowermateControl::poll_event() {
         // add devfd
         for (int i=0; i < max_controls; i++) {
             pfds[1 + i].fd = devfds[i];
@@ -88,8 +88,9 @@ namespace pong {
             exit(1);
         }
 
+        input_t res = input_t::idle;
         if (ret == 0) {
-            return;
+            return res;
         }
 
         for (int i=1; i<=1 + max_controls; i++) {
@@ -103,17 +104,16 @@ namespace pong {
                     if (ev.type == EV_REL && ev.code == 7) {
                         if (ev.value == -1) {
                             // counter clock-wise turn
-                            if (pfds[i].fd==devfds[bottom_fd]) go_up1(); else go_up2();
+                            res |= (pfds[i].fd==devfds[bottom_fd] ? input_t::player_1_up : input_t::player_2_up);
+
                         } else if (ev.value == 1) {
                             // clock-wise turn
-                            if (pfds[i].fd == devfds[bottom_fd]) go_down1(); else go_down2();
+                            res |= (pfds[i].fd==devfds[bottom_fd] ? input_t::player_1_down : input_t::player_2_down);
                         }
                     } else if (ev.type == EV_KEY && ev.code == 256) {
                         std::cout << "click" << std::endl;
                         if (ev.value == 1) {
-                            // knob depressed
-                            // set_led(pfds[i].fd, 0);
-                            post_key(SDLK_SPACE);
+                            res |= input_t::pause;
                         } else if (ev.value == 0) {
                             // knob released
                         }
@@ -121,31 +121,9 @@ namespace pong {
                 }
             }
         }
+        return res;
     };
 
-    void PowermateControl::go_up1() {
-        post_key(SDLK_UP);
-    }
-    void PowermateControl::go_down1() {
-        post_key(SDLK_DOWN);
-    }
-
-    void PowermateControl::go_up2() {
-        post_key(SDLK_q);
-    }
-    void PowermateControl::go_down2() {
-        post_key(SDLK_a);
-    }
-
-    void PowermateControl::post_key(SDL_Keycode key_code) {
-        SDL_Event ev{};
-        ev.type = SDL_KEYDOWN;
-        //ev.key.windowID = win_id;
-        ev.key.state = SDL_PRESSED;
-        ev.key.keysym.sym = key_code;
-
-        auto ret = SDL_PushEvent(&ev);
-    }
 
     void PowermateControl::set_led(int fd_ctrl, unsigned int val)  {
         ::input_event ev {};

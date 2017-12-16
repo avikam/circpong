@@ -35,19 +35,19 @@ namespace pong {
             p2.angle_ = 90+180;
         }
 
-        if (event == input_t::player_1_up) {
+        if (input_t::idle != (event & input_t::player_1_up)) {
             p1.go_up();
             // std::cout << abs(int(p1.angle_)%180) << ", "  << p1.pos[0].first << ", " << p1.pos[0].second << std::endl;
 
         }
-        if (event == input_t::player_1_down) {
+        if (input_t::idle != (event & input_t::player_1_down)) {
             p1.go_down();
         }
 
-        if (event == input_t::player_2_up) {
+        if (input_t::idle != (event & input_t::player_2_up)) {
             p2.go_up();
         }
-        if (event == input_t::player_2_down) {
+        if (input_t::idle != (event & input_t::player_2_down)) {
             p2.go_down();
         }
 
