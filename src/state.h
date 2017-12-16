@@ -50,6 +50,8 @@ namespace pong {
         // in which collision detection is disabled so we won't have "collision loop"
         int collision_cooldown;
 
+        std::chrono::seconds start_game_count_down;
+
         state() :
             is_game_start { true },
             is_paused { true  },
@@ -66,7 +68,8 @@ namespace pong {
             collision_cooldown { constants::collision_cooldown_max_val },
             rng { rd() },
             uni {-20,20},
-            game_start_time { high_resolution_clock::now() }
+            game_start_time { high_resolution_clock::now() },
+            start_game_count_down { 0 }
             {};
 
         void update(input_t);

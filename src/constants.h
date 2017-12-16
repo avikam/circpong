@@ -30,6 +30,8 @@ namespace pong {
         static float hit_threshold = 0.009;
 
         static int max_score = 3;
+
+        static int start_game_counter = 3;
     }
 }
 

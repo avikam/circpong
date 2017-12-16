@@ -8,6 +8,16 @@ namespace pong {
     void state::update(input_t event) {
         is_goal = false;
 
+        if (is_game_start) {
+            start_game_count_down = duration_cast<seconds>( high_resolution_clock::now() - game_start_time );
+            if (start_game_count_down.count() >= constants::start_game_counter) {
+                is_game_start = false;
+                is_paused = false;
+            } else {
+                return;
+            }
+        }
+
         if (event == input_t::pause) {
             is_paused = !is_paused;
         }

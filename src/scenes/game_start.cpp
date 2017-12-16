@@ -71,25 +71,43 @@ namespace pong {
 
         GLfloat vertices[] = {
                 //  Position      Color             Texcoords
-                -0.5f, 0.5f,    1.0f, 1.0f, 1.0f, 0.0f, 1.0f, // Top-left
-                0.5f, 0.5f,     1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Top-right
-                0.5f, -0.5f,    1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // Bottom-right
-                -0.5f, -0.5f,   1.0f, 1.0f, 1.0f, 0.0f, 0.0f  // Bottom-left
+                // Score
+                -0.125f, 0.0f,    1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Top-left
+                0.125f,  0.0f,     1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // Top-right
+                0.125f, -1.0f,    1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+                -.125f, -1.0f,   1.0f, 1.0f, 1.0f, 0.0f, 1.0f,  // Bottom-left
+
+                // Game Over
+                -1.0f,   1.0f,     1.0f, 1.0f, 1.0f, 0.0f, 0.0f, // Top-left
+                1.0f,  1.0f,     1.0f, 1.0f, 1.0f, 1.0f, 0.0f, // Top-right
+                1.0f,  0.0f,     1.0f, 1.0f, 1.0f, 1.0f, 1.0f, // Bottom-right
+                -1.0f,   0.0f,     1.0f, 1.0f, 1.0f, 0.0f, 1.0f  // Bottom-left
         };
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
         // Create an element array
-        glGenBuffers(1, &ebo);
+        glGenBuffers(2, ebo);
 
-        GLuint elements[] = {
-                0, 3, 1,
-                1, 2, 3
-        };
+        {
+            GLuint elements[] = {
+                    0, 1, 2,
+                    2, 3, 0
+            };
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+        }
+        {
+            GLuint elements[] = {
+                    4, 5, 6,
+                    6, 7, 4
+            };
+
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[1]);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+        }
 
         glGenTextures(2, textures);
 
@@ -103,7 +121,7 @@ namespace pong {
 
         glDeleteProgram(shaderProgram);
         // delete elements buffer
-        glDeleteBuffers(1, &ebo);
+        glDeleteBuffers(2, ebo);
         // delete vertex buffer
         glDeleteBuffers(1, &vbo);
         // delete vertex array data
@@ -122,10 +140,8 @@ namespace pong {
     }
 
     void game_start::invalidate(const pong::state &s) {
-        auto secs = duration_cast<seconds>( high_resolution_clock::now() - s.game_start_time ).count();
-
         std::ostringstream stream;
-        stream << (4 - secs);
+        stream << (constants::start_game_counter - s.start_game_count_down.count());
         draw_text_in_texture(0, stream.str());
         draw_text_in_texture(1, "START GAME");
 
@@ -136,7 +152,6 @@ namespace pong {
         glUseProgram(shaderProgram);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
         // Specify the layout of the vertex data
         // must happen AFTER binding vbo, otherwise glDrawArrays seems to be able draw on the account of
@@ -165,14 +180,27 @@ namespace pong {
 
         // counter
         {
-            glm::mat4 identity{1};
+            glm::mat4 transformation = glm::mat4{1};
+            transformation = glm::scale(transformation, glm::vec3 { 0.5f, 0.25f, 0 });
+            transformation = glm::translate(transformation, glm::vec3 { 0.0f, -0.5f, 0 });
 
-            auto t = glm::scale(identity, glm::vec3(0.5, -0.125, 0));
-
+            // set texture
             glUniform1i(uniTex, 0);
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+            // set transformation
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
+            // set elements and draw
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        }
 
-            // Create a Vertex Buffer Object and copy the vertex data to i
+        // start game
+        {
+            glm::mat4 transformation = glm::mat4{1};
+            transformation = glm::scale(transformation, glm::vec3 { 0.5f, 0.25f, 0 });
+
+            glUniform1i(uniTex, 1);
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[1]);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
     }
