@@ -102,7 +102,7 @@ namespace pong {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
-        glGenTextures(3, textures);
+        glGenTextures(4, textures);
 
 
         glDeleteShader(fragmentShader);
@@ -111,7 +111,7 @@ namespace pong {
     };
 
     scene::~scene() {
-        glDeleteTextures(3, textures);
+        glDeleteTextures(4, textures);
 
         glDeleteProgram(shaderProgram);
         // delete elements buffer
@@ -168,6 +168,7 @@ namespace pong {
         {
             glm::mat4 transformation = glm::mat4{1};
             transformation = glm::translate(transformation, glm::vec3 { 0.85f, 0.1f, 0 });
+            transformation = glm::rotate(transformation, glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f });
             transformation = glm::scale(transformation, glm::vec3 { 0.125f, 0.125f, 0 });
 
 
@@ -183,6 +184,7 @@ namespace pong {
         {
             glm::mat4 transformation = glm::mat4{1};
             transformation = glm::translate(transformation, glm::vec3 { 0.85f, -0.1f, 0 });
+            transformation = glm::rotate(transformation, glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f });
             transformation = glm::scale(transformation, glm::vec3 { 0.125f, 0.125f, 0 });
 
             glUniform1i(uniTex, 1);
@@ -194,14 +196,27 @@ namespace pong {
         }
 
         // Who won?:
-        if (s.is_game_over && s.curr_winner != nullptr)
-        {
+        if (s.is_game_over && s.curr_winner != nullptr) {
             glm::mat4 transformation = glm::mat4{1};
             transformation = glm::translate(transformation, glm::vec3 { 0.0, 0.5 * (s.curr_winner == &s.p1 ? 1 : -1), 0 });
             transformation = glm::scale(transformation, glm::vec3 { 1.0f, 0.2f, 0 });
             transformation = glm::rotate(transformation, glm::radians(180.0f) * (s.curr_winner == &s.p1 ? 1 : 0),  glm::vec3 {0,0,1});
 
             glUniform1i(uniTex, 2);
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
+
+            // Create a Vertex Buffer Object and copy the vertex data to i
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            debug_err();
+        }
+
+        // pause:
+        if (s.is_player_pressed_paused) {
+            glm::mat4 transformation = glm::mat4{1};
+            transformation = glm::rotate(transformation, glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f });
+            transformation = glm::scale(transformation, glm::vec3 { 0.6f, 0.25f, 0 });
+
+            glUniform1i(uniTex, 3);
             glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
 
             // Create a Vertex Buffer Object and copy the vertex data to i
@@ -225,9 +240,12 @@ namespace pong {
         }
         {
             if (s.is_game_over && s.curr_winner != nullptr) {
-                std::ostringstream stream;
-                stream << "WIN";
-                draw_text_in_texture(2, stream.str());
+                draw_text_in_texture(2, "WIN");
+            }
+        }
+        {
+            if (s.is_paused) {
+                draw_text_in_texture(3, "PAUSED");
             }
         }
     }

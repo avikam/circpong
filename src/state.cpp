@@ -31,6 +31,10 @@ namespace pong {
         }
 
         if (event == input_t::pause) {
+            // If the game wasn't paused and a pause input has come -> player pressed pause is true to indicate
+            // that a "RESUME" statement should be displayed.
+            is_player_pressed_paused = !is_paused;
+
             is_paused = !is_paused;
         }
 
@@ -47,6 +51,7 @@ namespace pong {
             p2.angle_ = 90+180;
 
             is_paused = true;
+            is_player_pressed_paused = false;
             is_game_start = false;
             is_welcome = true;
         }
@@ -88,6 +93,7 @@ namespace pong {
         auto winner = test_goal();
         if (winner != nullptr) {
             is_paused = true;
+            is_player_pressed_paused = false;
             is_goal = true;
 
             ball_speed_x = 0.01;

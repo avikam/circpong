@@ -19,7 +19,7 @@ namespace pong{
         GLuint vbo;
         GLuint ebo;
 
-        GLuint textures[3];
+        GLuint textures[4];
 
         text_drawer& _txt_drawer;
 

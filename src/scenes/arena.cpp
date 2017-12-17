@@ -177,7 +177,8 @@ namespace pong {
         }
         glDrawArrays(GL_POINTS, 0, 1);
 
-        render_ball(s.ball_pos);
+        if (!s.is_player_pressed_paused)
+            render_ball(s.ball_pos);
 
         render_player_set_pos(s.p1);
         render_player_set_pos(s.p2);

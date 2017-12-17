@@ -33,7 +33,10 @@ namespace pong {
     public:
         bool is_welcome;
         bool is_game_start;
+        // After a goal
         bool is_paused;
+        // User ask for pause
+        bool is_player_pressed_paused;
         bool is_goal;
         bool is_game_over;
 
@@ -58,6 +61,7 @@ namespace pong {
             is_welcome { true },
             is_game_start { false },
             is_paused { true  },
+            is_player_pressed_paused { false },
             is_goal { false },
             is_game_over {false },
             p1("Player 1", 90),
