@@ -111,12 +111,14 @@ namespace pong {
                             res |= (pfds[i].fd==devfds[bottom_fd] ? input_t::player_1_down : input_t::player_2_down);
                         }
                     } else if (ev.type == EV_KEY && ev.code == 256) {
-                        std::cout << "click" << std::endl;
+                        std::cout << "click" << ev.value << std::endl;
                         if (ev.value == 1) {
-                            res |= input_t::pause;
+                            if (pfds[i].fd==devfds[bottom_fd]) down_pressed = true; else up_pressed = true;
                         } else if (ev.value == 0) {
-                            // knob released
+                            if (pfds[i].fd==devfds[bottom_fd]) down_pressed = false; else up_pressed = false;
                         }
+
+                        if (down_pressed) res |= input_t::p1_press; if (up_pressed) res |= input_t::p2_press;
                     }
                 }
             }

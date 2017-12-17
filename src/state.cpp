@@ -9,7 +9,7 @@ namespace pong {
         is_goal = false;
 
         if (is_welcome) {
-            if (input_t::idle != (event & input_t::pause) /* todo: both clicks */) {
+            if (input_all_pressed(event)) {
                 is_welcome = false;
 
                 is_paused = true;
@@ -30,7 +30,7 @@ namespace pong {
             }
         }
 
-        if (event == input_t::pause) {
+        if (input_is_pause(event)) {
             // If the game wasn't paused and a pause input has come -> player pressed pause is true to indicate
             // that a "RESUME" statement should be displayed.
             is_player_pressed_paused = !is_paused;
@@ -56,22 +56,19 @@ namespace pong {
             is_welcome = true;
         }
 
-        if (input_t::idle != (event & input_t::player_1_up)) {
+        if (input_is_set(event, input_t::player_1_up)) {
             p1.go_up();
-            // std::cout << abs(int(p1.angle_)%180) << ", "  << p1.pos[0].first << ", " << p1.pos[0].second << std::endl;
-
         }
-        if (input_t::idle != (event & input_t::player_1_down)) {
+        if (input_is_set(event, input_t::player_1_down)) {
             p1.go_down();
         }
 
-        if (input_t::idle != (event & input_t::player_2_up)) {
+        if (input_is_set(event, input_t::player_2_up)) {
             p2.go_up();
         }
-        if (input_t::idle != (event & input_t::player_2_down)) {
+        if (input_is_set(event, input_t::player_2_down)) {
             p2.go_down();
         }
-
 
         ball_pos.first  += ball_speed_x;
         ball_pos.second += ball_speed_y;

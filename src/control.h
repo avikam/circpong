@@ -27,15 +27,10 @@ namespace pong {
         int timeout;
         struct pollfd *pfds;
         int devfds[max_controls];
-
         void set_led(int fd, unsigned int val);
 
-        void go_up1();
-        void go_down1();
-
-        void go_up2();
-        void go_down2();
-        void post_key(SDL_Keycode key_code);
+        bool up_pressed;
+        bool down_pressed;
 
     public:
         PowermateControl();

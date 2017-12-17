@@ -27,7 +27,7 @@ namespace pong{
                         r |=input_t::quit;
                         break;
                     case SDLK_SPACE:
-                        r |= input_t::pause;
+                        r |= (input_t::p1_press | input_t::p2_press);
                         break;
                     case SDLK_UP:
                         r |=input_t::player_1_up;

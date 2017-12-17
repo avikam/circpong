@@ -71,17 +71,17 @@ namespace pong {
                 },
 
                 text_positions_t {
-                    [](const state& s) -> std::string { return "Loren ipsum instruction line1"; },
+                    [](const state& s) -> std::string { return "To begin a new game, team up with an  "; },
                             glm::scale(glm::translate(
                                     glm::mat4{1}, glm::vec3 {.0f, 0.0f, 0 }
                             ), glm::vec3 { .65f, .07f, 0 })
                 },
 
                 text_positions_t {
-                        [](const state& s) -> std::string { return "instruction line 2"; },
+                        [](const state& s) -> std::string { return "opponent and press both dials together"; },
                         glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {-.2f, -.1f, 0 }
-                        ), glm::vec3 { .45f, .07f, 0 })
+                                glm::mat4{1}, glm::vec3 {.0f, -.1f, 0 }
+                        ), glm::vec3 { .65f, .07f, 0 })
                 },
 
                 text_positions_t {
