@@ -7,7 +7,6 @@
 namespace pong {
     game::game() :
             exit_ {false},
-            scene_ {nullptr},
             txt_drawer {}
     {
         // Intialize SDL.
@@ -57,14 +56,12 @@ namespace pong {
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
         // Needs to be initialized after we have an OpenGl context
-        scene_ = new scene{txt_drawer};
         game_start_ = new game_start{txt_drawer};
         arena_ = new arena{};
     }
 
     game::~game() {
         SDL_GL_DeleteContext(maincontext);
-        delete scene_;
         delete arena_;
         delete game_start_;
         // Destroy  window.
@@ -80,15 +77,10 @@ namespace pong {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        if (s.is_welcome || s.is_game_start) {
-            game_start_->invalidate(s);
-            game_start_->render(s);
-        } else {
-            if (s.is_paused || constants::always_draw_scores) { // Always draw scores
-                scene_->invalidate(s);
-                scene_->render(s);
-                game_start_->render(s);
-            }
+        game_start_->invalidate(s);
+        game_start_->render(s);
+
+        if (!(s.is_welcome || s.is_game_start)) {
             arena_->render(s);
         }
 
@@ -98,7 +90,6 @@ namespace pong {
 
     void game::play() {
         std::cout << "start playing" << std::endl;
-        scene_->invalidate(s);
         while (true) {
             auto event = env_.get_event();
             if (event == input_t::quit) {

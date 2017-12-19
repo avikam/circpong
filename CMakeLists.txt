@@ -36,7 +36,7 @@ set(SOURCE_FILES
         src/scenes/text_drawer.cpp
         src/scenes/utils.cpp
 
-        src/scenes/scene.cpp
+
         src/scenes/arena.cpp
         src/scenes/game_start.cpp
 

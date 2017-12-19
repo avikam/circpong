@@ -28,6 +28,8 @@ namespace pong {
             paused,
             win1,
             win2,
+            score1,
+            score2,
             end
         };
         std::vector<text_positions_t> texts;

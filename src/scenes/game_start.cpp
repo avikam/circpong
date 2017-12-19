@@ -113,6 +113,30 @@ namespace pong {
                                            glm::vec3 {0.5f, 0.1f, 0}),
                                 glm::radians(180.0f) * 0, glm::vec3 {0, 0, 1})
                 },
+
+                // score 1
+                text_positions_t {
+                        [](const state& s) -> std::string {
+                            std::ostringstream stream; stream << s.p1.score; return stream.str();
+                        },
+                        glm::scale(
+                                glm::rotate(
+                                        glm::translate(glm::mat4{1}, glm::vec3 { 0.85f, 0.1f, 0 }),
+                                        glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
+                                glm::vec3 { 0.5 * 0.125f, 0.5 * 0.125f, 0 })
+                },
+
+                // score 2
+                text_positions_t {
+                        [](const state& s) -> std::string {
+                            std::ostringstream stream; stream << s.p2.score; return stream.str();
+                        },
+                        glm::scale(
+                                glm::rotate(
+                                        glm::translate(glm::mat4{1}, glm::vec3 { 0.85f, -0.1f, 0 }),
+                                        glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
+                                glm::vec3 { 0.5 * 0.125f, 0.5 * 0.125f, 0 })
+                },
         }
 
     {
@@ -226,6 +250,8 @@ namespace pong {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        if (!s.is_welcome and !s.is_game_start)
+            _render_text(std::index_sequence<size_t(texts_idx::score1), size_t(texts_idx::score2)>{});
         if (s.is_welcome)
             _render_text(std::index_sequence<
                     size_t(texts_idx::pong),
