@@ -25,6 +25,9 @@ namespace pong {
             instruction1,
             instruction2,
             play,
+            paused,
+            win1,
+            win2,
             end
         };
         std::vector<text_positions_t> texts;

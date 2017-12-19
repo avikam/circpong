@@ -195,53 +195,6 @@ namespace pong {
             debug_err();
         }
 
-        // Who won?:
-        if (s.is_game_over && s.curr_winner != nullptr) {
-            {
-                glm::mat4 transformation = glm::mat4{1};
-                transformation = glm::translate(transformation,
-                                                glm::vec3 {0.0, 0.5 * (s.curr_winner == &s.p1 ? 1 : -1), 0});
-                transformation = glm::scale(transformation, glm::vec3 {1.0f, 0.2f, 0});
-                transformation = glm::rotate(transformation, glm::radians(180.0f) * (s.curr_winner == &s.p1 ? 1 : 0),
-                                             glm::vec3 {0, 0, 1});
-
-                glUniform1i(uniTex, 2);
-                glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
-
-                // Create a Vertex Buffer Object and copy the vertex data to i
-                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-                debug_err();
-            }
-            {
-                glm::mat4 transformation = glm::mat4{1};
-                transformation = glm::translate(transformation,
-                                                glm::vec3 {0.0, 0.5 * (s.curr_winner == &s.p1 ? -1 : 1), 0});
-                transformation = glm::scale(transformation, glm::vec3 {1.0f, 0.2f, 0});
-                transformation = glm::rotate(transformation, glm::radians(180.0f) * (s.curr_winner == &s.p1 ? 0 : 1),
-                                             glm::vec3 {0, 0, 1});
-
-                glUniform1i(uniTex, 3);
-                glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
-
-                // Create a Vertex Buffer Object and copy the vertex data to i
-                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-                debug_err();
-            }
-        }
-
-        // pause:
-        if (s.is_player_pressed_paused) {
-            glm::mat4 transformation = glm::mat4{1};
-            transformation = glm::rotate(transformation, glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f });
-            transformation = glm::scale(transformation, glm::vec3 { 0.99*0.6f, 0.99*0.25f, 0 });
-
-            glUniform1i(uniTex, 4);
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
-
-            // Create a Vertex Buffer Object and copy the vertex data to i
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-            debug_err();
-        }
     }
 
     void scene::invalidate(const pong::state& s) {
@@ -256,17 +209,6 @@ namespace pong {
             stream << s.p2.score;
             draw_text_in_texture(1, stream.str());
 
-        }
-        {
-            if (s.is_game_over && s.curr_winner != nullptr) {
-                draw_text_in_texture(2, "WIN");
-                draw_text_in_texture(3, "LOSE");
-            }
-        }
-        {
-            if (s.is_paused) {
-                draw_text_in_texture(4, "PAUSED");
-            }
         }
     }
 

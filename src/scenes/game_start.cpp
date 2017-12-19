@@ -89,7 +89,30 @@ namespace pong {
                         glm::scale(glm::translate(
                                 glm::mat4{1}, glm::vec3 {.0f, -0.5f, 0 }
                         ), glm::vec3 { .15f, .1f, 0 })
-                }
+                },
+
+                text_positions_t {
+                        [](const state& s) -> std::string { return "PAUSED"; },
+                        glm::scale(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
+                                glm::vec3 { 0.3f, 0.125f, 0 })
+                },
+
+                text_positions_t {
+                        [](const state& s) -> std::string { return "WIN"; },
+                        glm::rotate(
+                                glm::scale(glm::translate(glm::mat4{1},glm::vec3 {0.0, 0.5, 0}),
+                                           glm::vec3 {0.5f, 0.1f, 0}),
+                                glm::radians(180.0f), glm::vec3 {0, 0, 1})
+                },
+
+                text_positions_t {
+                        [](const state& s) -> std::string { return "WIN"; },
+                        glm::rotate(
+                                glm::scale(glm::translate(glm::mat4{1}, glm::vec3 {0.0, 0.5 * -1, 0}),
+                                           glm::vec3 {0.5f, 0.1f, 0}),
+                                glm::radians(180.0f) * 0, glm::vec3 {0, 0, 1})
+                },
         }
 
     {
@@ -212,8 +235,17 @@ namespace pong {
             >{});
         else if (s.is_game_start)
             _render_text(std::index_sequence<size_t(texts_idx::counter), size_t(texts_idx::start_game)>{});
-        else
-            throw std::runtime_error("No reason to rander this scene"); // shouldnt be here
+        else if (s.is_player_pressed_paused)
+            _render_text(std::index_sequence<size_t(texts_idx::paused)>{});
+        else if (s.is_game_over) {
+            if (s.curr_winner == &s.p1)
+                _render_text(std::index_sequence<size_t(texts_idx::win1)>{});
+            else
+                _render_text(std::index_sequence<size_t(texts_idx::win2)>{});
+        }
+        else {
+            //throw std::runtime_error("No reason to rander this scene"); // shouldnt be here
+        }
     }
 
 
