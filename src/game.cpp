@@ -25,12 +25,14 @@ namespace pong {
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
+        SDL_DisplayMode DM;
+        SDL_GetCurrentDisplayMode(0, &DM);
 
         // Create window and renderer.
         window = SDL_CreateWindow("Pong",
                                   SDL_WINDOWPOS_UNDEFINED,  // Centered window.
                                   SDL_WINDOWPOS_UNDEFINED,  // Centered window.
-                                  constants::screen_width, constants::screen_height,
+                                  DM.h, DM.h,
                                   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
         maincontext = SDL_GL_CreateContext(window);

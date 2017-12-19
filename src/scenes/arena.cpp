@@ -180,8 +180,8 @@ namespace pong {
         if (!s.is_player_pressed_paused)
             render_ball(s.ball_pos);
 
-        render_player_set_pos(s.p1);
-        render_player_set_pos(s.p2);
+        render_player(s.p1);
+        render_player(s.p2);
     }
 
     void arena::render_ball(pos_t ball_pos) {
@@ -204,7 +204,7 @@ namespace pong {
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
 
-    void arena::render_player_set_pos(player& p) {
+    void arena::render_player(player &p) {
         glUseProgram(playerShaderProgram);
         glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
         {
@@ -235,15 +235,8 @@ namespace pong {
                 glm::vec3(0.90, 0, 0)
         );
 
-        // Base pixel
-        auto out_iter = p.pos.begin();
-
         glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos));
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-        auto new_pos = pos * glm::vec4{ 0, 0, 0, 1};
-        *out_iter++ = {new_pos.x, new_pos.y};
-
 
         // Level n
         float straightness_factor = 0.25f;
@@ -254,9 +247,6 @@ namespace pong {
                                               glm::vec3{-i * constants::player_size * straightness_factor, i * constants::player_size, 0});
                 glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
-                auto new_pos = pos * glm::vec4{ 0, 0, 0, 1};
-                *out_iter++ = {new_pos.x, new_pos.y};
             }
             {
                 auto t = pos * glm::translate(glm::mat4 {1},
@@ -264,8 +254,6 @@ namespace pong {
                 glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-                auto new_pos = pos * glm::vec4{ 0, 0, 0, 1};
-                *out_iter++ = {new_pos.x, new_pos.y};
             }
         }
     }

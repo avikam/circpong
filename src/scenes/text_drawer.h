@@ -11,7 +11,6 @@
 namespace pong {
     class text_drawer {
         SDL_Color textColor;
-        SDL_Color backgroundColor;
         TTF_Font * font;
     public:
         explicit text_drawer();

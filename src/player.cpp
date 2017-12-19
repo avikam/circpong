@@ -16,8 +16,7 @@ namespace pong {
         angular_speed { 4 },
         angle_ { angle },
         boundaries {angle-85,angle+85},
-        score {0},
-        pos(2 * constants::player_pixel_levels + 1)
+        score {0}
     {}
 
     void player::go_up() {

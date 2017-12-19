@@ -11,8 +11,7 @@
 namespace pong {
 
     text_drawer::text_drawer() :
-            textColor { 255, 255, 255, 255 }, // white
-            backgroundColor { 0, 0, 0, 255 } // black
+            textColor { 255, 255, 255, 255 } // white
     {
         TTF_Init();
         // Load our fonts, with a huge size

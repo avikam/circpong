@@ -233,7 +233,7 @@ namespace pong {
         if (s.is_player_pressed_paused) {
             glm::mat4 transformation = glm::mat4{1};
             transformation = glm::rotate(transformation, glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f });
-            transformation = glm::scale(transformation, glm::vec3 { 0.6f, 0.25f, 0 });
+            transformation = glm::scale(transformation, glm::vec3 { 0.99*0.6f, 0.99*0.25f, 0 });
 
             glUniform1i(uniTex, 4);
             glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(transformation));
