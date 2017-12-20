@@ -6,6 +6,9 @@
 
 namespace pong {
     void state::update(input_t event) {
+        if (event != input_t::idle)
+            last_input_time = high_resolution_clock::now();
+
         is_goal = false;
 
         if (is_welcome) {
@@ -20,7 +23,14 @@ namespace pong {
         }
 
         if (is_instructions) {
-            if (input_is_pause(event)) {
+            if (event == input_t::idle) {
+                if (duration_cast<seconds>(high_resolution_clock::now() - last_input_time).count() > constants::max_seconds_idle_instruction) {
+                    is_welcome = true;
+                    is_instructions = false;
+                    is_paused = true;
+                    is_game_start = false;
+                }
+            } else if (input_is_pause(event)) {
                 is_welcome = false;
                 is_instructions = false;
                 is_paused = true;

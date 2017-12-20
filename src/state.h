@@ -46,6 +46,7 @@ namespace pong {
         pos_t ball_pos;
 
         high_resolution_clock::time_point game_start_time;
+        high_resolution_clock::time_point last_input_time;
 
         player p1;
         player p2;
@@ -78,6 +79,7 @@ namespace pong {
             rng { rd() },
             uni {-20,20},
             game_start_time { high_resolution_clock::now() },
+            last_input_time { high_resolution_clock::now() },
             start_game_count_down { 0 }
             {};
 

@@ -34,6 +34,8 @@ namespace pong {
         static int start_game_counter = 3;
 
         static bool always_draw_scores = true;
+
+        static int max_seconds_idle_instruction = 3;
     }
 }
 
