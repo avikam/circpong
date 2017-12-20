@@ -32,6 +32,7 @@ namespace pong {
 
     public:
         bool is_welcome;
+        bool is_instructions;
         bool is_game_start;
         // After a goal
         bool is_paused;
@@ -59,6 +60,7 @@ namespace pong {
 
         state() :
             is_welcome { true },
+            is_instructions { false },
             is_game_start { false },
             is_paused { true  },
             is_player_pressed_paused { false },

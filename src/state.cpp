@@ -9,9 +9,20 @@ namespace pong {
         is_goal = false;
 
         if (is_welcome) {
-            if (input_all_pressed(event)) {
+            if (input_is_pause(event)) {
                 is_welcome = false;
+                is_instructions = true;
+                is_paused = true;
+                is_game_start = false;
+            }
 
+            return;
+        }
+
+        if (is_instructions) {
+            if (input_is_pause(event)) {
+                is_welcome = false;
+                is_instructions = false;
                 is_paused = true;
                 is_game_start = true;
                 game_start_time = high_resolution_clock::now();
@@ -19,6 +30,7 @@ namespace pong {
 
             return;
         }
+
 
         if (is_game_start) {
             start_game_count_down = duration_cast<seconds>( high_resolution_clock::now() - game_start_time );
@@ -113,10 +125,7 @@ namespace pong {
             ball_theta += 180;
         }
 
-//         std::cout << ball_pos.first << ", " << ball_pos.second << ": " <<
-//               pow(ball_pos.first, 2) + pow(ball_pos.second, 2) << ", " << ball_theta <<std::endl;
         if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) >= 0.85*0.85) {
-//            std::cout << "theta: " << ball_theta << ", p:" << player_theta << std::endl;
             if (player_theta - 6 <= ball_theta && ball_theta <= player_theta + 6)
                 return true;
         }

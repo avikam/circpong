@@ -80,7 +80,7 @@ namespace pong {
         game_start_->invalidate(s);
         game_start_->render(s);
 
-        if (!(s.is_welcome || s.is_game_start)) {
+        if (!(s.is_welcome || s.is_game_start || s.is_instructions)) {
             arena_->render(s);
         }
 

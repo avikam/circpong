@@ -71,24 +71,64 @@ namespace pong {
                 },
 
                 text_positions_t {
-                    [](const state& s) -> std::string { return "To begin a new game, team up with an  "; },
-                            glm::scale(glm::translate(
-                                    glm::mat4{1}, glm::vec3 {.0f, 0.0f, 0 }
-                            ), glm::vec3 { .65f, .07f, 0 })
+                        [](const state& s) -> std::string { return "2 PLAYER"; },
+                        glm::scale(glm::translate(
+                                glm::mat4{1}, glm::vec3 {.0f, 0.0f, 0 }
+                        ), glm::vec3 { .25f, .08f, 0 })
                 },
 
                 text_positions_t {
-                        [](const state& s) -> std::string { return "opponent and press both dials together"; },
+                        [](const state& s) -> std::string { return "PUSH DIAL TO START"; },
                         glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {.0f, -.1f, 0 }
+                                glm::mat4{1}, glm::vec3 {.0f, -0.20f, 0 }
+                        ), glm::vec3 {.56f, .08f, 0 })
+                },
+
+                text_positions_t {
+                        [](const state& s) -> std::string { return "INSTRUCTIONS"; },
+                        glm::scale(glm::translate(
+                                glm::mat4{1}, glm::vec3 {.0f, 0.20f, 0 }
+                        ), glm::vec3 { .45f, .15f, 0 })
+                },
+
+                text_positions_t {
+                    [](const state& s) -> std::string { return "CONTROL YOUR PADDLE BY TURNING"; },
+                            glm::scale(glm::translate(
+                                    glm::mat4{1}, glm::vec3 {.0f, 0.0f, 0 }
+                            ), glm::vec3 { .60f, .07f, 0 })
+                },
+
+                text_positions_t {
+                        [](const state& s) -> std::string { return "YOUR DIAL LEFT AND RIGHT"; },
+                        glm::scale(glm::translate(
+                                glm::mat4{1}, glm::vec3 {-.12f, -.1f, 0 }
+                        ), glm::vec3 { .48f, .07f, 0 })
+                },
+
+                text_positions_t {
+                        [](const state& s) -> std::string { return "PAUSE THE GAME BY PUSHING YOUR DIAL"; },
+                        glm::scale(glm::translate(
+                                glm::mat4{1}, glm::vec3 {.10f, -.25f, 0 }
+                        ), glm::vec3 { .70f, .07f, 0 })
+                },
+
+                text_positions_t {
+                        [](const state& s) -> std::string {
+                            std::ostringstream stream;
+                            stream << "FIRST PLAYER TO " << constants::max_score << " POINTS WINS";
+                            return stream.str();
+                        },
+                        glm::scale(glm::translate(
+                                glm::mat4{1}, glm::vec3 {.05f, -.35f, 0 }
                         ), glm::vec3 { .65f, .07f, 0 })
                 },
 
+
                 text_positions_t {
-                        [](const state& s) -> std::string { return "PLAY"; },
+                        [](const state& s) -> std::string { return "PUSH DIAL TO PLAY"; },
                         glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {.0f, -0.5f, 0 }
-                        ), glm::vec3 { .15f, .1f, 0 })
+                                glm::mat4{1}, glm::vec3 {.0f, -0.65f, 0 }
+                        ), glm::vec3 { .45f, .1f, 0 })
                 },
 
                 text_positions_t {
@@ -102,7 +142,7 @@ namespace pong {
                         [](const state& s) -> std::string { return "WIN"; },
                         glm::rotate(
                                 glm::scale(glm::translate(glm::mat4{1},glm::vec3 {0.0, 0.5, 0}),
-                                           glm::vec3 {0.5f, 0.1f, 0}),
+                                           glm::vec3 {0.35f, 0.1f, 0}),
                                 glm::radians(180.0f), glm::vec3 {0, 0, 1})
                 },
 
@@ -110,7 +150,7 @@ namespace pong {
                         [](const state& s) -> std::string { return "WIN"; },
                         glm::rotate(
                                 glm::scale(glm::translate(glm::mat4{1}, glm::vec3 {0.0, 0.5 * -1, 0}),
-                                           glm::vec3 {0.5f, 0.1f, 0}),
+                                           glm::vec3 {0.35f, 0.1f, 0}),
                                 glm::radians(180.0f) * 0, glm::vec3 {0, 0, 1})
                 },
 
@@ -250,13 +290,21 @@ namespace pong {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        if (!s.is_welcome and !s.is_game_start)
+        if (!(s.is_welcome || s.is_game_start || s.is_instructions))
             _render_text(std::index_sequence<size_t(texts_idx::score1), size_t(texts_idx::score2)>{});
         if (s.is_welcome)
             _render_text(std::index_sequence<
                     size_t(texts_idx::pong),
+                    size_t(texts_idx::two_player),
+                    size_t(texts_idx::push_to_start)
+            >{});
+        if (s.is_instructions)
+            _render_text(std::index_sequence<
+                    size_t(texts_idx::instruction),
                     size_t(texts_idx::instruction1),
                     size_t(texts_idx::instruction2),
+                    size_t(texts_idx::instruction3),
+                    size_t(texts_idx::instruction4),
                     size_t(texts_idx::play)
             >{});
         else if (s.is_game_start)
