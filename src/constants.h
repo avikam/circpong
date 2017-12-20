@@ -35,7 +35,8 @@ namespace pong {
 
         static bool always_draw_scores = true;
 
-        static int max_seconds_idle_instruction = 3;
+        static int max_seconds_idle_instruction = 20;
+        static int max_seconds_idle = 60;
     }
 }
 

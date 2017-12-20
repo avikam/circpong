@@ -6,8 +6,26 @@
 
 namespace pong {
     void state::update(input_t event) {
+        auto now = high_resolution_clock::now();
         if (event != input_t::idle)
-            last_input_time = high_resolution_clock::now();
+            last_input_time = now;
+        else {
+            if (duration_cast<seconds>(now - last_input_time).count() > constants::max_seconds_idle) {
+                last_input_time = now;
+
+                is_welcome = true;
+                is_instructions = false;
+                is_paused = true;
+                is_game_start = false;
+
+                curr_winner = nullptr;
+                p1.score = 0;
+                p2.score = 0;
+                p1.angle_ = 90;
+                p2.angle_ = 90+180;
+            }
+        }
+
 
         is_goal = false;
 
@@ -24,7 +42,7 @@ namespace pong {
 
         if (is_instructions) {
             if (event == input_t::idle) {
-                if (duration_cast<seconds>(high_resolution_clock::now() - last_input_time).count() > constants::max_seconds_idle_instruction) {
+                if (duration_cast<seconds>(now - last_input_time).count() > constants::max_seconds_idle_instruction) {
                     is_welcome = true;
                     is_instructions = false;
                     is_paused = true;
@@ -43,7 +61,7 @@ namespace pong {
 
 
         if (is_game_start) {
-            start_game_count_down = duration_cast<seconds>( high_resolution_clock::now() - game_start_time );
+            start_game_count_down = duration_cast<seconds>(now - game_start_time );
             if (start_game_count_down.count() >= constants::start_game_counter) {
                 is_game_start = false;
                 is_paused = false;
