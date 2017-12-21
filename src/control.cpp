@@ -69,6 +69,9 @@ namespace pong {
             }
         }
 
+        set_led(devfds[0], 0);
+        set_led(devfds[1], 0);
+
         nfds = 3;
         timeout = 10;
         pfds = new struct pollfd[nfds + 1];
