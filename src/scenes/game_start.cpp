@@ -44,7 +44,8 @@ static const GLchar* fragmentSource = R"glsl(
 )glsl";
 
 namespace pong {
-    game_start::game_start(text_drawer &txt_drawer) :
+    game_start::game_start(const config& conf, text_drawer &txt_drawer) :
+        _conf { conf },
         _txt_drawer{txt_drawer},
         texts {
                 text_positions_t {
@@ -113,9 +114,9 @@ namespace pong {
                 },
 
                 text_positions_t {
-                        [](const state& s) -> std::string {
+                        [this](const state& s) -> std::string {
                             std::ostringstream stream;
-                            stream << "FIRST PLAYER TO " << constants::max_score << " POINTS WINS";
+                            stream << "FIRST PLAYER TO " << _conf.max_score << " POINTS WINS";
                             return stream.str();
                         },
                         glm::scale(glm::translate(

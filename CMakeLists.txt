@@ -32,7 +32,7 @@ endif()
 
 
 set(SOURCE_FILES
-        main.cpp
+        src/main.cpp
         src/scenes/text_drawer.cpp
         src/scenes/utils.cpp
 

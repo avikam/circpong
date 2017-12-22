@@ -6,7 +6,7 @@
 #define CIRPONG_GAME_H
 
 #include "src/state.h"
-
+#include "src/config.h"
 #include "src/environment.h"
 #include "src/scenes/text_drawer.h"
 #include "src/scenes/arena.h"
@@ -15,6 +15,7 @@
 namespace pong {
     class game {
     private:
+        state s;
         environment env_;
         text_drawer txt_drawer;
         arena* arena_;
@@ -25,10 +26,8 @@ namespace pong {
         SDL_GLContext maincontext; /* Our opengl context handle */
 
         void render();
-
-        state s;
     public:
-        game();
+        explicit game(const config& conf);
         ~game();
 
         void play();

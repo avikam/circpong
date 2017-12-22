@@ -5,6 +5,7 @@
 #ifndef CIRPONG_STATE_H
 #define CIRPONG_STATE_H
 
+#include "src/config.h"
 #include "src/constants.h"
 #include "src/environment.h"
 #include "src/player.h"
@@ -29,7 +30,7 @@ namespace pong {
         std::mt19937_64 rng;    // random-number engine used (Mersenne-Twister in this case)
         std::uniform_int_distribution<int> uni; // guaranteed unbiased
 
-
+        const config& _conf;
     public:
         bool is_welcome;
         bool is_instructions;
@@ -59,7 +60,8 @@ namespace pong {
 
         std::chrono::seconds start_game_count_down;
 
-        state() :
+        explicit state(const config& conf) :
+            _conf { conf },
             is_welcome { true },
             is_instructions { false },
             is_game_start { false },

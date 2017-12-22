@@ -5,7 +5,8 @@
 #include "src/game.h"
 
 namespace pong {
-    game::game() :
+    game::game(const config& conf) :
+            s { conf },
             exit_ {false},
             txt_drawer {}
     {
@@ -56,7 +57,7 @@ namespace pong {
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 
         // Needs to be initialized after we have an OpenGl context
-        game_start_ = new game_start{txt_drawer};
+        game_start_ = new game_start{conf, txt_drawer};
         arena_ = new arena{};
     }
 

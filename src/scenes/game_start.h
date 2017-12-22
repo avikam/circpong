@@ -9,11 +9,12 @@
 #include <vector>
 
 #include "src/state.h"
+#include "src/config.h"
 #include "src/scenes/text_drawer.h"
 
 namespace pong {
     class game_start {
-        using text_factory = std::string(*)(const state&);
+        using text_factory = std::function<std::string(const state&)>;
         using text_positions_t = std::tuple<
                 text_factory,
                 glm::mat4
@@ -49,6 +50,7 @@ namespace pong {
         GLuint textures[static_cast<size_t>(texts_idx::end)];
 
         text_drawer &_txt_drawer;
+        const config& _conf;
 
 
         void draw_text_in_texture(int tex_num, const std::string &s);
@@ -57,7 +59,7 @@ namespace pong {
         void _render_text(std::index_sequence<I...>);
 
     public:
-        explicit game_start(text_drawer &txt_drawer);
+        explicit game_start(const config& conf, text_drawer &txt_drawer);
         ~game_start();
 
         void render(pong::state &s);

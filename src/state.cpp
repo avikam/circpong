@@ -10,7 +10,7 @@ namespace pong {
         if (event != input_t::idle)
             last_input_time = now;
         else {
-            if (duration_cast<seconds>(now - last_input_time).count() > constants::max_seconds_idle) {
+            if (duration_cast<seconds>(now - last_input_time).count() > _conf.max_seconds_idle) {
                 last_input_time = now;
 
                 is_welcome = true;
@@ -42,7 +42,7 @@ namespace pong {
 
         if (is_instructions) {
             if (event == input_t::idle) {
-                if (duration_cast<seconds>(now - last_input_time).count() > constants::max_seconds_idle_instruction) {
+                if (duration_cast<seconds>(now - last_input_time).count() > _conf.max_seconds_idle_instruction) {
                     is_welcome = true;
                     is_instructions = false;
                     is_paused = true;
@@ -140,7 +140,7 @@ namespace pong {
 
             winner->score += 1;
 
-            if (winner->score == constants::max_score) {
+            if (winner->score == _conf.max_score) {
                 is_game_over = true;
                 curr_winner = winner;
             }
