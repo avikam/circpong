@@ -16,6 +16,7 @@ namespace pong {
     namespace constants {
         // arena radius
         static float PI = 3.14159265358;
+        static float radius = 1.0f;
 
         // TODO: Consider calculating by player speed or other player position
         static int collision_cooldown_max_val = 10;

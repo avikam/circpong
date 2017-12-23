@@ -40,6 +40,8 @@ namespace pong {
         layout(points) in;
         layout(line_strip, max_vertices = 250) out;
 
+        uniform float radius;
+
         const float PI = 3.1415926;
         const int SIZE = 50;
 
@@ -52,9 +54,8 @@ namespace pong {
                 float ang = 2.0 * PI / SIZE * i;
 
                 // Offset from center of point
-                vec4 offset = vec4(0.95 * cos(ang), 0.95 * sin(ang), 0.0, 0.0);
+                vec4 offset = vec4(radius * 0.95 * cos(ang), radius * 0.95 * sin(ang), 0.0, 0.0);
 
-                // gl_Position = gl_in[0].gl_Position + offset;
                 gl_Position = gl_in[0].gl_Position + offset;
                 EmitVertex();
             }
@@ -62,10 +63,10 @@ namespace pong {
 
             // Draw field separation
             for (int i = -47; i <= 47; i++) {
-                gl_Position = gl_in[0].gl_Position + vec4(0.01 * 2 * i, 0, 0, 0);
+                gl_Position = gl_in[0].gl_Position + vec4(radius * 0.01 * 2 * i, 0, 0, 0);
                 EmitVertex();
 
-                gl_Position = gl_in[0].gl_Position + vec4(0.01 * (2 * i+1), 0, 0, 0);
+                gl_Position = gl_in[0].gl_Position + vec4(radius * 0.01 * (2 * i+1), 0, 0, 0);
                 EmitVertex();
 
                 EndPrimitive();
@@ -162,10 +163,23 @@ namespace pong {
     }
 
     void arena::render(pong::state& s) {
-        /* Clear our buffer with a red background */
         glBindVertexArray(vao);
 
+        render_arena();
+
+        if (!s.is_player_pressed_paused)
+            render_ball(s.ball_pos);
+
+        render_player(s.p1);
+        render_player(s.p2);
+    }
+
+    void arena::render_arena() {
         glUseProgram(arenaShaderProgram);
+
+        GLint uni_radius = glGetUniformLocation(arenaShaderProgram, "radius");
+        glUniform1f(uni_radius, _conf.radius);
+
         glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
         {
             // Specify the layout of the vertex data
@@ -176,12 +190,6 @@ namespace pong {
             glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), nullptr);
         }
         glDrawArrays(GL_POINTS, 0, 1);
-
-        if (!s.is_player_pressed_paused)
-            render_ball(s.ball_pos);
-
-        render_player(s.p1);
-        render_player(s.p2);
     }
 
     void arena::render_ball(pos_t ball_pos) {
@@ -226,13 +234,12 @@ namespace pong {
 
         GLint uniTrans = glGetUniformLocation(playerShaderProgram, "trans");
         glm::mat4 trans { 1 };
-        //glm::mat4 trans = glm::rotate(glm::mat4 {1.0f}, glm::radians(p.angle_), glm::vec3(0,0,1));
 
         // 0.90 is little far of the edge of the arena.
         // TODO: this number should be integrated with the shader's factor (0.95)
         glm::mat4 pos = glm::translate(
                 glm::rotate(trans, glm::radians(p.angle_), glm::vec3(0,0,1)),
-                glm::vec3(0.90, 0, 0)
+                glm::vec3(_conf.radius * 0.90, 0, 0)
         );
 
         glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos));

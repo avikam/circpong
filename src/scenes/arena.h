@@ -21,6 +21,7 @@ namespace pong {
 
         void render_player(player &p);
         void render_ball(pos_t);
+        void render_arena();
     public:
         void render(state& s);
 

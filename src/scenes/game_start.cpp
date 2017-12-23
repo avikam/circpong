@@ -45,8 +45,8 @@ static const GLchar* fragmentSource = R"glsl(
 
 namespace pong {
     game_start::game_start(const config& conf, text_drawer &txt_drawer) :
-        _conf { conf },
         _txt_drawer{txt_drawer},
+        _conf { conf },
         texts {
                 text_positions_t {
                     [](const state& s) -> std::string {
@@ -162,7 +162,7 @@ namespace pong {
                         },
                         glm::scale(
                                 glm::rotate(
-                                        glm::translate(glm::mat4{1}, glm::vec3 { 0.85f, 0.1f, 0 }),
+                                        glm::translate(glm::mat4{1}, glm::vec3 { conf.radius * 0.85f, 0.1f, 0 }),
                                         glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
                                 glm::vec3 { 0.5 * 0.125f, 0.5 * 0.125f, 0 })
                 },
@@ -174,7 +174,7 @@ namespace pong {
                         },
                         glm::scale(
                                 glm::rotate(
-                                        glm::translate(glm::mat4{1}, glm::vec3 { 0.85f, -0.1f, 0 }),
+                                        glm::translate(glm::mat4{1}, glm::vec3 { conf.radius * 0.85f, -0.1f, 0 }),
                                         glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
                                 glm::vec3 { 0.5 * 0.125f, 0.5 * 0.125f, 0 })
                 },

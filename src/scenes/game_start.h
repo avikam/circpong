@@ -39,6 +39,10 @@ namespace pong {
             score2,
             end
         };
+
+        text_drawer &_txt_drawer;
+        const config& _conf;
+
         std::vector<text_positions_t> texts;
 
 
@@ -49,10 +53,6 @@ namespace pong {
         GLuint ebo[1];
 
         GLuint textures[static_cast<size_t>(texts_idx::end)];
-
-        text_drawer &_txt_drawer;
-        const config& _conf;
-
 
         void draw_text_in_texture(int tex_num, const std::string &s);
 

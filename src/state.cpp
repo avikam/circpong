@@ -153,7 +153,8 @@ namespace pong {
             ball_theta += 180;
         }
 
-        if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) >= 0.85*0.85) {
+        auto effective_radius = _conf.radius * 0.85;
+        if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) >= pow(effective_radius, 2)) {
             if (player_theta - 6 <= ball_theta && ball_theta <= player_theta + 6)
                 return true;
         }
@@ -161,7 +162,9 @@ namespace pong {
     }
 
     player* state::test_goal() {
-        if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) <= (0.95*0.95) ) {
+        // Factor the size of the paddle in the hit calculation
+        auto effective_radius = _conf.radius * 0.95;
+        if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) <= pow(effective_radius,2) ) {
             return nullptr;
         }
 
