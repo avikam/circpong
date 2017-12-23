@@ -16,8 +16,10 @@ namespace pong {
             }
 
             conf.max_score = static_cast<int>(reader.GetInteger("config", "max_score", constants::max_score));
+            conf.max_seconds_idle_instruction = static_cast<int>(reader.GetInteger("config", "instruction_idle", constants::max_seconds_idle_instruction));
+            conf.max_seconds_idle = static_cast<int>(reader.GetInteger("config", "idle", constants::max_seconds_idle));
+            conf.ball_size = static_cast<float>(reader.GetReal("config", "ball_size", constants::ball_size));
         }
-        // conf.max_seconds_idle = 2;
 
         return conf;
     };

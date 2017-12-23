@@ -84,7 +84,7 @@ namespace pong {
         }
     )glsl";
 
-    arena::arena() {
+    arena::arena(const config& conf) : _conf { conf } {
         // Create Vertex Array Object
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
@@ -136,10 +136,10 @@ namespace pong {
 
         glUseProgram(ballShaderProgram);
         GLfloat ball[] = {
-            -constants::ball_size / 2, constants::ball_size / 2,
-            constants::ball_size / 2, constants::ball_size / 2,
-            constants::ball_size / 2, -constants::ball_size / 2,
-            -constants::ball_size / 2, -constants::ball_size / 2
+            -_conf.ball_size / 2, _conf.ball_size / 2,
+            _conf.ball_size / 2, _conf.ball_size / 2,
+            _conf.ball_size / 2, -_conf.ball_size / 2,
+            -_conf.ball_size / 2, -_conf.ball_size / 2
         };
         glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(ball), ball, GL_STATIC_DRAW);

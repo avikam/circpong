@@ -58,7 +58,7 @@ namespace pong {
 
         // Needs to be initialized after we have an OpenGl context
         game_start_ = new game_start{conf, txt_drawer};
-        arena_ = new arena{};
+        arena_ = new arena{conf};
     }
 
     game::~game() {

@@ -12,15 +12,19 @@ namespace pong {
         int max_seconds_idle;
         int max_seconds_idle_instruction;
         int max_score;
+        float ball_size;
 
         config(
                 int max_seconds_idle = constants::max_seconds_idle,
                 int max_seconds_idle_instruction = constants::max_seconds_idle,
-                int max_score = constants::max_score
+                int max_score = constants::max_score,
+                float ball_size = constants::ball_size
+
         ) :
             max_seconds_idle { max_seconds_idle },
             max_seconds_idle_instruction { max_seconds_idle_instruction },
-            max_score{ max_score }
+            max_score{ max_score },
+            ball_size{ ball_size }
                 {}
     };
 

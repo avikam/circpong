@@ -7,6 +7,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <functional>
 
 #include "src/state.h"
 #include "src/config.h"

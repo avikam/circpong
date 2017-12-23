@@ -16,12 +16,15 @@ namespace pong {
         GLuint vao;
         GLuint vbo[3];
 
+        const config& _conf;
+
+
         void render_player(player &p);
         void render_ball(pos_t);
     public:
         void render(state& s);
 
-        arena();
+        explicit arena(const config& conf);
         ~arena();
     };
 }
