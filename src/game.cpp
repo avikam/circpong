@@ -29,12 +29,13 @@ namespace pong {
         SDL_GetCurrentDisplayMode(0, &DM);
 
         std::cout << DM.w << ", " << DM.h << std::endl;
+        auto size = (0 != conf.window_size) ? conf.window_size : DM.h;
 
         // Create window and renderer.
         window = SDL_CreateWindow("Pong",
                                   SDL_WINDOWPOS_UNDEFINED,  // Centered window.
                                   SDL_WINDOWPOS_UNDEFINED,  // Centered window.
-                                  DM.h, DM.h,
+                                  size, size,
                                   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
         maincontext = SDL_GL_CreateContext(window);
@@ -53,7 +54,10 @@ namespace pong {
 //        SDL_Rect bounds;
 //        SDL_GetDisplayBounds( idx, &bounds );
         SDL_SetWindowBordered( window, SDL_FALSE );
-        SDL_SetWindowPosition( window, (DM.w - DM.h) / 2, 0);
+        auto pos_x = (conf.window_pos_x == -1) ? (DM.w - size) / 2 : conf.window_pos_x;
+        auto pos_y = (conf.window_pos_y == -1) ? (DM.h - size) / 2 : conf.window_pos_y;
+
+        SDL_SetWindowPosition( window, pos_x, pos_y);
 //        SDL_SetWindowSize( window, bounds.w, bounds.h );
         opengl_init();
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));

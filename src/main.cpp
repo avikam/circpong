@@ -20,6 +20,9 @@ namespace pong {
             conf.max_seconds_idle = static_cast<int>(reader.GetInteger("config", "idle", constants::max_seconds_idle));
             conf.ball_size = static_cast<float>(reader.GetReal("config", "ball_size", constants::ball_size));
             conf.radius = static_cast<float>(reader.GetReal("config", "radius", constants::radius));
+            conf.window_size = static_cast<int>(reader.GetInteger("config", "window_size", 0));
+            conf.window_pos_x = static_cast<int>(reader.GetInteger("config", "window_pos_x", -1));
+            conf.window_pos_y = static_cast<int>(reader.GetInteger("config", "window_pos_y", -1));
         }
 
         return conf;
