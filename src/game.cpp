@@ -97,7 +97,11 @@ namespace pong {
 
     void game::play() {
         std::cout << "start playing" << std::endl;
+        auto last_render = high_resolution_clock::now();
+        auto now = high_resolution_clock::now();
         while (true) {
+            now = high_resolution_clock::now();
+
             auto event = env_.get_event();
             if (event == input_t::quit) {
                 return;
@@ -108,10 +112,14 @@ namespace pong {
             }
 
             s.update(event);
-            render();
+
+            if (duration_cast<milliseconds>(now - last_render).count() >= 20) {
+                render();
+                last_render = now;
+            }
 
             // TODO: Get the amount of time we waited while polling and deduce how much time to delay
-            SDL_Delay(2);
+             //SDL_Delay(2);
         }
     }
 }

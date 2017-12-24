@@ -96,7 +96,7 @@ namespace pong {
             return res;
         }
 
-        for (int i=1; i<=1 + max_controls; i++) {
+        for (int i=0; i<=1 + max_controls; i++) {
             if (pfds[i].revents & POLLIN) {
                 ::input_event ev{};
                 auto n = read(pfds[i].fd, &ev, sizeof(ev));
@@ -104,6 +104,8 @@ namespace pong {
                     printf("Device disappeared!\n");
                     throw std::runtime_error("device is out, not supported yet");
                 } else {
+                    std::cout << "code: " << ev.code << "val: " << ev.value << " type: " << ev.type << " player_b: " << (pfds[i].fd==devfds[bottom_fd]) << std::endl;
+
                     if (ev.type == EV_REL && ev.code == 7) {
                         if (ev.value == -1) {
                             // counter clock-wise turn
@@ -113,15 +115,15 @@ namespace pong {
                             // clock-wise turn
                             res |= (pfds[i].fd==devfds[bottom_fd] ? input_t::player_1_down : input_t::player_2_down);
                         }
-                    } else if (ev.type == EV_KEY && ev.code == 256) {
-                        std::cout << "click" << ev.value << std::endl;
-                        if (ev.value == 1) {
-                            if (pfds[i].fd==devfds[bottom_fd]) down_pressed = true; else up_pressed = true;
-                        } else if (ev.value == 0) {
-                            if (pfds[i].fd==devfds[bottom_fd]) down_pressed = false; else up_pressed = false;
+                    } else {
+                        if (ev.type == EV_KEY && ev.code == 256) {
+                            if (ev.value == 1) {
+                                if (pfds[i].fd==devfds[bottom_fd]) down_pressed = true; else up_pressed = true;
+                                if (down_pressed) res |= input_t::p1_press; if (up_pressed) res |= input_t::p2_press;
+                            } else if (ev.value == 0) {
+                                if (pfds[i].fd==devfds[bottom_fd]) down_pressed = false; else up_pressed = false;
+                            }
                         }
-
-                        if (down_pressed) res |= input_t::p1_press; if (up_pressed) res |= input_t::p2_press;
                     }
                 }
             }
