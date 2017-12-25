@@ -49,87 +49,109 @@ namespace pong {
         _conf { conf },
         texts {
                 text_positions_t {
-                    [](const state& s) -> std::string {
-                        std::ostringstream stream;
-                        stream << (constants::start_game_counter - s.start_game_count_down.count());
-                        return stream.str();
-                    },
-                    glm::scale(
-                       glm::translate(
-                               glm::mat4{1}, glm::vec3 { 0.0f, -0.25f, 0 }
-                       ), glm::vec3 { 0.05f, 0.2f, 0 })
+                [](const state& s) -> std::string {
+                    std::ostringstream stream;
+                    stream << (constants::start_game_counter - s.start_game_count_down.count());
+                    return stream.str();
                 },
-                text_positions_t {
-                    [](const state& s) -> std::string { return "START GAME"; },
-                    glm::scale(glm::mat4{1}, glm::vec3 { .55f, .25f, 0 })
+                glm::scale(
+                   glm::translate(
+                           glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                           glm::vec3 { 0.0f, -0.25f, 0 }),
+                   glm::vec3 { 0.05f, 0.2f, 0 })
                 },
 
                 text_positions_t {
-                        [](const state& s) -> std::string { return "PONG"; },
-                        glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {.0f, 0.25f, 0 }
-                        ), glm::vec3 { .45f, .25f, 0 })
+                [](const state& s) -> std::string { return "START GAME"; },
+                glm::scale(
+                        glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                        glm::vec3 { .55f, .25f, 0 })
                 },
 
                 text_positions_t {
-                        [](const state& s) -> std::string { return "2 PLAYER"; },
-                        glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {.0f, 0.0f, 0 }
-                        ), glm::vec3 { .25f, .08f, 0 })
+                [](const state& s) -> std::string { return "PONG"; },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {.0f, 0.25f, 0 }),
+                        glm::vec3 { .45f, .25f, 0 })
                 },
 
                 text_positions_t {
-                        [](const state& s) -> std::string { return "PUSH DIAL TO START"; },
-                        glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {.0f, -0.20f, 0 }
-                        ), glm::vec3 {.56f, .08f, 0 })
+                [](const state& s) -> std::string { return "2 PLAYER"; },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {.0f, 0.0f, 0 }),
+                        glm::vec3 { .25f, .08f, 0 })
                 },
 
                 text_positions_t {
-                        [](const state& s) -> std::string { return "INSTRUCTIONS"; },
-                        glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {.0f, 0.20f, 0 }
-                        ), glm::vec3 { .45f, .15f, 0 })
+                [](const state& s) -> std::string { return "PUSH DIAL TO START"; },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {.0f, -0.20f, 0 }),
+                        glm::vec3 {.56f, .08f, 0 })
                 },
 
                 text_positions_t {
-                    [](const state& s) -> std::string { return "CONTROL YOUR PADDLE BY TURNING"; },
-                            glm::scale(glm::translate(
-                                    glm::mat4{1}, glm::vec3 {.0f, 0.0f, 0 }
-                            ), glm::vec3 { .60f, .07f, 0 })
+                [](const state& s) -> std::string { return "INSTRUCTIONS"; },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {.0f, 0.20f, 0 }),
+                        glm::vec3 { .45f, .15f, 0 })
                 },
 
                 text_positions_t {
-                        [](const state& s) -> std::string { return "YOUR DIAL LEFT AND RIGHT"; },
-                        glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {-.12f, -.1f, 0 }
-                        ), glm::vec3 { .48f, .07f, 0 })
+                [](const state& s) -> std::string { return "CONTROL YOUR PADDLE BY TURNING"; },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {.0f, 0.0f, 0 }),
+                        glm::vec3 { .60f, .07f, 0 })
                 },
 
                 text_positions_t {
-                        [](const state& s) -> std::string { return "PAUSE THE GAME BY PUSHING YOUR DIAL"; },
-                        glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {.10f, -.25f, 0 }
-                        ), glm::vec3 { .70f, .07f, 0 })
+                [](const state& s) -> std::string { return "YOUR DIAL LEFT AND RIGHT"; },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {-.12f, -.1f, 0 }),
+                        glm::vec3 { .48f, .07f, 0 })
                 },
 
                 text_positions_t {
-                        [this](const state& s) -> std::string {
-                            std::ostringstream stream;
-                            stream << "FIRST PLAYER TO " << _conf.max_score << " POINTS WINS";
-                            return stream.str();
-                        },
-                        glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {.05f, -.35f, 0 }
-                        ), glm::vec3 { .65f, .07f, 0 })
+                [](const state& s) -> std::string { return "PAUSE THE GAME BY PUSHING YOUR DIAL"; },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {.10f, -.25f, 0 }),
+                        glm::vec3 { .70f, .07f, 0 })
+                },
+
+                text_positions_t {
+                [this](const state& s) -> std::string {
+                    std::ostringstream stream;
+                    stream << "FIRST PLAYER TO " << _conf.max_score << " POINTS WINS";
+                    return stream.str();
+                },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {.05f, -.35f, 0 }),
+                        glm::vec3 { .65f, .07f, 0 })
                 },
 
 
                 text_positions_t {
-                        [](const state& s) -> std::string { return "PUSH DIAL TO PLAY"; },
-                        glm::scale(glm::translate(
-                                glm::mat4{1}, glm::vec3 {.0f, -0.65f, 0 }
-                        ), glm::vec3 { .45f, .1f, 0 })
+                [](const state& s) -> std::string { return "PUSH DIAL TO PLAY"; },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {.0f, -0.65f, 0 }),
+                        glm::vec3 { .45f, .1f, 0 })
                 },
 
                 text_positions_t {

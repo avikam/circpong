@@ -47,6 +47,7 @@ namespace pong {
                     is_instructions = false;
                     is_paused = true;
                     is_game_start = false;
+                    is_player_pressed_paused = false;
                 }
             } else if (input_is_pause(event)) {
                 is_welcome = false;
@@ -65,6 +66,7 @@ namespace pong {
             if (start_game_count_down.count() >= constants::start_game_counter) {
                 is_game_start = false;
                 is_paused = false;
+                is_player_pressed_paused = false;
             } else {
                 return;
             }
@@ -133,9 +135,7 @@ namespace pong {
             is_player_pressed_paused = false;
             is_goal = true;
 
-            ball_speed_x = 0.01;
-            ball_speed_y = 0.01;
-            ball_pos = {0, 0};
+            reset_ball();
             collision_cooldown = 0;
 
             winner->score += 1;

@@ -24,6 +24,13 @@ namespace pong {
          */
         player* test_goal();
 
+        inline void reset_ball() {
+            ball_speed_x = 0.000005;
+            ball_speed_y = 0.000005;
+            ball_pos = {0, 0};
+
+        }
+
         bool is_ball_player_collision(float angle);
         void hit();
         std::random_device rd;     // only used once to initialise (seed) engine
@@ -73,17 +80,15 @@ namespace pong {
             p2("Player 2", 90+180),
             curr_winner {nullptr},
 
-            ball_speed_x {0.01},
-            ball_speed_y {0.01},
-            ball_pos {0, 0},
-
             collision_cooldown { constants::collision_cooldown_max_val },
             rng { rd() },
             uni {-20,20},
             game_start_time { high_resolution_clock::now() },
             last_input_time { high_resolution_clock::now() },
             start_game_count_down { 0 }
-            {};
+            {
+                reset_ball();
+            };
 
         void update(input_t);
     };
