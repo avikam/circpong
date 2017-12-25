@@ -17,12 +17,14 @@ namespace pong {
                 is_instructions = false;
                 is_paused = true;
                 is_game_start = false;
+                is_player_pressed_paused = false;
 
                 curr_winner = nullptr;
                 p1.score = 0;
                 p2.score = 0;
                 p1.angle_ = 90;
                 p2.angle_ = 90+180;
+                reset_ball();
             }
         }
 
@@ -48,6 +50,13 @@ namespace pong {
                     is_paused = true;
                     is_game_start = false;
                     is_player_pressed_paused = false;
+
+                    curr_winner = nullptr;
+                    p1.score = 0;
+                    p2.score = 0;
+                    p1.angle_ = 90;
+                    p2.angle_ = 90+180;
+                    reset_ball();
                 }
             } else if (input_is_pause(event)) {
                 is_welcome = false;
@@ -66,7 +75,6 @@ namespace pong {
             if (start_game_count_down.count() >= constants::start_game_counter) {
                 is_game_start = false;
                 is_paused = false;
-                is_player_pressed_paused = false;
             } else {
                 return;
             }
@@ -119,12 +127,12 @@ namespace pong {
             collision_cooldown -= 1;
         } else {
             if (ball_pos.second >= 0 && is_ball_player_collision(p1.angle_)) {
-                std::cout << "player 1 collision";
+                //std::cout << "player 1 collision";
                 hit();
             }
 
             if (ball_pos.second <= 0 &&  is_ball_player_collision(p2.angle_ - 180)) {
-                std::cout << "player 2 collision";
+                //std::cout << "player 2 collision";
                 hit();
             }
         }
