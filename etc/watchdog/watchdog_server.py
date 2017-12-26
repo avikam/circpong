@@ -6,7 +6,7 @@ PORT = 7898
 
 class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
-        x = subprocess.Popen('/home/pong/src/circpong/cirpong', cwd='/home/pong/src/circpong')
+        x = subprocess.Popen(['/home/pong/src/circpong/cirpong', 'config.ini'], cwd='/home/pong/src/circpong')
         resp = str(x.pid)
 
         self.send_response(200)

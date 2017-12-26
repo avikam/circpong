@@ -25,8 +25,8 @@ namespace pong {
         player* test_goal();
 
         inline void reset_ball() {
-            ball_speed_x = 0.000005;
-            ball_speed_y = 0.000005;
+            ball_speed_x = _conf.initial_velocity;
+            ball_speed_y = _conf.initial_velocity;
             ball_pos = {0, 0};
 
         }
@@ -91,6 +91,8 @@ namespace pong {
             };
 
         void update(input_t);
+
+        void update_ball();
     };
 }
 

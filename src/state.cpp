@@ -120,6 +120,12 @@ namespace pong {
             p2.go_down();
         }
 
+    }
+
+    void state::update_ball() {
+        if (is_paused)
+            return;
+
         ball_pos.first  += ball_speed_x;
         ball_pos.second += ball_speed_y;
 
@@ -127,18 +133,21 @@ namespace pong {
             collision_cooldown -= 1;
         } else {
             if (ball_pos.second >= 0 && is_ball_player_collision(p1.angle_)) {
-                //std::cout << "player 1 collision";
+                std::cout << "player 1 collision\n";
                 hit();
             }
 
             if (ball_pos.second <= 0 &&  is_ball_player_collision(p2.angle_ - 180)) {
-                //std::cout << "player 2 collision";
+                std::cout << "player 2 collisioni\n";
                 hit();
             }
+
+
         }
 
         auto winner = test_goal();
         if (winner != nullptr) {
+            std::cout << "goal!" << std::endl;
             is_paused = true;
             is_player_pressed_paused = false;
             is_goal = true;

@@ -17,6 +17,7 @@ namespace pong {
         int window_pos_y;
         float ball_size;
         float radius;
+        float initial_velocity;
 
         config(
                 int max_seconds_idle = constants::max_seconds_idle,
@@ -24,6 +25,7 @@ namespace pong {
                 int max_score = constants::max_score,
                 float ball_size = constants::ball_size,
                 float radius = constants::radius,
+                float initial_velocity = constants::initial_velocity,
                 int window_size = 0,
                 int window_pos_x = 0,
                 int window_pos_y = 0
@@ -36,7 +38,9 @@ namespace pong {
             window_pos_x{ window_pos_x },
             window_pos_y{ window_pos_y },
             ball_size{ ball_size },
-            radius{ radius}
+            radius{ radius},
+            initial_velocity { initial_velocity }
+
                 {}
     };
 

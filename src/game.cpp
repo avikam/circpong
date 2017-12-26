@@ -113,7 +113,8 @@ namespace pong {
 
             s.update(event);
 
-            if (duration_cast<milliseconds>(now - last_render).count() >= 20) {
+            if (duration_cast<milliseconds>(now - last_render).count() >= 40) {
+                s.update_ball();
                 render();
                 last_render = now;
             }
