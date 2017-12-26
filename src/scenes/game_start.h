@@ -23,7 +23,9 @@ namespace pong {
         enum class texts_idx : std::size_t {
             counter = 0,
             start_game,
-            pong,
+            push,
+            to,
+            start,
             two_player,
             push_to_start,
             instruction,

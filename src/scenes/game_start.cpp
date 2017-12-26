@@ -69,12 +69,28 @@ namespace pong {
                 },
 
                 text_positions_t {
-                [](const state& s) -> std::string { return "PONG"; },
+                [](const state& s) -> std::string { return "PUSH"; },
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, 0.25f, 0 }),
-                        glm::vec3 { .45f, .25f, 0 })
+                                glm::vec3 {.0f, 0.4f, 0 }),
+                        glm::vec3 { .44f, .23f, 0 })
+                },
+                text_positions_t {
+                [](const state& s) -> std::string { return "TO"; },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {.0f, 0.0f, 0 }),
+                        glm::vec3 { .22f, .23f, 0 })
+                },
+                text_positions_t {
+                [](const state& s) -> std::string { return "START"; },
+                glm::scale(
+                        glm::translate(
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+                                glm::vec3 {.0f, -0.4f, 0 }),
+                        glm::vec3 { .55f, .23f, 0 })
                 },
 
                 text_positions_t {
@@ -317,9 +333,9 @@ namespace pong {
             _render_text(std::index_sequence<size_t(texts_idx::score1), size_t(texts_idx::score2)>{});
         if (s.is_welcome)
             _render_text(std::index_sequence<
-                    size_t(texts_idx::pong),
-                    size_t(texts_idx::two_player),
-                    size_t(texts_idx::push_to_start)
+                    size_t(texts_idx::push),
+                    size_t(texts_idx::to),
+                    size_t(texts_idx::start)
             >{});
         if (s.is_instructions)
             _render_text(std::index_sequence<
