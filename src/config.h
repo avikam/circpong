@@ -5,6 +5,12 @@
 #ifndef CIRPONG_CONFIG_H
 #define CIRPONG_CONFIG_H
 
+#include <ios>
+#include <iostream>
+#include <fstream>
+#include <regex>
+#include <string>
+
 #include "src/constants.h"
 
 namespace pong {
@@ -53,6 +59,47 @@ namespace pong {
                 {}
     };
 
+
+    static void copy_file(const std::string &to) {
+        std::string from =  "." + to + ".tmp";
+        std::ifstream ifs(from, std::ios::in | std::ios::binary);
+        std::ofstream ofs(to, std::ios::out | std::ios::binary);
+        ofs << ifs.rdbuf();
+    }
+
+    template <class T>
+    static void replace_string(const std::string& config_file, const std::string& key, T value) {
+        std::ifstream is(config_file, std::ios::in);
+        std::ofstream os("." + config_file + ".tmp", std::ios::out);
+
+
+        std::ostringstream stringStream;
+        // TODO: Needs to make sure newline is in the end of file
+        stringStream << key << ".*=.*?\n";
+        std::string copyOfStr = stringStream.str();
+
+        std::ostringstream stringStream2;
+        stringStream2 << key << " = " << value << std::endl;
+        std::string copyOfStr2 = stringStream2.str();
+
+        std::regex rx(copyOfStr);
+
+        std::string str((std::istreambuf_iterator<char>(is)),
+                        std::istreambuf_iterator<char>());
+
+        // write the results to an output iterator
+        std::regex_replace(std::ostreambuf_iterator<char>(os),
+                           str.begin(),
+                           str.end(),
+                           rx, copyOfStr2);
+
+    }
+
+    template <class T>
+    void update_config(const std::string& key, T value) {
+        replace_string("config.ini", key, value);
+        copy_file("config.ini");
+    }
 }
 
 #endif //CIRPONG_CONFIG_H

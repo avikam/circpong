@@ -115,7 +115,8 @@ namespace pong {
         glGenBuffers(3, vbo);
 
         glUseProgram(arenaShaderProgram);
-        GLfloat arena_center[] = {_conf.game_center_x*_conf.window_ratio, _conf.game_center_y};
+
+        GLfloat arena_center[] = {0, 0};
         glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(arena_center), arena_center, GL_STATIC_DRAW);
 
