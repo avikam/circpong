@@ -11,16 +11,24 @@ namespace pong {
     enum class input_t : int {
         // no input between frames
         idle                = 0,
-        player_1_up         = 0x001,
-        player_1_down       = 0x002,
-        player_2_up         = 0x004,
-        player_2_down       = 0x008,
+        player_1_up         = 0x0001,
+        player_1_down       = 0x0002,
+        player_2_up         = 0x0004,
+        player_2_down       = 0x0008,
 
-        toggle_fullscreen   = 0x010,
+        toggle_fullscreen   = 0x0010,
 
-        p1_press            = 0x100,
-        p2_press            = 0x200,
-        quit                = 0x400
+        p1_press            = 0x0100,
+        p2_press            = 0x0200,
+
+        screen_left         = 0x0400,
+        screen_right        = 0x0800,
+        screen_up           = 0x1000,
+        screen_down         = 0x2000,
+        screen_decr         = 0x4000,
+        screen_incr         = 0x8000,
+
+        quit                = 0x10000
     };
 
     using T = std::underlying_type_t <input_t>;

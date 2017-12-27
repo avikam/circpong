@@ -15,6 +15,8 @@
 namespace pong {
     class game {
     private:
+        // config is not const because the user can change the arena's center
+        config& conf;
         state s;
         environment env_;
         text_drawer txt_drawer;
@@ -27,7 +29,7 @@ namespace pong {
 
         void render();
     public:
-        explicit game(const config& conf);
+        explicit game(config& conf);
         ~game();
 
         void play();

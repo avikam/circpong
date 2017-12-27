@@ -30,10 +30,16 @@ namespace pong{
                         r |= (input_t::p1_press | input_t::p2_press);
                         break;
                     case SDLK_UP:
-                        r |=input_t::player_1_up;
+                        r |= input_t::screen_up;
                         break;
                     case SDLK_DOWN:
-                        r |=input_t::player_1_down;
+                        r |= input_t::screen_down;
+                        break;
+                    case SDLK_LEFT:
+                        r |= input_t::screen_left;
+                        break;
+                    case SDLK_RIGHT:
+                        r |= input_t::screen_right;
                         break;
                     case SDLK_q:
                         r |= input_t::player_2_down;

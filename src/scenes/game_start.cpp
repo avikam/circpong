@@ -371,7 +371,9 @@ namespace pong {
             // set texture
             glUniform1i(uniTex, I),
             // set transformation
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(std::get<1>(texts[I]))),
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(
+                    glm::translate(glm::mat4{1}, glm::vec3(_conf.game_center_x, _conf.game_center_y, 0)) * std::get<1>(texts[I])
+            )),
 
             // set elements and draw
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo[0]),

@@ -5,7 +5,8 @@
 #include "src/game.h"
 
 namespace pong {
-    game::game(const config& conf) :
+    game::game(config& conf) :
+            conf { conf },
             s { conf },
             exit_ {false},
             txt_drawer {}
@@ -110,6 +111,11 @@ namespace pong {
                 (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) ?
                     SDL_SetWindowFullscreen(window, 0) : SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
             }
+
+            if (input_is_set(event, input_t::screen_left)) conf.game_center_x -= 0.001;
+            if (input_is_set(event, input_t::screen_right)) conf.game_center_x += 0.001;
+            if (input_is_set(event, input_t::screen_up)) conf.game_center_y += 0.001;
+            if (input_is_set(event, input_t::screen_down)) conf.game_center_y -= 0.001;
 
             s.update(event);
 
