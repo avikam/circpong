@@ -3,6 +3,7 @@
 //
 
 #include "src/game.h"
+#include "src/config.h"
 
 namespace pong {
     game::game(config& conf) :
@@ -112,10 +113,22 @@ namespace pong {
                     SDL_SetWindowFullscreen(window, 0) : SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
             }
 
-            if (input_is_set(event, input_t::screen_left)) conf.game_center_x -= 0.001;
-            if (input_is_set(event, input_t::screen_right)) conf.game_center_x += 0.001;
-            if (input_is_set(event, input_t::screen_up)) conf.game_center_y += 0.001;
-            if (input_is_set(event, input_t::screen_down)) conf.game_center_y -= 0.001;
+            if (input_is_set(event, input_t::screen_left)){
+                conf.game_center_x -= 0.001;
+                update_config("game_center_x", conf.game_center_x);
+            }
+            if (input_is_set(event, input_t::screen_right)){
+                conf.game_center_x += 0.001;
+                update_config("game_center_x", conf.game_center_x);
+            }
+            if (input_is_set(event, input_t::screen_up)) {
+                conf.game_center_y += 0.001;
+                update_config("game_center_y", conf.game_center_y);
+            }
+            if (input_is_set(event, input_t::screen_down)){
+                conf.game_center_y -= 0.001;
+                update_config("game_center_y", conf.game_center_y);
+            }
 
             s.update(event);
 
@@ -124,9 +137,6 @@ namespace pong {
                 render();
                 last_render = now;
             }
-
-            // TODO: Get the amount of time we waited while polling and deduce how much time to delay
-             //SDL_Delay(2);
         }
     }
 }
