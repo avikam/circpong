@@ -29,6 +29,7 @@ namespace pong {
         SDL_DisplayMode DM;
         SDL_GetCurrentDisplayMode(0, &DM);
 
+        conf.window_ratio = float(DM.h)/float(DM.w);
         std::cout << DM.w << ", " << DM.h << std::endl;
         auto size = (0 != conf.window_size) ? conf.window_size : DM.h;
 
@@ -36,7 +37,7 @@ namespace pong {
         window = SDL_CreateWindow("Pong",
                                   SDL_WINDOWPOS_UNDEFINED,  // Centered window.
                                   SDL_WINDOWPOS_UNDEFINED,  // Centered window.
-                                  size, size,
+                                  DM.w, DM.h,
                                   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
         maincontext = SDL_GL_CreateContext(window);
@@ -46,20 +47,8 @@ namespace pong {
         }
 
         // Create full screen
-//         SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-//        SDL_Rect curBounds;
-//        SDL_GetWindowPosition( window, &curBounds.x, &curBounds.y );
-//        SDL_GetWindowSize( window, &curBounds.w, &curBounds.h );
-//
-//        int idx = SDL_GetWindowDisplayIndex( window );
-//        SDL_Rect bounds;
-//        SDL_GetDisplayBounds( idx, &bounds );
-        SDL_SetWindowBordered( window, SDL_FALSE );
-        auto pos_x = (conf.window_pos_x == -1) ? (DM.w - size) / 2 : conf.window_pos_x;
-        auto pos_y = (conf.window_pos_y == -1) ? (DM.h - size) / 2 : conf.window_pos_y;
+        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
-        SDL_SetWindowPosition( window, pos_x, pos_y);
-//        SDL_SetWindowSize( window, bounds.w, bounds.h );
         opengl_init();
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
 

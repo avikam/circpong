@@ -20,6 +20,7 @@ namespace pong {
         float game_center_x;
         float game_center_y;
         float initial_velocity;
+        float window_ratio;
 
         config(
                 int max_seconds_idle = constants::max_seconds_idle,
@@ -32,7 +33,9 @@ namespace pong {
                 float initial_velocity = constants::initial_velocity,
                 int window_size = 0,
                 int window_pos_x = 0,
-                int window_pos_y = 0
+                int window_pos_y = 0,
+                float window_ratio = 9/16
+
 
         ) :
             max_seconds_idle { max_seconds_idle },
