@@ -19,6 +19,7 @@ namespace pong {
                 is_game_start = false;
                 is_player_pressed_paused = false;
 
+                is_game_over = false;
                 curr_winner = nullptr;
                 p1.score = 0;
                 p2.score = 0;
