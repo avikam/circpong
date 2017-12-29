@@ -6,6 +6,7 @@
 #define CIRPONG_CONFIG_H
 
 #include <ios>
+#include <sstream>
 #include <iostream>
 #include <fstream>
 #include <regex>

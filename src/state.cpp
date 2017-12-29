@@ -19,6 +19,7 @@ namespace pong {
                 is_game_start = false;
                 is_player_pressed_paused = false;
 
+                is_game_over = false;
                 curr_winner = nullptr;
                 p1.score = 0;
                 p2.score = 0;
@@ -202,8 +203,8 @@ namespace pong {
         float shift_sin = sin(Angle_shift * constants::PI/180);
 
         // change speed
-        ball_speed_y *= 1.05;
-        ball_speed_x *= 1.05;
+        ball_speed_y = (ball_speed_y * 1.1 < _conf.radius*0.3) ? ball_speed_y * 1.05 : ball_speed_y;
+        ball_speed_x = (ball_speed_x * 1.1 < _conf.radius*0.3) ? ball_speed_x * 1.05 : ball_speed_x;
 
         // change direction
         auto speed_x_tmp = ball_speed_x*shift_cos - ball_speed_y*shift_sin;

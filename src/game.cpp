@@ -106,17 +106,27 @@ namespace pong {
                 conf.game_center_x -= 0.001;
                 update_config("game_center_x", conf.game_center_x);
             }
-            if (input_is_set(event, input_t::screen_right)){
+            else if (input_is_set(event, input_t::screen_right)){
                 conf.game_center_x += 0.001;
                 update_config("game_center_x", conf.game_center_x);
             }
-            if (input_is_set(event, input_t::screen_up)) {
+            else if (input_is_set(event, input_t::screen_up)) {
                 conf.game_center_y += 0.001;
                 update_config("game_center_y", conf.game_center_y);
             }
-            if (input_is_set(event, input_t::screen_down)){
+            else if (input_is_set(event, input_t::screen_down)){
                 conf.game_center_y -= 0.001;
                 update_config("game_center_y", conf.game_center_y);
+            }
+            else if (input_is_set(event, input_t::screen_decr)){
+                conf.radius -= 0.001;
+                update_config("radius", conf.radius);
+
+            }
+            else if (input_is_set(event, input_t::screen_incr)){
+                conf.radius += 0.001;
+                update_config("radius", conf.radius);
+
             }
 
             s.update(event);

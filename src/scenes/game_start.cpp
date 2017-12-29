@@ -121,7 +121,7 @@ namespace pong {
                 },
 
                 text_positions_t {
-                [](const state& s) -> std::string { return "CONTROL YOUR PADDLE BY TURNING"; },
+                [](const state& s) -> std::string { return "TURN DIAL LEFT OR RIGHT TO CONTROL PADDLE"; },
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
@@ -130,21 +130,13 @@ namespace pong {
                 },
 
                 text_positions_t {
-                [](const state& s) -> std::string { return "YOUR DIAL LEFT AND RIGHT"; },
+                [](const state& s) -> std::string { return "PUSH DIAL TO PAUSE GAME"; },
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {-.12f, conf.window_ratio*-.1f, 0 }),
-                        glm::vec3 { .48f, conf.window_ratio*.07f, 0 })
-                },
 
-                text_positions_t {
-                [](const state& s) -> std::string { return "PAUSE THE GAME BY PUSHING YOUR DIAL"; },
-                glm::scale(
-                        glm::translate(
-                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.10f, conf.window_ratio*-.25f, 0 }),
-                        glm::vec3 { .70f, conf.window_ratio*.07f, 0 })
+                                glm::vec3 {0, -.17f, 0 }),
+                        glm::vec3 { .48f, .07f, 0 })
                 },
 
                 text_positions_t {
@@ -156,10 +148,9 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.05f, conf.window_ratio*-.35f, 0 }),
-                        glm::vec3 { .65f, conf.window_ratio*.07f, 0 })
+                                glm::vec3 {0, -.35f, 0 }),
+                        glm::vec3 { .65f, .07f, 0 })
                 },
-
 
                 text_positions_t {
                 [](const state& s) -> std::string { return "PUSH DIAL TO PLAY"; },
@@ -342,7 +333,6 @@ namespace pong {
                     size_t(texts_idx::instruction),
                     size_t(texts_idx::instruction1),
                     size_t(texts_idx::instruction2),
-                    size_t(texts_idx::instruction3),
                     size_t(texts_idx::instruction4),
                     size_t(texts_idx::play)
             >{});
@@ -372,7 +362,9 @@ namespace pong {
             glUniform1i(uniTex, I),
             // set transformation
             glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(
-                    glm::translate(glm::mat4{1}, glm::vec3(_conf.game_center_x*_conf.window_ratio, _conf.game_center_y, 0)) * std::get<1>(texts[I])
+                    glm::scale(glm::mat4 { 1 },glm::vec3{_conf.window_ratio ,1, 0}) *
+                    glm::translate(glm::mat4{1}, glm::vec3(_conf.game_center_x, _conf.game_center_y, 0)) *
+                            std::get<1>(texts[I])
             )),
 
             // set elements and draw
