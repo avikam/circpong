@@ -31,7 +31,6 @@ namespace pong {
             instruction,
             instruction1,
             instruction2,
-            instruction3,
             instruction4,
             play,
             paused,
