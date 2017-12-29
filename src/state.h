@@ -25,14 +25,22 @@ namespace pong {
         player* test_goal();
 
         inline void reset_ball() {
-            ball_speed_x = _conf.initial_velocity;
-            ball_speed_y = _conf.initial_velocity;
+            float angle;
+            if (winner == nullptr)
+                angle = 90;
+            else
+                angle = winner->angle_;
+            float start_angle = angle + (ceilf(uni(rng)/181)*2-1)*(10 + abs(uni(rng))/9);
+            start_angle = start_angle + 360*(start_angle<0);
+            if ((start_angle < 180 & angle > 180) | (start_angle > 180 & angle < 180))
+                start_angle = angle-(start_angle - angle);
+            ball_speed_x = float(_conf.initial_velocity * cos(start_angle * constants::PI/180));
+            ball_speed_y = float(_conf.initial_velocity * sin(start_angle * constants::PI/180));
             ball_pos = {0, 0};
-
         }
 
         bool is_ball_player_collision(float angle);
-        void hit();
+        void hit(float p_angle);
         std::random_device rd;     // only used once to initialise (seed) engine
         std::mt19937_64 rng;    // random-number engine used (Mersenne-Twister in this case)
         std::uniform_int_distribution<int> uni; // guaranteed unbiased
@@ -59,7 +67,8 @@ namespace pong {
         player p1;
         player p2;
 
-        player* curr_winner;
+        player* winner;         //winner of current round
+        player* curr_winner;    //winner of entire game
 
         // After detecting a collision we start this timer that is reduced every frame
         // in which collision detection is disabled so we won't have "collision loop"
@@ -79,10 +88,11 @@ namespace pong {
             p1("Player 1", 90),
             p2("Player 2", 90+180),
             curr_winner {nullptr},
+            winner {nullptr},
 
             collision_cooldown { constants::collision_cooldown_max_val },
             rng { rd() },
-            uni {-20,20},
+            uni {-180,180},
             game_start_time { high_resolution_clock::now() },
             last_input_time { high_resolution_clock::now() },
             start_game_count_down { 0 }

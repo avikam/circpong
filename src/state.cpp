@@ -135,18 +135,18 @@ namespace pong {
         } else {
             if (ball_pos.second >= 0 && is_ball_player_collision(p1.angle_)) {
                 std::cout << "player 1 collision\n";
-                hit();
+                hit(p1.angle_);
             }
 
             if (ball_pos.second <= 0 &&  is_ball_player_collision(p2.angle_ - 180)) {
-                std::cout << "player 2 collisioni\n";
-                hit();
+                std::cout << "player 2 collision\n";
+                hit(p2.angle_ - 180);
             }
 
 
         }
 
-        auto winner = test_goal();
+        winner = test_goal();
         if (winner != nullptr) {
             std::cout << "goal!" << std::endl;
             is_paused = true;
@@ -194,10 +194,13 @@ namespace pong {
         return &p1;
     }
 
-    void state::hit() {
+    void state::hit(float p_angle) {
         collision_cooldown = constants::collision_cooldown_max_val;
-
-        auto Angle_shift = uni(rng);
+        auto ball_theta = (atan(ball_pos.second / ball_pos.first ) * 180 / constants::PI);
+        if (ball_pos.first * ball_pos.second < 0) {
+            ball_theta += 180;
+        }
+        auto Angle_shift = uni(rng)/90 + 2*(ball_theta - p_angle);
         // rotate speed vector by random angle
         float shift_cos = cos(Angle_shift * constants::PI/180);
         float shift_sin = sin(Angle_shift * constants::PI/180);

@@ -38,7 +38,7 @@ namespace pong {
         window = SDL_CreateWindow("Pong",
                                   SDL_WINDOWPOS_UNDEFINED,  // Centered window.
                                   SDL_WINDOWPOS_UNDEFINED,  // Centered window.
-                                  DM.w, DM.h,
+                                  DM.w/2, DM.h/2,
                                   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
         maincontext = SDL_GL_CreateContext(window);
@@ -48,7 +48,7 @@ namespace pong {
         }
 
         // Create full screen
-        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+//        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
         opengl_init();
         printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
