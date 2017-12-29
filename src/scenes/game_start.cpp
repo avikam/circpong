@@ -57,15 +57,15 @@ namespace pong {
                 glm::scale(
                    glm::translate(
                            glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                           glm::vec3 { 0.0f, -0.25f, 0 }),
-                   glm::vec3 { 0.05f, 0.2f, 0 })
+                           glm::vec3 { 0.0f, conf.window_ratio*-0.25f, 0 }),
+                   glm::vec3 { 0.05f, conf.window_ratio*0.2f, 0 })
                 },
 
                 text_positions_t {
                 [](const state& s) -> std::string { return "START GAME"; },
                 glm::scale(
-                        glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                        glm::vec3 { .55f, .25f, 0 })
+                        glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,conf.window_ratio*0,1)),
+                        glm::vec3 { .55f, conf.window_ratio*.25f, 0 })
                 },
 
                 text_positions_t {
@@ -73,24 +73,24 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, 0.4f, 0 }),
-                        glm::vec3 { .44f, .23f, 0 })
+                                glm::vec3 {.0f, conf.window_ratio*0.4f, 0 }),
+                        glm::vec3 { .44f, conf.window_ratio*.23f, 0 })
                 },
                 text_positions_t {
                 [](const state& s) -> std::string { return "TO"; },
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, 0.0f, 0 }),
-                        glm::vec3 { .22f, .23f, 0 })
+                                glm::vec3 {.0f, conf.window_ratio*0.0f, 0 }),
+                        glm::vec3 { .22f, conf.window_ratio*.23f, 0 })
                 },
                 text_positions_t {
                 [](const state& s) -> std::string { return "START"; },
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, -0.4f, 0 }),
-                        glm::vec3 { .55f, .23f, 0 })
+                                glm::vec3 {.0f, conf.window_ratio*-0.4f, 0 }),
+                        glm::vec3 { .55f, conf.window_ratio*.23f, 0 })
                 },
 
                 text_positions_t {
@@ -98,8 +98,8 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, 0.0f, 0 }),
-                        glm::vec3 { .25f, .08f, 0 })
+                                glm::vec3 {.0f, conf.window_ratio*0.0f, 0 }),
+                        glm::vec3 { .25f, conf.window_ratio*.08f, 0 })
                 },
 
                 text_positions_t {
@@ -107,8 +107,8 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, -0.20f, 0 }),
-                        glm::vec3 {.56f, .08f, 0 })
+                                glm::vec3 {.0f, conf.window_ratio*-0.20f, 0 }),
+                        glm::vec3 {.56f, conf.window_ratio*.08f, 0 })
                 },
 
                 text_positions_t {
@@ -116,8 +116,8 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, 0.20f, 0 }),
-                        glm::vec3 { .45f, .15f, 0 })
+                                glm::vec3 {.0f, conf.window_ratio*0.20f, 0 }),
+                        glm::vec3 { .45f, conf.window_ratio*.15f, 0 })
                 },
 
                 text_positions_t {
@@ -125,8 +125,8 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, 0.0f, 0 }),
-                        glm::vec3 { .60f, .07f, 0 })
+                                glm::vec3 {.0f, conf.window_ratio*0.0f, 0 }),
+                        glm::vec3 { .60f, conf.window_ratio*.07f, 0 })
                 },
 
                 text_positions_t {
@@ -134,8 +134,8 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {-.12f, -.1f, 0 }),
-                        glm::vec3 { .48f, .07f, 0 })
+                                glm::vec3 {-.12f, conf.window_ratio*-.1f, 0 }),
+                        glm::vec3 { .48f, conf.window_ratio*.07f, 0 })
                 },
 
                 text_positions_t {
@@ -143,8 +143,8 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.10f, -.25f, 0 }),
-                        glm::vec3 { .70f, .07f, 0 })
+                                glm::vec3 {.10f, conf.window_ratio*-.25f, 0 }),
+                        glm::vec3 { .70f, conf.window_ratio*.07f, 0 })
                 },
 
                 text_positions_t {
@@ -156,8 +156,8 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.05f, -.35f, 0 }),
-                        glm::vec3 { .65f, .07f, 0 })
+                                glm::vec3 {.05f, conf.window_ratio*-.35f, 0 }),
+                        glm::vec3 { .65f, conf.window_ratio*.07f, 0 })
                 },
 
 
@@ -166,30 +166,30 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, -0.65f, 0 }),
-                        glm::vec3 { .45f, .1f, 0 })
+                                glm::vec3 {.0f, conf.window_ratio*-0.65f, 0 }),
+                        glm::vec3 { .45f, conf.window_ratio*.1f, 0 })
                 },
 
                 text_positions_t {
                         [](const state& s) -> std::string { return "PAUSED"; },
                         glm::scale(
-                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
-                                glm::vec3 { 0.3f, 0.125f, 0 })
+                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3 { .0f,conf.window_ratio*.0f,1.0f }),
+                                glm::vec3 { 0.3f, conf.window_ratio*0.125f, 0 })
                 },
 
                 text_positions_t {
                         [](const state& s) -> std::string { return "WIN"; },
                         glm::rotate(
-                                glm::scale(glm::translate(glm::mat4{1},glm::vec3 {0.0, 0.5, 0}),
-                                           glm::vec3 {0.35f, 0.1f, 0}),
+                                glm::scale(glm::translate(glm::mat4{1},glm::vec3 {conf.window_ratio*0.0, 0.5, 0}),
+                                           glm::vec3 {conf.window_ratio*0.35f, 0.1f, 0}),
                                 glm::radians(180.0f), glm::vec3 {0, 0, 1})
                 },
 
                 text_positions_t {
                         [](const state& s) -> std::string { return "WIN"; },
                         glm::rotate(
-                                glm::scale(glm::translate(glm::mat4{1}, glm::vec3 {0.0, 0.5 * -1, 0}),
-                                           glm::vec3 {0.35f, 0.1f, 0}),
+                                glm::scale(glm::translate(glm::mat4{1}, glm::vec3 {conf.window_ratio*0.0, 0.5 * -1, 0}),
+                                           glm::vec3 {conf.window_ratio*0.35f, 0.1f, 0}),
                                 glm::radians(180.0f) * 0, glm::vec3 {0, 0, 1})
                 },
 
@@ -197,10 +197,10 @@ namespace pong {
                 text_positions_t {
                         [](const state& s) -> std::string {
                             std::ostringstream stream; stream << s.p1.score; return stream.str();
-                        },
-                        glm::scale(
+                },
+                glm::scale(
                                 glm::rotate(
-                                        glm::translate(glm::mat4{1}, glm::vec3 { conf.radius * 0.85f, 0.1f, 0 }),
+                                        glm::translate(glm::mat4{1}, glm::vec3 {  conf.window_ratio*conf.radius * 0.8f, 0.1f, 0 }),
                                         glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
                                 glm::vec3 { 0.5 * 0.125f, 0.5 * 0.125f, 0 })
                 },
@@ -212,7 +212,7 @@ namespace pong {
                         },
                         glm::scale(
                                 glm::rotate(
-                                        glm::translate(glm::mat4{1}, glm::vec3 { conf.radius * 0.85f, -0.1f, 0 }),
+                                        glm::translate(glm::mat4{1}, glm::vec3 { conf.window_ratio*conf.radius * 0.8f, -0.1f, 0 }),
                                         glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
                                 glm::vec3 { 0.5 * 0.125f, 0.5 * 0.125f, 0 })
                 },

@@ -5,7 +5,13 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(
         .
+        C:/amsys32/mingw64/include/SDL
         /usr/local/include/SDL2
+)
+
+link_directories(
+        .
+        C:/msys32/mingw64/lib
 )
 
 IF(APPLE)
@@ -15,28 +21,23 @@ IF(APPLE)
 
     add_definitions(-DAPPLE)
 
+ELSEIF(WIN32)
+    SET(EXTRA_LIBS opengl32 glew32)
 ELSE()
     SET(EXTRA_LIBS GL GLEW)
 ENDIF ()
 
-if(UNIX AND NOT APPLE)
-    # Use powermates controls, not on MAC :/
+IF(UNIX AND NOT APPLE AND NOT WIN32) # Use powermates controls, not on MAC OR WINDOWS :/
     SET(SRC_CONTROL src/control.cpp)
-
-    # ADD_CUSTOM_TARGET(link_target ALL
-    #   COMMAND ${CMAKE_COMMAND} -E create_symlink OpenGl /usr/include/GL)
-
-else()
+ELSE()
     SET(SRC_CONTROL src/control_non.cpp)
-endif()
+ENDIF()
 
 
 set(SOURCE_FILES
         src/main.cpp
         src/scenes/text_drawer.cpp
         src/scenes/utils.cpp
-
-
         src/scenes/arena.cpp
         src/scenes/game_start.cpp
 
@@ -46,6 +47,7 @@ set(SOURCE_FILES
         src/ball.cpp
         src/game.cpp
         ${SRC_CONTROL}
-        src/input.h src/config.cpp)
+        src/input.h)
+
 add_executable(cirpong ${SOURCE_FILES})
-target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf)
+target_link_libraries(cirpong ${EXTRA_LIBS} SDL2 SDL2_ttf )

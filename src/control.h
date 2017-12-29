@@ -6,7 +6,9 @@
 
 
 #include <SDL2/SDL_events.h>
-#include <poll.h> // struct pollfd
+#ifdef __linux__
+    #include <poll.h> // struct pollfd
+#endif
 #include <iostream>
 
 #include "src/input.h"
