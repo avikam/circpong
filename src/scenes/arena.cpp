@@ -29,7 +29,7 @@ namespace pong {
         layout(points) in;
         layout(line_strip, max_vertices = 250) out;
 
-        uniform float radius;
+        uniform float radius_x , radius_y;
 
         const float PI = 3.1415926;
         const int SIZE = 50;
@@ -43,7 +43,7 @@ namespace pong {
                 float ang = 2.0 * PI / SIZE * i;
 
                 // Offset from center of point
-                vec4 offset = vec4(radius * 0.95 * cos(ang), radius * 0.95 * sin(ang), 0.0, 0.0);
+                vec4 offset = vec4(radius_x * 0.95 * cos(ang), radius_y * 0.95 * sin(ang), 0.0, 0.0);
 
                 gl_Position = gl_in[0].gl_Position + offset;
                 EmitVertex();
@@ -51,11 +51,11 @@ namespace pong {
             EndPrimitive();
 
             // Draw field separation
-            for (int i = -47; i <= 47; i++) {
-                gl_Position = gl_in[0].gl_Position + vec4(radius * 0.01 * 2 * i, 0, 0, 0);
+            for (int i = -27; i <= 26; i++) {
+                gl_Position = gl_in[0].gl_Position + vec4(radius_x * 0.01 * 2 * i, 0, 0, 0);
                 EmitVertex();
 
-                gl_Position = gl_in[0].gl_Position + vec4(radius * 0.01 * (2 * i+1), 0, 0, 0);
+                gl_Position = gl_in[0].gl_Position + vec4(radius_y * 0.01 * (2 * i+1), 0, 0, 0);
                 EmitVertex();
 
                 EndPrimitive();
@@ -115,26 +115,27 @@ namespace pong {
         glGenBuffers(3, vbo);
 
         glUseProgram(arenaShaderProgram);
+
         GLfloat arena_center[] = {0, 0};
         glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(arena_center), arena_center, GL_STATIC_DRAW);
 
         glUseProgram(ballShaderProgram);
         GLfloat ball[] = {
-            -_conf.ball_size / 2, _conf.ball_size / 2,
-            _conf.ball_size / 2, _conf.ball_size / 2,
-            _conf.ball_size / 2, -_conf.ball_size / 2,
-            -_conf.ball_size / 2, -_conf.ball_size / 2
+            -_conf.ball_size*_conf.window_ratio / 2, _conf.ball_size / 2,
+            _conf.ball_size*_conf.window_ratio / 2, _conf.ball_size / 2,
+            _conf.ball_size*_conf.window_ratio / 2, -_conf.ball_size / 2,
+            -_conf.ball_size*_conf.window_ratio / 2, -_conf.ball_size / 2
         };
         glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(ball), ball, GL_STATIC_DRAW);
 
         glUseProgram(playerShaderProgram);
         GLfloat player[] = {
-                -constants::player_size / 2, constants::player_size / 2,
-                constants::player_size / 2, constants::player_size / 2,
-                constants::player_size / 2, -constants::player_size / 2,
-                -constants::player_size / 2, -constants::player_size / 2
+                -constants::player_size *_conf.window_ratio / 2, constants::player_size / 2,
+                constants::player_size *_conf.window_ratio / 2, constants::player_size / 2,
+                constants::player_size *_conf.window_ratio / 2, -constants::player_size / 2,
+                -constants::player_size *_conf.window_ratio / 2, -constants::player_size / 2
         };
         glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(player), player, GL_STATIC_DRAW);
@@ -160,8 +161,11 @@ namespace pong {
     void arena::render_arena() {
         glUseProgram(arenaShaderProgram);
 
-        GLint uni_radius = glGetUniformLocation(arenaShaderProgram, "radius");
-        glUniform1f(uni_radius, _conf.radius);
+        GLint uni_radius_x = glGetUniformLocation(arenaShaderProgram, "radius_x");
+        glUniform1f(uni_radius_x, _conf.radius*_conf.window_ratio );
+
+        GLint uni_radius_y = glGetUniformLocation(arenaShaderProgram, "radius_y");
+        glUniform1f(uni_radius_y, _conf.radius);
 
         glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
         {
@@ -175,7 +179,7 @@ namespace pong {
 
         GLint uniTrans = glGetUniformLocation(playerShaderProgram, "trans");
         glm::mat4 pos = glm::translate(
-                glm::mat4 {1.0f}, glm::vec3 { _conf.game_center_x, _conf.game_center_y, 0});
+                glm::mat4 {1.0f}, glm::vec3 { _conf.game_center_x*_conf.window_ratio, _conf.game_center_y, 0});
         glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos));
 
         glDrawArrays(GL_POINTS, 0, 1);
@@ -194,9 +198,9 @@ namespace pong {
 
         GLint uniTrans = glGetUniformLocation(playerShaderProgram, "trans");
         auto trans = glm::translate(glm::mat4 {1.0f},
-                glm::vec3(ball_pos.first, ball_pos.second, 0)
+                glm::vec3(ball_pos.first*_conf.window_ratio, ball_pos.second, 0)
         );
-        trans = glm::translate(trans, glm::vec3 { _conf.game_center_x, _conf.game_center_y, 0});
+        trans = glm::translate(trans, glm::vec3 { _conf.game_center_x*_conf.window_ratio, _conf.game_center_y, 0});
 
         glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
@@ -231,8 +235,9 @@ namespace pong {
                         , glm::radians(p.angle_), glm::vec3(0,0,1)),
                 glm::vec3(_conf.radius * 0.90, 0, 0)
         );
+        auto scale = glm::scale(glm::mat4 { 1 },glm::vec3{_conf.window_ratio ,1, 0});
 
-        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(pos));
+        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(scale * pos));
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
         // Level n
@@ -242,13 +247,15 @@ namespace pong {
                 // 0.75 is the factor of congruence
                 auto t = glm::translate(pos,
                                         glm::vec3{-i * constants::player_size * straightness_factor, i * constants::player_size, 0});
-                glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+
+                glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(scale * t));
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
             }
             {
                 auto t = glm::translate(pos,
                                         glm::vec3{-i * constants::player_size * straightness_factor, -i * constants::player_size, 0});
-                glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(t));
+
+                glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(scale * t));
                 glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
             }

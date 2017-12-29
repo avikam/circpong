@@ -47,6 +47,12 @@ namespace pong{
                     case SDLK_a:
                         r |= input_t::player_2_up;
                         break;
+                    case SDLK_o:
+                        r |= input_t::player_1_down;
+                        break;
+                    case SDLK_l:
+                        r |= input_t::player_1_up;
+                        break;
                     case SDLK_f:
                         break;
 //                        return input_t::toggle_fullscreen;
