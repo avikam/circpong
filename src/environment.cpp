@@ -41,6 +41,12 @@ namespace pong{
                     case SDLK_RIGHT:
                         r |= input_t::screen_right;
                         break;
+                    case SDLK_d:
+                        r |= input_t::screen_decr;
+                        break;
+                    case SDLK_i:
+                        r |= input_t::screen_incr;
+                        break;
                     case SDLK_q:
                         r |= input_t::player_2_down;
                         break;
