@@ -51,11 +51,11 @@ namespace pong {
             EndPrimitive();
 
             // Draw field separation
-            for (int i = -27; i <= 26; i++) {
+            for (int i = -47; i <= 47; i++) {
                 gl_Position = gl_in[0].gl_Position + vec4(radius_x * 0.01 * 2 * i, 0, 0, 0);
                 EmitVertex();
 
-                gl_Position = gl_in[0].gl_Position + vec4(radius_y * 0.01 * (2 * i+1), 0, 0, 0);
+                gl_Position = gl_in[0].gl_Position + vec4(radius_x * 0.01 * (2 * i+1), 0, 0, 0);
                 EmitVertex();
 
                 EndPrimitive();
