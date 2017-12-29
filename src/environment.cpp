@@ -54,10 +54,10 @@ namespace pong{
                         r |= input_t::player_2_up;
                         break;
                     case SDLK_o:
-                        r |= input_t::player_1_down;
+                        r |= input_t::player_1_up;
                         break;
                     case SDLK_l:
-                        r |= input_t::player_1_up;
+                        r |= input_t::player_1_down;
                         break;
                     case SDLK_f:
                         break;
