@@ -122,20 +122,20 @@ namespace pong {
 
         glUseProgram(ballShaderProgram);
         GLfloat ball[] = {
-            -_conf.ball_size*_conf.window_ratio / 2, _conf.ball_size / 2,
-            _conf.ball_size*_conf.window_ratio / 2, _conf.ball_size / 2,
-            _conf.ball_size*_conf.window_ratio / 2, -_conf.ball_size / 2,
-            -_conf.ball_size*_conf.window_ratio / 2, -_conf.ball_size / 2
+            -_conf.ball_size / 2, _conf.ball_size / 2,
+            _conf.ball_size / 2, _conf.ball_size / 2,
+            _conf.ball_size / 2, -_conf.ball_size / 2,
+            -_conf.ball_size / 2, -_conf.ball_size / 2
         };
         glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(ball), ball, GL_STATIC_DRAW);
 
         glUseProgram(playerShaderProgram);
         GLfloat player[] = {
-                -constants::player_size *_conf.window_ratio / 2, constants::player_size / 2,
-                constants::player_size *_conf.window_ratio / 2, constants::player_size / 2,
-                constants::player_size *_conf.window_ratio / 2, -constants::player_size / 2,
-                -constants::player_size *_conf.window_ratio / 2, -constants::player_size / 2
+                -constants::player_size / 2, constants::player_size / 2,
+                constants::player_size / 2, constants::player_size / 2,
+                constants::player_size / 2, -constants::player_size / 2,
+                -constants::player_size / 2, -constants::player_size / 2
         };
         glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(player), player, GL_STATIC_DRAW);
@@ -198,11 +198,12 @@ namespace pong {
 
         GLint uniTrans = glGetUniformLocation(playerShaderProgram, "trans");
         auto trans = glm::translate(glm::mat4 {1.0f},
-                glm::vec3(ball_pos.first*_conf.window_ratio, ball_pos.second, 0)
+                glm::vec3(ball_pos.first, ball_pos.second, 0)
         );
-        trans = glm::translate(trans, glm::vec3 { _conf.game_center_x*_conf.window_ratio, _conf.game_center_y, 0});
+        trans = glm::translate(trans, glm::vec3 { _conf.game_center_x, _conf.game_center_y, 0});
+        auto scale = glm::scale(glm::mat4 { 1 },glm::vec3{_conf.window_ratio ,1, 0});
 
-        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(scale * trans));
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
 
