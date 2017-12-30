@@ -110,17 +110,17 @@ namespace pong {
             is_welcome = true;
         }
 
-        if (input_is_set(event, input_t::player_1_up) & (active_player == 1 | is_2_player) ) {
+        if (input_is_set(event, input_t::player_1_up) && (active_player == 1 || is_2_player) ) {
             p1.go_up();
         }
-        if (input_is_set(event, input_t::player_1_down) & (active_player == 1 | is_2_player) ) {
+        if (input_is_set(event, input_t::player_1_down) && (active_player == 1 || is_2_player) ) {
             p1.go_down();
         }
 
-        if (input_is_set(event, input_t::player_2_up)  & (active_player == 2 | is_2_player) ) {
+        if (input_is_set(event, input_t::player_2_up)  && (active_player == 2 || is_2_player) ) {
             p2.go_up();
         }
-        if (input_is_set(event, input_t::player_2_down) & (active_player == 2 | is_2_player) ) {
+        if (input_is_set(event, input_t::player_2_down) && (active_player == 2 || is_2_player) ) {
             p2.go_down();
         }
 
@@ -209,7 +209,7 @@ namespace pong {
 
         auto effective_radius = _conf.radius * 0.85;
         if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) >= pow(effective_radius, 2)) {
-            if (player_theta - 6 <= ball_theta && ball_theta <= player_theta + 6)
+            if (player_theta - 6.5 <= ball_theta && ball_theta <= player_theta + 6.5)
                 return true;
         }
         return false;
