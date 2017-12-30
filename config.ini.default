@@ -1,6 +1,6 @@
 ; Some explanation here
 [config]
-max_score = 3
+max_score = 5
 ball_size = 0.04     ; size of 1 side of the square composing the ball. 0.01 is really small, 0.09 is really big
 radius = 0.999
 game_center_x = -0.011

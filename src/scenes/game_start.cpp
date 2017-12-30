@@ -126,7 +126,7 @@ namespace pong {
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
                                 glm::vec3 {.0f, 0.135f, 0 }),
-                        glm::vec3 { .60f, .07f, 0 })
+                        glm::vec3 { .92f, .07f, 0 })
                 },
 
                 text_positions_t {

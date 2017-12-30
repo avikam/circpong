@@ -104,7 +104,7 @@ namespace pong {
                     printf("Device disappeared!\n");
                     throw std::runtime_error("device is out, not supported yet");
                 } else {
-                    std::cout << "code: " << ev.code << "val: " << ev.value << " type: " << ev.type << " player_b: " << (pfds[i].fd==devfds[bottom_fd]) << std::endl;
+                    // std::cout << "code: " << ev.code << "val: " << ev.value << " type: " << ev.type << " player_b: " << (pfds[i].fd==devfds[bottom_fd]) << std::endl;
 
                     if (ev.type == EV_REL && ev.code == 7) {
                         if (ev.value == -1) {
