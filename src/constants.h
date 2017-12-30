@@ -27,7 +27,7 @@ namespace pong {
         static float player_size = 0.03;
         static float ball_size = 0.04;
         constexpr unsigned player_pixel_levels = 3;
-        static float initial_velocity = 0.001;
+        static float initial_velocity = 0.015;
 
         static float hit_threshold = 0.009;
 
