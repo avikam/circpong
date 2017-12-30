@@ -1,0 +1,100 @@
+for i in $(dconf list /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/); do echo "-----"; for j in $(dconf list /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/$i); do echo $i$j; dconf read /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/$i$j; done; done;
+-----
+custom0/binding
+'<Primary>p'
+custom0/command
+'gedit /home/pong/src/circpong/config.ini'
+custom0/name
+'EditPong'
+-----
+custom1/binding
+'<Primary><Shift>h'
+custom1/command
+'teamviewer'
+custom1/name
+'TeamViewer'
+-----
+custom2/binding
+'<Primary><Shift>Delete'
+custom2/command
+'reboot'
+custom2/name
+'Reboot'
+-----
+custom3/binding
+'<Primary><Shift>d'
+custom3/command
+'cp /home/pong/src/circpong/config.ini.default /home/pong/src/circpong/config.ini'
+custom3/name
+'RestoreConfig'
+-----
+custom4/binding
+'<Primary>1'
+custom4/command
+"sed -i 's/max_score.*/max_score = 1 ; by keyboard/g' src/circpong/config.ini"
+custom4/name
+'MaxScore_1'
+-----
+custom5/binding
+'<Primary>2'
+custom5/command
+"sed -i 's/max_score.*/max_score = 2 ; by keyboard/g' src/circpong/config.ini"
+custom5/name
+'MaxScore_2'
+-----
+custom10/binding
+'<Primary>7'
+custom10/command
+"sed -i 's/max_score.*/max_score = 7 ; by keyboard/g' src/circpong/config.ini"
+custom10/name
+'MaxScore_7'
+-----
+custom6/binding
+'<Primary>3'
+custom6/command
+"sed -i 's/max_score.*/max_score = 3 ; by keyboard/g' src/circpong/config.ini"
+custom6/name
+'MaxScore_3'
+-----
+custom11/binding
+'<Primary>8'
+custom11/command
+"sed -i 's/max_score.*/max_score = 8 ; by keyboard/g' src/circpong/config.ini"
+custom11/name
+'MaxScore_8'
+-----
+custom7/binding
+'<Primary>4'
+custom7/command
+"sed -i 's/max_score.*/max_score = 4 ; by keyboard/g' src/circpong/config.ini"
+custom7/name
+'MaxScore_4'
+-----
+custom12/binding
+'<Primary>9'
+custom12/command
+"sed -i 's/max_score.*/max_score = 9 ; by keyboard/g' src/circpong/config.ini"
+custom12/name
+'MaxScore_9'
+-----
+custom8/binding
+'<Primary>5'
+custom8/command
+"sed -i 's/max_score.*/max_score = 5 ; by keyboard/g' src/circpong/config.ini"
+custom8/name
+'MaxScore_5'
+-----
+custom13/binding
+'<Primary>0'
+custom13/command
+"sed -i 's/max_score.*/max_score = 10 ; by keyboard/g' src/circpong/config.ini"
+custom13/name
+'MaxScore_10'
+-----
+custom9/binding
+'<Primary>6'
+custom9/command
+"sed -i 's/max_score.*/max_score = 6 ; by keyboard/g' src/circpong/config.ini"
+custom9/name
+'MaxScore_6'
+
