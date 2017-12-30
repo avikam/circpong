@@ -110,17 +110,17 @@ namespace pong {
             is_welcome = true;
         }
 
-        if (input_is_set(event, input_t::player_1_up) & (active_player == 1 | is_2_player) ) {
+        if (input_is_set(event, input_t::player_1_up) && (active_player == 1 || is_2_player) ) {
             p1.go_up();
         }
-        if (input_is_set(event, input_t::player_1_down) & (active_player == 1 | is_2_player) ) {
+        if (input_is_set(event, input_t::player_1_down) && (active_player == 1 || is_2_player) ) {
             p1.go_down();
         }
 
-        if (input_is_set(event, input_t::player_2_up)  & (active_player == 2 | is_2_player) ) {
+        if (input_is_set(event, input_t::player_2_up)  && (active_player == 2 || is_2_player) ) {
             p2.go_up();
         }
-        if (input_is_set(event, input_t::player_2_down) & (active_player == 2 | is_2_player) ) {
+        if (input_is_set(event, input_t::player_2_down) && (active_player == 2 || is_2_player) ) {
             p2.go_down();
         }
 
