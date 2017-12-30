@@ -164,8 +164,11 @@ namespace pong {
                 text_positions_t {
                         [](const state& s) -> std::string { return "PAUSED"; },
                         glm::scale(
-                                glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
-                                glm::vec3 { 0.3f, 0.125f, 0 })
+                           glm::translate(
+                                   glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
+                                   glm::vec3 { .0f, -.0625f, .0f }
+                           ),
+                           glm::vec3 { 0.3f, 0.125f, 0 })
                 },
 
                 text_positions_t {
