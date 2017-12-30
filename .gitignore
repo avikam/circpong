@@ -1,2 +1,6 @@
 .idea
 cmake-*
+config.ini
+.config.ini.tmp
+CMakeFiles
+Makefile
