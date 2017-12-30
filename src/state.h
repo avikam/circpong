@@ -50,6 +50,7 @@ namespace pong {
         bool is_welcome;
         bool is_instructions;
         bool is_game_start;
+        bool is_2_player;
         // After a goal
         bool is_paused;
         // User ask for pause
@@ -69,7 +70,8 @@ namespace pong {
 
         player* winner;         //winner of current round
         player* curr_winner;    //winner of entire game
-
+        int active_player;
+        int pc_cooldown;
         // After detecting a collision we start this timer that is reduced every frame
         // in which collision detection is disabled so we won't have "collision loop"
         int collision_cooldown;
@@ -79,6 +81,7 @@ namespace pong {
         explicit state(const config& conf) :
             _conf { conf },
             is_welcome { true },
+            is_2_player { true },
             is_instructions { false },
             is_game_start { false },
             is_paused { true  },
@@ -88,8 +91,9 @@ namespace pong {
             p1("Player 1", 90),
             p2("Player 2", 90+180),
             curr_winner {nullptr},
+            active_player {1},
             winner {nullptr},
-
+            pc_cooldown {0},
             collision_cooldown { constants::collision_cooldown_max_val },
             rng { rd() },
             uni {-180,180},
@@ -101,7 +105,7 @@ namespace pong {
             };
 
         void update(input_t);
-
+        void update_AI();
         void update_ball();
     };
 }
