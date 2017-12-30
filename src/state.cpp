@@ -209,7 +209,7 @@ namespace pong {
 
         auto effective_radius = _conf.radius * 0.85;
         if (pow(ball_pos.first, 2) + pow(ball_pos.second, 2) >= pow(effective_radius, 2)) {
-            if (player_theta - 6 <= ball_theta && ball_theta <= player_theta + 6)
+            if (player_theta - 6.5 <= ball_theta && ball_theta <= player_theta + 6.5)
                 return true;
         }
         return false;

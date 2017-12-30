@@ -73,7 +73,7 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, 0.4f, 0 }),
+                                glm::vec3 {.0f, 0.285f, 0 }),
                         glm::vec3 { .44f, .23f, 0 })
                 },
                 text_positions_t {
@@ -81,7 +81,7 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, 0.0f, 0 }),
+                                glm::vec3 {.0f, -0.115f, 0 }),
                         glm::vec3 { .22f, .23f, 0 })
                 },
                 text_positions_t {
@@ -89,7 +89,7 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, -0.4f, 0 }),
+                                glm::vec3 {.0f, -0.515f, 0 }),
                         glm::vec3 { .55f, .23f, 0 })
                 },
 
@@ -116,7 +116,7 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, 0.20f, 0 }),
+                                glm::vec3 {.0f, 0.335f, 0 }),
                         glm::vec3 { .45f, .15f, 0 })
                 },
 
@@ -125,7 +125,7 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, 0.0f, 0 }),
+                                glm::vec3 {.0f, 0.135f, 0 }),
                         glm::vec3 { .60f, .07f, 0 })
                 },
 
@@ -135,7 +135,7 @@ namespace pong {
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
 
-                                glm::vec3 {0, -.17f, 0 }),
+                                glm::vec3 {0, -.035f, 0 }),
                         glm::vec3 { .48f, .07f, 0 })
                 },
 
@@ -148,7 +148,7 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {0, -.35f, 0 }),
+                                glm::vec3 {0, -.215f, 0 }),
                         glm::vec3 { .65f, .07f, 0 })
                 },
 
@@ -157,7 +157,7 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
-                                glm::vec3 {.0f, -0.65f, 0 }),
+                                glm::vec3 {.0f, -0.515f, 0 }),
                         glm::vec3 { .45f, .1f, 0 })
                 },
 
