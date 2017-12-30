@@ -17,10 +17,13 @@ namespace pong {
                 is_instructions = false;
                 is_paused = true;
                 is_game_start = false;
+                is_2_player = true;
                 is_player_pressed_paused = false;
 
                 is_game_over = false;
                 curr_winner = nullptr;
+                active_player = 1;
+                pc_cooldown = 10;
                 p1.score = 0;
                 p2.score = 0;
                 p1.angle_ = 90;
@@ -107,20 +110,53 @@ namespace pong {
             is_welcome = true;
         }
 
-        if (input_is_set(event, input_t::player_1_up)) {
+        if (input_is_set(event, input_t::player_1_up) & (active_player == 1 | is_2_player) ) {
             p1.go_up();
         }
-        if (input_is_set(event, input_t::player_1_down)) {
+        if (input_is_set(event, input_t::player_1_down) & (active_player == 1 | is_2_player) ) {
             p1.go_down();
         }
 
-        if (input_is_set(event, input_t::player_2_up)) {
+        if (input_is_set(event, input_t::player_2_up)  & (active_player == 2 | is_2_player) ) {
             p2.go_up();
         }
-        if (input_is_set(event, input_t::player_2_down)) {
+        if (input_is_set(event, input_t::player_2_down) & (active_player == 2 | is_2_player) ) {
             p2.go_down();
         }
 
+    }
+
+    void state::update_AI() {
+        if (!is_2_player & !pc_cooldown & !is_paused){
+            pc_cooldown = 10;
+            auto ball_next_pos_x = ball_pos.first , ball_next_pos_y = ball_pos.second;
+            float Dist=-1;
+            auto Itr = 0 ;
+            while (abs(Dist) > 0.01 & Itr < 15) {
+                ball_next_pos_x += ((Dist<0)*2-1)*ball_speed_x*512/pow(2,Itr);
+                ball_next_pos_y += ((Dist<0)*2-1)*ball_speed_y*512/pow(2,Itr);
+                Dist = float(pow(ball_next_pos_x,2) + pow(ball_next_pos_y,2) - 1);
+                Itr++;
+            }
+            auto ball_theta = (atan2(ball_next_pos_y , ball_next_pos_x ) * 180 / constants::PI);
+            ball_theta += 360*(ball_theta<0);
+            if (active_player == 1){
+                if (ball_theta > 180)
+                    if  (p2.angle_ - p2.angular_speed/2 > ball_theta | p2.angle_ + p2.angular_speed/2 < ball_theta){
+                        if (ball_theta  > p2.angle_)
+                            p2.go_up();
+                        else if (p2.angle_> ball_theta)
+                            p2.go_down(); }}
+            else if(active_player == 2){
+                if (ball_theta < 180)
+                    if  (p1.angle_ - p1.angular_speed/2 > ball_theta | p1.angle_ + p1.angular_speed/2 < ball_theta){
+                        if (ball_theta  > p1.angle_)
+                            p1.go_up();
+                        else if (p1.angle_> ball_theta)
+                            p1.go_down(); }}
+        }
+        else if (!is_2_player & pc_cooldown!=0)
+            pc_cooldown = (pc_cooldown <= 0) ? 0 : pc_cooldown-1;
     }
 
     void state::update_ball() {
@@ -135,18 +171,18 @@ namespace pong {
         } else {
             if (ball_pos.second >= 0 && is_ball_player_collision(p1.angle_)) {
                 std::cout << "player 1 collision\n";
-                hit();
+                hit(p1.angle_);
             }
 
             if (ball_pos.second <= 0 &&  is_ball_player_collision(p2.angle_ - 180)) {
-                std::cout << "player 2 collisioni\n";
-                hit();
+                std::cout << "player 2 collision\n";
+                hit(p2.angle_ - 180);
             }
 
 
         }
 
-        auto winner = test_goal();
+        winner = test_goal();
         if (winner != nullptr) {
             std::cout << "goal!" << std::endl;
             is_paused = true;
@@ -194,10 +230,13 @@ namespace pong {
         return &p1;
     }
 
-    void state::hit() {
+    void state::hit(float p_angle) {
         collision_cooldown = constants::collision_cooldown_max_val;
-
-        auto Angle_shift = uni(rng);
+        auto ball_theta = (atan(ball_pos.second / ball_pos.first ) * 180 / constants::PI);
+        if (ball_pos.first * ball_pos.second < 0) {
+            ball_theta += 180;
+        }
+        auto Angle_shift = uni(rng)/90 + 2*(ball_theta - p_angle);
         // rotate speed vector by random angle
         float shift_cos = cos(Angle_shift * constants::PI/180);
         float shift_sin = sin(Angle_shift * constants::PI/180);

@@ -32,7 +32,33 @@ namespace pong {
     };
 }
 
-int main(int argc, const char* const argv[]) {
+#ifdef _WIN32
+#include "windows.h"
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) {
+    LPWSTR * szArgList;
+    int argc;
+    int i;
+    auto ** argv = new char*[argc];
+
+    szArgList = CommandLineToArgvW(GetCommandLineW(), &argc);
+    if( NULL == szArgList )
+    {
+        wprintf(L"CommandLineToArgvW failed\n");
+        return 0;
+    }
+    else {
+        for(i = 0; i<argc; i++){
+            auto len = wcslen(szArgList[i]);
+            argv[i] = new char[len+1];
+            wcstombs (argv[i], szArgList[i]  ,len+1);
+            std::cout << i << ": " << argv[i] << "\n";
+        }
+    }
+
+#else
+    int main(int argc, const char* const argv[]) {
+#endif
     auto conf = pong::init_config(argc, argv);
 
     pong::game g { conf };

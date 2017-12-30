@@ -7,6 +7,8 @@
 
 #ifdef APPLE
     #include "src/opengl.mac.h"
+#elif _WIN32
+    #include "src/opengl.windows.h"
 #else
     #include "src/opengl.ubuntu.h"
 #endif

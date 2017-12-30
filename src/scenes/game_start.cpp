@@ -134,6 +134,7 @@ namespace pong {
                 glm::scale(
                         glm::translate(
                                 glm::rotate(glm::mat4{1}, glm::radians(270.0f), glm::vec3(0,0,1)),
+
                                 glm::vec3 {0, -.17f, 0 }),
                         glm::vec3 { .48f, .07f, 0 })
                 },
@@ -150,7 +151,6 @@ namespace pong {
                                 glm::vec3 {0, -.35f, 0 }),
                         glm::vec3 { .65f, .07f, 0 })
                 },
-
 
                 text_positions_t {
                 [](const state& s) -> std::string { return "PUSH DIAL TO PLAY"; },
@@ -188,10 +188,10 @@ namespace pong {
                 text_positions_t {
                         [](const state& s) -> std::string {
                             std::ostringstream stream; stream << s.p1.score; return stream.str();
-                        },
-                        glm::scale(
+                },
+                glm::scale(
                                 glm::rotate(
-                                        glm::translate(glm::mat4{1}, glm::vec3 { conf.radius * 0.85f, 0.1f, 0 }),
+                                        glm::translate(glm::mat4{1}, glm::vec3 { conf.radius * 0.8f, 0.1f, 0 }),
                                         glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
                                 glm::vec3 { 0.5 * 0.125f, 0.5 * 0.125f, 0 })
                 },
@@ -203,7 +203,7 @@ namespace pong {
                         },
                         glm::scale(
                                 glm::rotate(
-                                        glm::translate(glm::mat4{1}, glm::vec3 { conf.radius * 0.85f, -0.1f, 0 }),
+                                        glm::translate(glm::mat4{1}, glm::vec3 { conf.radius * 0.8f, -0.1f, 0 }),
                                         glm::radians(270.0f), glm::vec3 { .0f,.0f,1.0f }),
                                 glm::vec3 { 0.5 * 0.125f, 0.5 * 0.125f, 0 })
                 },
